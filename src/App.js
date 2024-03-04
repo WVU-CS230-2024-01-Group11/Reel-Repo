@@ -3,7 +3,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Search from './components/Search/Search';
 import Details from './components/Search/Details';
 import Home from './components/Home/Home';
-
+import AccountCreation from './components/UserAccount/AccountCreation';
 // Used to move around website, different pages
 function App() {
   //Each Route is a new page. Path = what you want the extension to be. "/" is the start up page
@@ -30,7 +30,11 @@ function App() {
             path="/search"
             element={<Search />}
             />
-          
+          <Route 
+            exact 
+            path="/account-creation" 
+            element={<AccountCreation />} 
+            />
         </Routes>
       </BrowserRouter>
     </>
