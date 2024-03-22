@@ -2,6 +2,8 @@
 import React, {useState} from 'react';
 import { useNavigate } from 'react-router-dom';
 import theMovieDb from '../Utils/themoviedb';
+import './Search.css';
+
 
 function Search() {
     const navigate = useNavigate();
@@ -31,6 +33,29 @@ function Search() {
         setSearchType(event.target.value);
     }
 
+    function truncateText(text, maxLength) {
+        return text.length > maxLength ? text.substring(0, maxLength) + "..." : text;
+      }
+      
+      function getYear(searchType, result) {
+        if (result !== '') {
+            if (searchType === 'movie') {
+                if (result.release_date && result.release_date.length >= 4) {
+                    return result.release_date.substring(0, 4);
+                }
+            } else {
+                if (result.first_air_date && result.first_air_date.length >= 4) {
+                    return result.first_air_date.substring(0, 4);
+                }
+            }
+        } else {
+
+            return null;
+        }
+       
+        return "N/A"; 
+    }
+
     function successCB(data) {
         // on successful retrieval, data is parsed and searchResults is updated
         const parsedData = JSON.parse(data);
@@ -53,23 +78,37 @@ function Search() {
     // Unordered list of search results
         // Takes each movie and on click, navigates to the details page for it
     return (
-        <div>
-            <input id="searchbar" onKeyUp={getSearch} type="text" name="search" placeholder="Search movies"/>
+        <div className="search-container">
+            <div className="search-bar-container">
+            <input className="search-bar" id="searchbar" onKeyUp={getSearch} type="text" name="search" placeholder="Search movies"/>
             <select value={searchType} onChange={handleSearchType}>
                 <option value="movie">Movie</option>
                 <option value="tv">TV Show</option>
                 <option value="person">Person</option>
             </select>
-            <ul>
+            </div>
+            <ul className ={`search-results-list ${searchResults.length === 0 ? 'search-results-list-empty' : ''}`}>
                 {searchResults.map(result => (
-                    searchType === 'person' ? (
-                    <li key={result.id} onClick={()=>navigate(`/details/${result.media_type}/${result.id}`)}>
-                        {result.media_type === 'tv' ? result.name : result.title }
-                    </li>
+                    searchType === 'person' ? ( 
+                    <div className = "search-result-item" key={result.id} onClick={()=>navigate(`/details/${result.media_type}/${result.id}`)}>
+                        <div className='title-year-box'>
+                            <span className="title">{result.media_type === 'tv' ? result.name : result.title }</span>
+                            <span className="year">{getYear(result.media_type, result)}</span>
+                        </div>
+                        <span className="overview">{truncateText(result.overview, 150)}</span>
+                        <img className="movie-poster"src={`https://image.tmdb.org/t/p/w200${result.poster_path}`} alt="Media Poster" />
+                    </div>
                     ) : (
-                        <li key={result.id} onClick={()=>navigate(`/details/${searchType}/${result.id}`)}>
-                            {searchType === 'tv' ? result.name : result.title }
-                    </li>
+                        <div className = "search-result-item" key={result.id} onClick={()=>navigate(`/details/${searchType}/${result.id}`)}>
+                            <div className='title-year-box'>
+                                <span className="title">{searchType === 'tv' ? result.name : result.title }</span>
+                            
+                                <span className="year">{getYear(searchType, result)}</span>
+                            </div>
+                            <span className="overview">{truncateText(result.overview, 150)}</span>
+
+                            <img className="movie-poster" src={`https://image.tmdb.org/t/p/w200${result.poster_path}`} alt="Media Poster" />
+                        </div>
                     )
             ))}
                  
