@@ -10,6 +10,9 @@ function Home() {
         <div>
             <h1>Temp Homepage</h1>
             <button onClick={()=>navigate('/search')}>Search</button>
+            <button onClick={()=>navigate('/stats')}>Stats</button>
+            <button onClick={()=>navigate('/account-creation')}>Account Creation</button>
+            <button onClick={()=>navigate('/account-login')}>Account Login</button>
         </div>
     );
 }

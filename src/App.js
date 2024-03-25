@@ -4,7 +4,9 @@ import Search from './components/Search/Search';
 import Details from './components/Search/Details';
 import Home from './components/Home/Home';
 import AccountDeletion from './components/AccountDeletion';
-
+import UserStatistics from './components/UserAccount/UserStatistics';
+import AccountCreation from './components/UserAccount/AccountCreation';
+import AccountLogin from './components/UserAccount/AccountLogin';
 
 // Used to move around website, different pages
 function App() {
@@ -37,7 +39,21 @@ function App() {
             path="/account-deletion"
             element={<AccountDeletion />}
             />
-        
+          <Route 
+            exact 
+            path="/stats" 
+            element={<UserStatistics />} 
+            />
+             <Route 
+            exact 
+            path="/account-creation" 
+            element={<AccountCreation />} 
+            />
+            <Route 
+            exact 
+            path="/account-login" 
+            element={<AccountLogin />} 
+            />
         </Routes>
       </BrowserRouter>
     </>
