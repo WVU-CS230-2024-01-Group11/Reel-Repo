@@ -1,4 +1,5 @@
 import React from 'react';
+import { useState } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Search from './components/Search/Search';
 import Details from './components/Search/Details';
@@ -9,14 +10,19 @@ import AccountCreation from './components/UserAccount/AccountCreation';
 import AccountLogin from './components/UserAccount/AccountLogin';
 
 // Used to move around website, different pages
+export const UsernameContext = React.createContext(null);
+
 function App() {
+  const [username, setUser] = useState(null);
+
   //Each Route is a new page. Path = what you want the extension to be. "/" is the start up page
   // If you want to dynamically add a user Id or something, refer to the Details :id. It adds the movie id
   // to the URL so it can be fetched and details about it can be populated
   // Element is the component you want that page to be. I think it can only be used with Components
   // Component must be exported in its own file and then imported here for it to work
   return (
-    <>
+    //Username global context wrapper
+    <UsernameContext.Provider value={{  username: username, setUser: setUser}}>
       <BrowserRouter>
         <Routes>
           <Route
@@ -56,9 +62,8 @@ function App() {
             />
         </Routes>
       </BrowserRouter>
-    </>
+      </UsernameContext.Provider>
   )
-    
 }
 
 export default App;

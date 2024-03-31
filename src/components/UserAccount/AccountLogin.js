@@ -1,10 +1,13 @@
 import { fetchAccountData } from '../../services/database';
-import React, { useState } from 'react';
+import React, { useState,useContext } from 'react';
+import { UsernameContext } from '../../App';
+
 function AccountLogin(){
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [userError, setUserError] = useState('');
   const [passwordError, setPasswordError] = useState('');
+  const {setUser} = useContext(UsernameContext);
 
 
   const validateInfo = () => {
@@ -24,6 +27,7 @@ function AccountLogin(){
       console.log("Fix the errors and resubmit.");
     }
   } while (!valid);
+    setUser(username);
 
   };
   

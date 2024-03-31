@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { totalMovieWatchTime,movieGenreCounts, allWatchedMovies, moviesWatchedMonth, moviesByRating, moviesWatchedYear} from '../../services/database';
 
-
+//Displays our user data, for now username is hardcoded
 function UserStatistics({ username="test" }) {
  
   const [stats, setStats] = useState({
@@ -14,10 +14,9 @@ function UserStatistics({ username="test" }) {
   });
   useEffect(() => {
     fetchUserStats();
-  }, []);
+  },[]);
   const fetchUserStats = async () => {
     
-  
     const data = {
       totalMovieWatchTime: await totalMovieWatchTime(username),
       movieGenreCount: await movieGenreCounts(username),
@@ -32,12 +31,6 @@ function UserStatistics({ username="test" }) {
 
 
   
-  const handleChange = (statName, value) => {
-    setStats(prevStats => ({
-      ...prevStats,
-      [statName]: value
-    }));
-  };
 
   return (
   <div className="UserStatistics">

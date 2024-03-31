@@ -1,8 +1,9 @@
 import { addNewAccount, fetchAccountData } from '../../services/database';
 import React, { useState } from 'react';
-import './AccountCreation.css';
+import { useNavigate } from 'react-router-dom';
+//import './AccountCreation.css';
 function AccountCreation() {
-
+  const navigate = useNavigate();
   const [username, setUsername] = useState('');
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
@@ -89,7 +90,7 @@ function AccountCreation() {
   };
 
   //Makes sure only validated user data is added to db
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     console.log("Form submitted");
     let valid = false;
@@ -105,7 +106,7 @@ function AccountCreation() {
   //Adding new user
   let newUser={username, firstName, lastName, email, password};
   try {
-    const response= addNewAccount(newUser);
+    const response= await addNewAccount(newUser);
     if (response.success) {
       console.log("User created success");
       setUsername('');
@@ -119,6 +120,12 @@ function AccountCreation() {
     }
   } catch (error) {
     console.error("Error adding new user", error);
+      setUsername('Username already taken');
+      setFirstName('');
+      setLastName('');
+      setEmail('');
+      setPassword('');
+      clearErrors();
   }
   };
   
