@@ -10,6 +10,8 @@ function Search() {
     // searchResults is the current state and setSearchResults allows it to update
     const [searchResults, setSearchResults] = useState([]);
     const [searchType, setSearchType ] = useState('movie');
+    const [isFocused, setIsFocused] = useState(false);
+    const [isHovered, setIsHovered] = useState(false);
 
     // Event is the onKeyUp, function is called in return part
     function getSearch(event) {
@@ -62,10 +64,10 @@ function Search() {
         // Shows max of 5 results
         if (parsedData.results && parsedData.results.length > 0) {
             if (searchType == 'person') {
-                setSearchResults(parsedData.results[0].known_for.slice(0,5));
+                setSearchResults(parsedData.results[0].known_for.slice(0,10));
             }
             else{
-                setSearchResults(parsedData.results.slice(0,5));
+                setSearchResults(parsedData.results.slice(0,10));
             }
         }
     }
@@ -78,16 +80,17 @@ function Search() {
     // Unordered list of search results
         // Takes each movie and on click, navigates to the details page for it
     return (
-        <div className="search-container">
+        /*className ={`search-results-list ${searchResults.length === 0 ? 'search-empty' : ''}`}*/
+        <div onBlur={() => setIsFocused(false)} onFocus={() => setIsFocused(true)}>
             <div className="search-bar-container">
-            <input className="search-bar" id="searchbar" onKeyUp={getSearch} type="text" name="search" placeholder="Search movies"/>
+            <input className="search-bar" id="searchbar" onKeyUp={getSearch} type="text" name="search" placeholder={"Search "+searchType} />
             <select value={searchType} onChange={handleSearchType}>
-                <option value="movie">Movie</option>
-                <option value="tv">TV Show</option>
-                <option value="person">Person</option>
+                <option value="movie">movie</option>
+                <option value="tv">tv</option>
+                <option value="person">person</option>
             </select>
             </div>
-            <ul className ={`search-results-list ${searchResults.length === 0 ? 'search-results-list-empty' : ''}`}>
+            <ul className ="search-results-list" onMouseEnter={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)} style ={{display: searchResults.length === 0 || (!isFocused && !isHovered) ? 'none' : 'flex'}}>
                 {searchResults.map(result => (
                     searchType === 'person' ? ( 
                     <div className = "search-result-item" key={result.id} onClick={()=>navigate(`/details/${result.media_type}/${result.id}`)}>
@@ -105,8 +108,9 @@ function Search() {
                             
                                 <span className="year">{getYear(searchType, result)}</span>
                             </div>
-                            <span className="overview">{truncateText(result.overview, 150)}</span>
-
+                            <div className='overview-box'>
+                                <span className="overview">{truncateText(result.overview, 150)}</span>
+                            </div>
                             <img className="movie-poster" src={`https://image.tmdb.org/t/p/w200${result.poster_path}`} alt="Media Poster" />
                         </div>
                     )

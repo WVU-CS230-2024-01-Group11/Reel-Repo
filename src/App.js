@@ -1,12 +1,15 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import Search from './components/Search/Search';
+
 import Details from './components/Search/Details';
 import Home from './components/Home/Home';
-import AccountDeletion from './components/AccountDeletion';
-import UserStatistics from './components/UserAccount/UserStatistics';
+import AccountDeletion from './components/UserAccount/AccountDeletion';
+import UserStatistics from './components/Stats/UserStatistics';
 import AccountCreation from './components/UserAccount/AccountCreation';
 import AccountLogin from './components/UserAccount/AccountLogin';
+import Repository from './components/Repository/Repository';
+import Profile from './components/Profile/Profile';
+import Settings from './components/Settings/Settings';
 
 // Used to move around website, different pages
 function App() {
@@ -25,24 +28,29 @@ function App() {
             element={<Home />}
           />
           <Route
+            exact 
+            path="/repository"
+            element={<Repository />}
+          />
+          <Route
+            exact 
+            path="/stats"
+            element={<UserStatistics />}
+          />
+          <Route
             exact
             path="/details/:media-type/:id"
             element={<Details />}
-            />
-            <Route
-            exact
-            path="/search"
-            element={<Search />}
-            />
-            <Route
-            exact
-            path="/account-deletion"
-            element={<AccountDeletion />}
-            />
-          <Route 
+          />
+          <Route
             exact 
-            path="/stats" 
-            element={<UserStatistics />} 
+            path="/profile"
+            element={<Profile />}
+          />
+          <Route
+            exact
+            path="/settings"
+            element={<AccountDeletion />}
             />
              <Route 
             exact 

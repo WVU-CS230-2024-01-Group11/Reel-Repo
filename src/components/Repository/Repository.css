@@ -1,0 +1,26 @@
+:root {
+    font-size: 16pt;
+    font-family: "Arial";
+    --text-primary: #b6b6b6;
+    --text-secondary: #ececec;
+    --bg-primary: #23232e;
+    --bg-secondary: #141418;
+    --transition-speed: 600ms;
+  }
+
+  .movie{
+    list-style: none;
+    background-color: darkgrey;
+    padding: 40px;
+    border-radius: 40px;
+    margin: 10px;
+  }
+
+  .movies{
+    display: flex;
+    flex-direction: column;
+    background-color: lightgrey;
+    padding: 50px;
+    border-radius: 40px;
+    width: 100%;
+  }

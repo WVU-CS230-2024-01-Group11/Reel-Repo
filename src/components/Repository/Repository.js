@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { totalMovieWatchTime,movieGenreCounts, allWatchedMovies, moviesWatchedMonth, moviesByRating, moviesWatchedYear} from '../../services/database';
+import NavigationBar from '../NavigationBar/NavigationBar'
 
-
-function UserStatistics({ username="test" }) {
+function Repository({ username="test" }) {
  
   const [stats, setStats] = useState({
     totalMovieWatchTime: [],
@@ -40,27 +40,15 @@ function UserStatistics({ username="test" }) {
   };
 
   return (
-  <div className="UserStatistics">
-  <h2>User Statistics for {username}</h2>
-  <div className="Stat">
-    <p>Total Watch Time: {stats.totalMovieWatchTime}</p>
-    <p>Movie Genre Count:</p>
-    <ul>
-      {stats.movieGenreCount.map((genre, index) => (
-        <li key={index}>
-          {genre.movieGenre_name}: {genre.titles_watched}
-        </li>
-      ))}
-    </ul>
-    <p>Movies watched month: </p>
-    <ul>
-      {stats.moviesWatchedMonth.map((movie, index) => (
-        <li key={index}>{movie.movie_name}</li>
-      ))}
-    </ul>
-  </div>
-</div>
+    <>
+    <NavigationBar />
+    <div className='content'>
+      <div className='movies'>{stats.allWatchedMovies.map((movie, index) => (
+        <li className='movie' key={index}>{movie.movie_name}</li>
+      ))}</div>
+    </div>
+  `</>
   );
 }
 
-export default UserStatistics;
+export default Repository;

@@ -8,6 +8,7 @@ import Form from 'react-bootstrap/Form';
 import  Modal from 'react-bootstrap/Modal';
 import { FormControl, ModalBody, ModalFooter } from 'react-bootstrap';
 import { getMovieWatchProviders, getTVWatchProviders } from '../Utils/watchProviders';
+import NavigationBar from '../NavigationBar/NavigationBar';
 
 
 
@@ -97,6 +98,7 @@ function Details() {
 
     return (
         <div>
+            <NavigationBar/>
             {mediaDetails && (
                 <>
                     {mediaType === 'movie' ? (
