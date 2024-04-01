@@ -59,7 +59,7 @@ app.get('/api/total-user-watch-time', (req, res) => {
             console.error('Error fetching total watch time:', error);
             res.status(500).send('Error fetching total watch time');
         } else {
-            res.json({ total_watch_time: results[0] ? results[0].total_watch_time : 0 });
+            res.json(results);
         }
     });
 });
@@ -70,7 +70,7 @@ app.get('/api/total-tv-watch-time', (req, res) => {
             console.error('Error fetching total watch time:', error);
             res.status(500).send('Error fetching total watch time');
         } else {
-            res.json({ total_watch_time: results[0] ? results[0].total_watch_time : 0 });
+            res.json(results);
         }
     });
 });
@@ -81,7 +81,7 @@ app.get('/api/total-watch-time', (req, res) => {
             console.error('Error fetching total watch time:', error);
             res.status(500).send('Error fetching total watch time');
         } else {
-            res.json({ total_runtime: results[0] ? results[0].total_runtime : 0 });
+            res.json(results);
         }
     });
 });
@@ -92,7 +92,7 @@ app.get('/api/total-month-watch-time', (req, res) => {
             console.error('Error fetching total month watch time:', error);
             res.status(500).send('Error fetching total month watch time');
         } else {
-            res.json({ total_runtime: results[0] ? results[0].total_runtime : 0 });
+            res.json(results);
         }
     });
 });
@@ -103,7 +103,7 @@ app.get('/api/total-year-watch-time', (req, res) => {
             console.error('Error fetching total year watch time:', error);
             res.status(500).send('Error fetching year month watch time');
         } else {
-            res.json({ total_runtime: results[0] ? results[0].total_runtime : 0 });
+            res.json(results);
         }
     });
 });

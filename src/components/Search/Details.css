@@ -1,142 +1,153 @@
-.movie-details-container {
-    max-width: 1200px;
-    margin: 40px auto;
-    padding: 40px;
-    background: #ebeaeed4;
-    border-radius: 20px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    color: #333;
-    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-  }
+.movie-details-container{
+  max-width: 1200px;
+  margin: 40px auto;
+  padding: 40px;
+  background: #ebeaeed4;
+  border-radius: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  color: #333;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+.tv-details-container {
+  max-width: 1200px;
+  margin: 40px auto;
+  padding: 40px;
+  background: #ebeaeed4;
+  border-radius: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  color: #333;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+
+.movie-grid{
+  display: grid;
+  grid-template-columns: 300px auto;
+  grid-gap: 40px;
+  align-items: start;
+}
+.tv-grid {
+  display: grid;
+  grid-template-columns: 300px auto; /* Adjust the poster width as needed */
+  grid-gap: 40px;
+  align-items: start;
+}
+
+.poster {
+  width: 100%;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.overviewDetails, .tv-overviewDetails {
+  padding: 20px;
+  background: #f8f9fa;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+  margin-top: 20px;
+}
+
+.details-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* Three columns for movies */
+  grid-gap: 20px;
+  max-height: calc(300px + 40px); /* Poster height + grid-gap */
+  overflow-y: auto; /* Enable scrolling if content exceeds max height */
   
-  .movie-grid {
-    display: grid;
-    grid-template-columns: 300px 1fr;
-    grid-gap: 40px;
-    align-items: start;
-  }
-  
-  .poster {
-    width: 100%;
-    border-radius: 10px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  }
-  
-  .overviewDetails {
-    padding: 20px;
-    background: #f8f9fa;
-    border-radius: 10px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    margin-bottom: 20px;
-    margin-top: 20px;
-  }
-  
-  .details-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr); /* Adjusted for three items to be inline */
-    grid-gap: 20px;
-  }
-  
-  .releaseYear, .rating, .genres {
-    padding: 20px;
-    border-radius: 5px;
-    background: #f8f9fa;
-    text-align: center; 
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    
-  }
-  
-  h1 {
-    text-align: center;
-    color: navy;
-    font-size: 2em;
-    margin-bottom: 30px;
-    font-family:Verdana, Geneva, Tahoma, sans-serif;
-    font-weight: bold;
-  }
-  
-  @media screen and (max-width: 768px) {
-    .movie-grid {
+}
+
+.tv-details-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* Two columns for TV shows */
+  grid-gap: 20px;
+  max-height: none; /* Remove the max-height restriction */
+}
+
+.releaseYear, .rating, .genres {
+  padding: 20px;
+  border-radius: 5px;
+  background: #f8f9fa;
+  text-align: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+.tv-seasonsBox, .tv-episodesBox, .tv-ratingBox, .tv-genresBox {
+  border-radius: 5px;
+  background: #f8f9fa;
+  text-align: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-left: 20px;
+  margin-right:20px;
+}
+h1 {
+  text-align: center;
+  color: navy;
+  font-size: 2em;
+  margin-bottom: 30px;
+  font-weight: bold;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+@media screen and (max-width: 768px) {
+  .movie-grid, .tv-grid {
       grid-template-columns: 1fr;
       text-align: center;
-    }
-  
-    .poster, .overviewDetails, .details-grid {
-      margin: 0 auto 20px; /* Ensure consistent margin for a stacked layout */
-    }
-  
-    .details-grid {
-      grid-template-columns: 1fr; /* Adjust for a single column layout on smaller screens */
-    }
   }
-  .tv-details-container {
-    max-width: 1200px;
-    margin: 40px auto;
-    padding: 40px;
-    background: #ebeaeed4;
-    border-radius: 20px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    color: #333;
-    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-  }
-  
-  .tv-grid {
-    display: grid;
-    grid-template-columns: 200px auto;
-    grid-gap: 40px;
-    align-items: start;
-  }
-  
-  .tv-overviewDetails {
-    padding: 20px;
-    background: #f8f9fa;
-    border-radius: 10px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    margin-bottom: 20px;
-    margin-top: 20px;
-  }
-  
-  .tv-details-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    grid-gap: 20px;
-  }
-  
-  .tv-seasonsBox, .tv-episodesBox, .tv-ratingBox, .tv-genresBox {
-    padding: 20px;
-    border-radius: 5px;
-    background: #f8f9fa;
-    text-align: center;
-    margin-bottom: 10px; 
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  }
-  
-  .tv-seasons, .tv-episodes, .tv-tvRating, .tv-tvGenres {
-    margin-top: 10px;
-    font-weight: bold;
-    color: #495057;
-  }
-  
-  @media screen and (max-width: 768px) {
-    .tv-grid {
-      grid-template-columns: 1fr;
-      text-align: center;
-    }
-  
-    .tv-overviewDetails, .tv-details-grid {
+
+  .poster, .overviewDetails, .tv-overviewDetails, .details-grid, .tv-details-grid {
       margin: 0 auto 20px;
-    }
-  
-    .tv-details-grid {
+  }
+
+  .details-grid, .tv-details-grid {
       grid-template-columns: 1fr;
-    }
   }
-  
-  p {
-    font-weight: bold;
-  }
+}
 
-  Button {
-    padding: 10px;
-  }
+p, .tv-seasons, .tv-episodes, .tv-tvRating, .tv-tvGenres {
+  font-weight: bold;
+}
 
+Button {
+  padding: 10px;
+}
+
+.watch-providers {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: flex-start;
+
+  width: 100%;
+  margin-top: 20px;
+ 
+}
+
+.streaming-section, .buy-section, .rent-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  min-height: 115px;
+  margin-top: 10px;
+
+}
+.streaming-section, .buy-section {
+  border-right: 2px solid black;
+}
+.streaming-title, .rent-title, .buy-title {
+  font-weight: bold;
+  margin-bottom: 10px;
+  text-align: center;
+
+}
+
+.icon {
+  width: 50px;
+  height: auto;
+}
+
+.icon-set {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}

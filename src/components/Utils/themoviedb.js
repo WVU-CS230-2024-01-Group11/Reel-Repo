@@ -1105,6 +1105,7 @@ theMovieDb.movies = {
       error
     );
   },
+
   getSimilarMovies: function(options, success, error) {
     'use strict';
 

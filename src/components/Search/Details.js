@@ -7,6 +7,7 @@ import { addEpisodeToWatched, addMovieToWatched } from '../../services/database'
 import Form from 'react-bootstrap/Form';
 import  Modal from 'react-bootstrap/Modal';
 import { FormControl, ModalBody, ModalFooter } from 'react-bootstrap';
+import { getMovieWatchProviders, getTVWatchProviders } from '../Utils/watchProviders';
 
 
 
@@ -19,8 +20,9 @@ function Details() {
     const [show, setShow] = useState(false);
     const [selectedSeason, setSelectedSeason] = useState('');
     const [selectedEpisode, setSelectedEpisode] = useState('');
+    const [watchProviders, setWatchProviders] = useState('');
     const location = useLocation();
-    const username = "test";
+    const username = "emily";
 
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
@@ -34,8 +36,14 @@ function Details() {
     
         if (type === 'movie') {
             theMovieDb.movies.getById({ "id": id }, detailsSuccess, errorCB);
+            getMovieWatchProviders(id)
+                .then(data => setWatchProviders(data))
+                .catch(error => console.error("Error fetching watch providers:", error));
         } else {
             theMovieDb.tv.getById({ "id": id }, detailsSuccess, errorCB);
+            getTVWatchProviders(id)
+            .then(data => setWatchProviders(data))
+            .catch(error => console.error("Error fetching watch providers:", error));
         }
     }, [location.pathname]);
 
@@ -43,6 +51,7 @@ function Details() {
         const parsedDetails = JSON.parse(details);
         setMediaDetails(parsedDetails);
     }
+
 
     function errorCB(error) {
         console.error('Error fetching data:', error);
@@ -150,21 +159,49 @@ function Details() {
                         <p className='genresP'>{mediaDetails.genres.slice(0, 3).map(genre => genre.name).join(', ')}</p>
                     </div>
                     </div>
+                    <div className='watch-providers'>
+                    <div className='streaming-section'>
+                        <div className='streaming-title'>Streaming</div>
+                        <div className='icon-set'>
+                        {watchProviders?.results?.US?.flatrate?.slice(0, 3).map(provider => (
+                            <img key={provider.provider_id} className='icon' title={provider.provider_name} src={`https://image.tmdb.org/t/p/w200${provider.logo_path}`} alt="icon" />
+                        ))}
+                        </div>
+                    </div>
+                    <div className='buy-section'>
+                        <div className='buy-title'>Buy</div>
+                        <div className='icon-set'>
+                        {watchProviders?.results?.US?.buy?.slice(0, 3).map(provider => (
+                            <img key={provider.provider_id} className='icon' title={provider.provider_name} src={`https://image.tmdb.org/t/p/w200${provider.logo_path}`} alt="icon" />
+                        ))}
+                    </div>
+                    </div>
+                    <div className='rent-section'>
+                        <div className='rent-title'>Rent</div>
+                        <div className='icon-set'>
+                        {watchProviders?.results?.US?.rent?.slice(0, 3).map(provider => (
+                            <img key={provider.provider_id} className='icon' title={provider.provider_name} src={`https://image.tmdb.org/t/p/w200${provider.logo_path}`} alt="icon" />
+                        ))}
+                    </div>
+                    </div>
+                    </div>
+                    </div>
+                    </div>
+                    
                 </div>
-                </div>
-            </div>
+               
                         </>
                     ) : (
                         <>
                 <div className="tv-details-container">
                 <h1>{mediaDetails.name}</h1>
                 <div className="tv-grid">
-                <img src={`https://image.tmdb.org/t/p/w200${mediaDetails.poster_path}`} alt="TV Show Poster" />
+                <img src={`https://image.tmdb.org/t/p/w300${mediaDetails.poster_path}`} alt="TV Show Poster" />
                 <div>
                     <Button variant="success" onClick={handleWatchedButton}>I Watched an Episode!</Button>{' '}
                     <Modal show={show} onHide={handleClose}>
                     <Modal.Header closeButton>
-                        <Modal.Title>Add to Watched Movies</Modal.Title>
+                        <Modal.Title>Add to Watched Episodes</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
                         <Form>
@@ -241,6 +278,33 @@ function Details() {
                     </div>
                     <div className='tv-genresBox'>Genres
                         <p className='tv-tvGenres'>{mediaDetails.genres.slice(0, 3).map(genre => genre.name).join(', ')}</p>
+                    </div>
+                    
+                    </div>
+                    <div className='watch-providers'>
+                    <div className='streaming-section'>
+                        <div className='streaming-title'>Streaming</div>
+                        <div className='icon-set'>
+                        {watchProviders?.results?.US?.flatrate?.slice(0, 3).map(provider => (
+                            <img key={provider.provider_id} className='icon' title={provider.provider_name} src={`https://image.tmdb.org/t/p/w200${provider.logo_path}`} alt="icon" />
+                        ))}
+                        </div>
+                    </div>
+                    <div className='buy-section'>
+                        <div className='buy-title'>Buy</div>
+                        <div className='icon-set'>
+                        {watchProviders?.results?.US?.buy?.slice(0, 3).map(provider => (
+                            <img key={provider.provider_id} className='icon' title={provider.provider_name} src={`https://image.tmdb.org/t/p/w200${provider.logo_path}`} alt="icon" />
+                        ))}
+                    </div>
+                    </div>
+                    <div className='rent-section'>
+                        <div className='rent-title'>Rent</div>
+                        <div className='icon-set'>
+                        {watchProviders?.results?.US?.rent?.slice(0, 3).map(provider => (
+                            <img key={provider.provider_id} className='icon' title={provider.provider_name} src={`https://image.tmdb.org/t/p/w200${provider.logo_path}`} alt="icon" />
+                        ))}
+                    </div>
                     </div>
                     </div>
                 </div>

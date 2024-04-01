@@ -93,7 +93,7 @@ export const addEpisodeToWatched =  async (episodeData) => {
 export const totalMovieWatchTime = async (username) => {
   try{
     const response = await axios.get(`${baseURL}/total-user-watch-time`, { params: { username } });
-    return response.data[0].total_watch_time;
+    return response.data;
   } catch (error) {
     console.error('Error fetching movie watch time:', error);
   }
@@ -101,7 +101,7 @@ export const totalMovieWatchTime = async (username) => {
 export const totalTVWatchTime = async (username) => {
   try{
     const response = await axios.get(`${baseURL}/total-tv-watch-time`, { params: { username } });
-    return response.data[0].total_watch_time;
+    return response.data;
   } catch (error) {
     console.error('Error fetching tv watch time:', error);
   }
@@ -110,7 +110,7 @@ export const totalTVWatchTime = async (username) => {
 export const totalWatchTime = async (username) => {
   try{
     const response = await axios.get(`${baseURL}/total-watch-time`, { params: { username } });
-    return response.data[0].total_runtime;
+    return response.data;
   } catch (error) {
     console.error('Error fetching watch time:', error);
   }
@@ -118,7 +118,7 @@ export const totalWatchTime = async (username) => {
 export const totalWatchTimeMonth = async (username) => {
   try{
     const response = await axios.get(`${baseURL}/total-month-watch-time`, { params: { username } });
-    return response.data[0].total_runtime;
+    return response.data;
   } catch (error) {
     console.error('Error fetching watch time:', error);
   }
@@ -126,7 +126,7 @@ export const totalWatchTimeMonth = async (username) => {
 export const totalWatchTimeYear = async (username) => {
   try{
     const response = await axios.get(`${baseURL}/total-year-watch-time`, { params: { username } });
-    return response.data[0].total_runtime;
+    return response.data;
   } catch (error) {
     console.error('Error fetching watch time:', error);
   }
