@@ -13,6 +13,8 @@ function Home() {
             <button onClick={()=>navigate('/stats')}>Stats</button>
             <button onClick={()=>navigate('/account-creation')}>Account Creation</button>
             <button onClick={()=>navigate('/account-login')}>Account Login</button>
+            <button onClick={()=>navigate('/tvstats')}>TV stats</button>
+            <button onClick={()=>navigate('/timestats')}>Time stats</button>
         </div>
     );
 }

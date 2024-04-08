@@ -5,7 +5,7 @@ import { totalMovieWatchTime,movieGenreCounts, allWatchedMovies, moviesWatchedMo
 function UserStatistics({ username="test" }) {
  
   const [stats, setStats] = useState({
-    totalMovieWatchTime: [],
+    totalMovieWatchTime: [0],
     movieGenreCount: [],
     allWatchedMovies: [],
     moviesWatchedMonth: [],
@@ -14,7 +14,7 @@ function UserStatistics({ username="test" }) {
   });
   useEffect(() => {
     fetchUserStats();
-  }, []);
+  }, [username]);
   const fetchUserStats = async () => {
     
   
@@ -43,7 +43,7 @@ function UserStatistics({ username="test" }) {
   <div className="UserStatistics">
   <h2>User Statistics for {username}</h2>
   <div className="Stat">
-    <p>Total Watch Time: {stats.totalMovieWatchTime}</p>
+    <p>Total Watch Time: {stats.totalMovieWatchTime[0].total_watch_time}</p>
     <p>Movie Genre Count:</p>
     <ul>
       {stats.movieGenreCount.map((genre, index) => (
@@ -55,6 +55,13 @@ function UserStatistics({ username="test" }) {
     <p>Movies watched month: </p>
     <ul>
       {stats.moviesWatchedMonth.map((movie, index) => (
+        <li key={index}>{movie.movie_name}</li>
+      ))}
+    </ul>
+    
+    <p>Movies watched this year: </p>
+    <ul>
+      {stats.moviesWatchedYear.map((movie, index) => (
         <li key={index}>{movie.movie_name}</li>
       ))}
     </ul>

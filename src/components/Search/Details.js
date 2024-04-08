@@ -22,7 +22,7 @@ function Details() {
     const [selectedEpisode, setSelectedEpisode] = useState('');
     const [watchProviders, setWatchProviders] = useState('');
     const location = useLocation();
-    const username = "emily";
+    const username = "test";
 
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);

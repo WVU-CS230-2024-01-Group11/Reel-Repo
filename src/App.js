@@ -7,6 +7,8 @@ import AccountDeletion from './components/AccountDeletion';
 import UserStatistics from './components/UserAccount/UserStatistics';
 import AccountCreation from './components/UserAccount/AccountCreation';
 import AccountLogin from './components/UserAccount/AccountLogin';
+import TVStats from './components/UserAccount/TVStats';
+import TimeStats from './components/UserAccount/TimeStats';
 
 // Used to move around website, different pages
 function App() {
@@ -53,6 +55,16 @@ function App() {
             exact 
             path="/account-login" 
             element={<AccountLogin />} 
+            />
+            <Route
+            exact
+            path="/tvstats"
+            element={<TVStats />}
+            />
+            <Route
+            exact
+            path="/timestats"
+            element={<TimeStats />}
             />
         </Routes>
       </BrowserRouter>
