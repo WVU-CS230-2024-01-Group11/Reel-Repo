@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { totalMovieWatchTime,movieGenreCounts, allWatchedMovies, moviesWatchedMonth, moviesByRating, moviesWatchedYear} from '../../services/database';
 import './UserStatistics.css'
 import NavigationBar from '../NavigationBar/NavigationBar';
+import TVStats from '../UserAccount/TVStats';
+import TimeStats from '../UserAccount/TimeStats';
 
 function UserStatistics({ username="test" }) {
  
@@ -68,6 +70,8 @@ function UserStatistics({ username="test" }) {
     </ul>
   </div>
 </div>
+<TVStats/>
+<TimeStats/>
 </>
   );
 }

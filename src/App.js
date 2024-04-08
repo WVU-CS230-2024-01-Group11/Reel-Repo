@@ -77,7 +77,7 @@ function App() {
             />
             <Route
             exact
-            path="/friends-demo"
+            path="/friends"
             element={<FriendsDemo />}
             />
         </Routes>

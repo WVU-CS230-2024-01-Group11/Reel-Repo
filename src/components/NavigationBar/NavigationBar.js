@@ -31,7 +31,10 @@ export default function NavigationBar() {
             <span className="dropdown-text">More</span>
             <div className="dropdown-content">
               <a href="/profile">Profile</a>
+              <a href="/friends">Friends</a>
               <a href="/settings">Settings</a>
+              <a href="/account-creation">Create Account</a>
+              <a href="/account-login">Login</a>
               <a href="/">Logout</a>
             </div>
           </div>
