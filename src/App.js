@@ -9,6 +9,7 @@ import AccountCreation from './components/UserAccount/AccountCreation';
 import AccountLogin from './components/UserAccount/AccountLogin';
 import TVStats from './components/UserAccount/TVStats';
 import TimeStats from './components/UserAccount/TimeStats';
+import FriendsDemo from './components/FriendsTesting/FriendsDemo';
 
 // Used to move around website, different pages
 function App() {
@@ -65,6 +66,11 @@ function App() {
             exact
             path="/timestats"
             element={<TimeStats />}
+            />
+            <Route
+            exact
+            path="/friends-demo"
+            element={<FriendsDemo />}
             />
         </Routes>
       </BrowserRouter>

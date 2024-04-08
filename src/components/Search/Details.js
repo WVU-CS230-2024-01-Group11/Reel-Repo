@@ -121,6 +121,8 @@ function Details() {
                                 name="rating"
                                 placeholder="10.000"
                                 autoFocus
+                                max={10.000}
+                                min={0.000}
                                 value={rating}
                                 onChange={(e) => setRating(e.target.value)}
                             />
@@ -130,6 +132,7 @@ function Details() {
                             <FormControl
                                 type="date"
                                 name="date_watched"
+                                max={Date}
                                 value={date_watched}
                                 onChange={(e) => setDateWatched(e.target.value)}
                             />
@@ -212,6 +215,8 @@ function Details() {
                                 name="rating"
                                 placeholder="10.000"
                                 autoFocus
+                                max={10.000}
+                                min={0.000}
                                 value={rating}
                                 onChange={(e) => setRating(e.target.value)}
                             />
@@ -221,6 +226,7 @@ function Details() {
                             <FormControl
                                 type="date"
                                 name="date_watched"
+                                max={Date}
                                 value={date_watched}
                                 onChange={(e) => setDateWatched(e.target.value)}
                             />

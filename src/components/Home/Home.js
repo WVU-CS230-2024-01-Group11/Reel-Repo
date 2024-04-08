@@ -15,6 +15,7 @@ function Home() {
             <button onClick={()=>navigate('/account-login')}>Account Login</button>
             <button onClick={()=>navigate('/tvstats')}>TV stats</button>
             <button onClick={()=>navigate('/timestats')}>Time stats</button>
+            <button onClick={()=>navigate('/friends-demo')}>Friends demo</button>
         </div>
     );
 }

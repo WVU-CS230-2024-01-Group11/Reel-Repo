@@ -16,8 +16,6 @@ function UserStatistics({ username="test" }) {
     fetchUserStats();
   }, [username]);
   const fetchUserStats = async () => {
-    
-  
     const data = {
       totalMovieWatchTime: await totalMovieWatchTime(username),
       movieGenreCount: await movieGenreCounts(username),
