@@ -23,7 +23,7 @@ function Details() {
     const [selectedEpisode, setSelectedEpisode] = useState('');
     const [watchProviders, setWatchProviders] = useState('');
     const location = useLocation();
-    const username = "emily";
+    const username = "test";
 
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
@@ -123,6 +123,8 @@ function Details() {
                                 name="rating"
                                 placeholder="10.000"
                                 autoFocus
+                                max={10.000}
+                                min={0.000}
                                 value={rating}
                                 onChange={(e) => setRating(e.target.value)}
                             />
@@ -132,6 +134,7 @@ function Details() {
                             <FormControl
                                 type="date"
                                 name="date_watched"
+                                max={Date}
                                 value={date_watched}
                                 onChange={(e) => setDateWatched(e.target.value)}
                             />
@@ -214,6 +217,8 @@ function Details() {
                                 name="rating"
                                 placeholder="10.000"
                                 autoFocus
+                                max={10.000}
+                                min={0.000}
                                 value={rating}
                                 onChange={(e) => setRating(e.target.value)}
                             />
@@ -223,6 +228,7 @@ function Details() {
                             <FormControl
                                 type="date"
                                 name="date_watched"
+                                max={Date}
                                 value={date_watched}
                                 onChange={(e) => setDateWatched(e.target.value)}
                             />

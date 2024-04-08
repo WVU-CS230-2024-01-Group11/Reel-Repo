@@ -10,6 +10,9 @@ import AccountLogin from './components/UserAccount/AccountLogin';
 import Repository from './components/Repository/Repository';
 import Profile from './components/Profile/Profile';
 import Settings from './components/Settings/Settings';
+import TVStats from './components/UserAccount/TVStats';
+import TimeStats from './components/UserAccount/TimeStats';
+import FriendsDemo from './components/FriendsTesting/FriendsDemo';
 
 // Used to move around website, different pages
 function App() {
@@ -61,6 +64,21 @@ function App() {
             exact 
             path="/account-login" 
             element={<AccountLogin />} 
+            />
+            <Route
+            exact
+            path="/tvstats"
+            element={<TVStats />}
+            />
+            <Route
+            exact
+            path="/timestats"
+            element={<TimeStats />}
+            />
+            <Route
+            exact
+            path="/friends-demo"
+            element={<FriendsDemo />}
             />
         </Routes>
       </BrowserRouter>
