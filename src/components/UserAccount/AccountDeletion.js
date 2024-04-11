@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Modal, Button } from 'react-bootstrap';
-import { deleteAccount } from '../services/database';
+import { deleteAccount } from '../../services/database';
+import NavigationBar from '../NavigationBar/NavigationBar';
 
 const AccountDeletion = () => {
     const [showModal, setShowModal] = useState(false);
@@ -19,6 +20,8 @@ const AccountDeletion = () => {
 
     return (
         <>
+        <NavigationBar/>
+        <div className='content'>
             <h1>User Settings</h1>
             <h2>Hello {username}!</h2>
             <Button variant="danger" onClick={() => setShowModal(true)}>
@@ -39,6 +42,7 @@ const AccountDeletion = () => {
                     </Button>
                 </Modal.Footer>
             </Modal>
+            </div>
         </>
     );
 };

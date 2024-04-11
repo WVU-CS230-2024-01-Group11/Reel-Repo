@@ -138,7 +138,8 @@ function AccountCreation() {
   
 
   return (
-    <div className="App">
+    <div className='content'>
+      <div className="App">
       <div>
         <form id="form" onSubmit={handleSubmit}>
           <h1>Account Creation</h1>
@@ -212,6 +213,8 @@ function AccountCreation() {
         </form>
       </div>
     </div>
+    </div>
+    
   );
 }
 

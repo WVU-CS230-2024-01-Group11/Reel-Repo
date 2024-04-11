@@ -59,7 +59,7 @@ app.get('/api/total-user-watch-time', (req, res) => {
             console.error('Error fetching total watch time:', error);
             res.status(500).send('Error fetching total watch time');
         } else {
-            res.json({ total_watch_time: results[0] ? results[0].total_watch_time : 0 });
+            res.json(results);
         }
     });
 });
@@ -70,7 +70,7 @@ app.get('/api/total-tv-watch-time', (req, res) => {
             console.error('Error fetching total watch time:', error);
             res.status(500).send('Error fetching total watch time');
         } else {
-            res.json({ total_watch_time: results[0] ? results[0].total_watch_time : 0 });
+            res.json(results);
         }
     });
 });
@@ -81,7 +81,7 @@ app.get('/api/total-watch-time', (req, res) => {
             console.error('Error fetching total watch time:', error);
             res.status(500).send('Error fetching total watch time');
         } else {
-            res.json({ total_runtime: results[0] ? results[0].total_runtime : 0 });
+            res.json(results);
         }
     });
 });
@@ -92,7 +92,7 @@ app.get('/api/total-month-watch-time', (req, res) => {
             console.error('Error fetching total month watch time:', error);
             res.status(500).send('Error fetching total month watch time');
         } else {
-            res.json({ total_runtime: results[0] ? results[0].total_runtime : 0 });
+            res.json(results);
         }
     });
 });
@@ -103,7 +103,7 @@ app.get('/api/total-year-watch-time', (req, res) => {
             console.error('Error fetching total year watch time:', error);
             res.status(500).send('Error fetching year month watch time');
         } else {
-            res.json({ total_runtime: results[0] ? results[0].total_runtime : 0 });
+            res.json(results);
         }
     });
 });
@@ -263,6 +263,56 @@ app.get('/api/top-episodes-year', (req, res) => {
         }
     });
 });
+app.get('/api/friend-requests/received', async (req, res) => {
+    const username  = req.query.username; 
+     db.query('SELECT requester FROM friendRequests WHERE receiver = ?', [username], (error, results) => {
+        if (error) {
+            console.error('Error fetching recieved friend requests:', error);
+            res.status(500).send('Error fetching recieved friend requests');
+        } else {
+            res.json(results || []);
+        }
+     });    
+});
+app.get('/api/friend-requests/sent', async (req, res) => {
+    const username  = req.query.username; 
+    db.query('SELECT receiver FROM friendRequests WHERE requester = ?', [username], (error, results) => {
+        if (error) {
+            console.error('Error fetching sent friend requests:', error);
+            res.status(500).send('Error fetching sent friend requests');
+        } else {
+            res.json(results);
+        }
+     });    
+});
+app.get('/api/friends', async (req, res) => {
+    const username  = req.query.username; 
+    db.query(
+        'SELECT user2 AS friend FROM friends WHERE user1 = ? UNION SELECT user1 AS friend FROM friends WHERE user2 = ?',
+        [username, username], (error, results) => {
+        if (error) {
+            console.error('Error fetching friends:', error);
+            res.status(500).send('Error fetching friends');
+        } else {
+            res.json(results);
+        }
+     });  
+});
+app.get('/api/check-friendship', (req, res) => {
+    const { user1, user2 } = req.query;
+    db.query(
+        'SELECT EXISTS (SELECT 1 FROM friends WHERE (user1 = ? AND user2 = ?) OR (user1 = ? AND user2 = ?)) AS isFriends',
+        [user1, user2, user2, user1],
+        (error, results) => {
+            if (error) {
+                console.error('Error checking friendship status:', error);
+                res.status(500).send('Error checking friendship status');
+            } else {
+                res.json({ isFriends: results[0].isFriends == 1 });
+            }
+        }
+    );
+});
 app.post('/api/accounts', (req, res) => {
     const newData = req.body;
     db.query('INSERT INTO accounts SET ?', newData, (error, results) => {
@@ -296,25 +346,21 @@ app.post('/api/UserTV', async (req, res) => {
     const { username, showDetails, tvShowData, season_number, episode_number, date_watched, user_rating } = req.body;
 
     try {
-        // Insert TV show data
         await db.query(
             'INSERT INTO tvShows (show_id, show_name, average_rating, poster_path, number_of_seasons, number_of_episodes) VALUES (?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE show_id=show_id',
             [showDetails.id, showDetails.name, showDetails.vote_average, showDetails.poster_path, showDetails.number_of_seasons, showDetails.number_of_episodes]
         );
 
-        // Insert TV show genres
         for (const genre of showDetails.genres) {
             await db.query('INSERT IGNORE INTO tvGenres (tvGenre_id, tvGenre_name) VALUES (?, ?)', [genre.id, genre.name]);
             await db.query('INSERT IGNORE INTO TVGenreAssociations (show_id, tvGenre_id) VALUES (?, ?)', [showDetails.id, genre.id]);
         }
 
-        // Insert episode data
         await db.query(
             'INSERT INTO episodes (show_id, season_number, episode_number, episode_name, date_aired, vote_average, still_path, runtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE episode_number=episode_number',
             [showDetails.id, season_number, episode_number, tvShowData.name, tvShowData.air_date, tvShowData.vote_average, tvShowData.still_path, tvShowData.runtime]
         );
 
-        // Insert user TV watch data
         await db.query('INSERT INTO UserTV (username, show_id, season_number, episode_number, date_watched, user_rating) VALUES (?, ?, ?, ?, ?, ?)', [username, showDetails.id, season_number, episode_number, date_watched, user_rating]);
 
         res.send('TV show episode and user watch data added successfully');
@@ -324,6 +370,40 @@ app.post('/api/UserTV', async (req, res) => {
     }
 });
 
+app.post('/api/send-friend-request', (req, res) => {
+    const { requester, receiver } = req.body;
+    const requestDate = new Date().toISOString().slice(0, 10);
+
+    db.query('INSERT INTO friendRequests (requester, receiver, request_date) VALUES (?, ?, ?)', [requester, receiver, requestDate], (error, results) => {
+        if (error) {
+            console.error('Error sending friend request:', error);
+            res.status(500).send('Error sending friend request');
+        } else {
+            res.send('Friend request sent successfully');
+        }
+    });
+});
+
+app.post('/api/accept-friend-request', async (req, res) => {
+    const { requester, receiver } = req.body;
+    try {
+        // Start a transaction
+        await db.query('START TRANSACTION');
+
+        const sortedUsers = [requester, receiver].sort();
+        await db.query('INSERT INTO friends (user1, user2) VALUES (?, ?)', [sortedUsers[0], sortedUsers[1]]);
+        await db.query('DELETE FROM friendRequests WHERE requester = ? AND receiver = ?', [requester, receiver]);
+
+        // Commit the transaction
+        await db.query('COMMIT');
+        res.send('Friend request accepted and friendship added successfully');
+    } catch (error) {
+        // Rollback the transaction in case of an error
+        await db.query('ROLLBACK');
+        console.error('Error accepting friend request:', error);
+        res.status(500).send('Error accepting friend request');
+    }
+});
 
 // NEED TO ALTER
 app.delete('/api/accounts/:username', (req, res) => {
@@ -341,6 +421,30 @@ app.delete('/api/accounts/:username', (req, res) => {
         }
     });
 });
+app.delete('/api/friend-request', async (req, res) => {
+    const { requester, receiver } = req.body;
+    try {
+        await db.query('DELETE FROM friendRequests WHERE requester = ? AND receiver = ?', [requester, receiver]);
+        res.send('Friend request declined successfully');
+    } catch (error) {
+        console.error('Error declining friend request:', error);
+        res.status(500).send('Error declining friend request');
+    }
+});
+app.delete('/api/friends', async (req, res) => {
+    const { user1, user2 } = req.body;
+    try {
+        await db.query(
+            'DELETE FROM friends WHERE (user1 = ? AND user2 = ?) OR (user1 = ? AND user2 = ?)',
+            [user1, user2, user2, user1]
+        );
+        res.send('Friendship removed successfully');
+    } catch (error) {
+        console.error('Error removing friendship:', error);
+        res.status(500).send('Error removing friendship');
+    }
+});
+
 
 
 app.listen(port, () => {

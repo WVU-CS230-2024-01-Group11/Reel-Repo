@@ -1,0 +1,117 @@
+:root {
+    font-size: 16pt;
+    font-family: "Arial";
+    --text-primary: #b6b6b6;
+    --text-secondary: #ececec;
+    --bg-primary: #23232e;
+    --bg-secondary: #141418;
+    --transition-speed: 600ms;
+  }
+
+  .navigation-bar{
+    position: fixed;
+    top: 10px;
+    left: 3vw;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: gray;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    border-radius: 40px;
+    width: 94vw;
+  }
+
+  .navbar-logo{
+    display: table;
+    flex-grow: 1;
+    margin: 20px;
+  }
+
+  .logo-text{
+    display: table-cell;
+    vertical-align: middle;
+    text-align: center;
+    text-wrap: nowrap;
+    text-decoration: none;
+    font-size: 2.5vw;
+    color: white;
+    padding: 10px 30px;
+    border-radius: 40px;
+    transition: 0.4s;
+  }
+
+  .logo-text:hover{
+    background-color: darkgray;
+    font-size: 3vw;
+    color: black;
+  }
+
+  .navbar-anchors {
+    padding: 0;
+    flex-grow: 3;
+    list-style: none;
+    display: flex;
+    align-items: center;
+    margin: 0;
+    justify-content: space-around;
+  }
+  
+  .anchor-text:hover, .dropdown:hover .dropdown-text{
+    background-color: darkgray;
+    font-size: 2vw;
+    color: black;
+  }
+
+  .anchor-text, .dropdown-text {
+    vertical-align: middle;
+    text-align: center;
+    padding: 10px 30px;
+    border-radius: 40px;
+    transition: 0.4s;
+    font-size: 1.5vw;
+    text-decoration: none;
+    color: white;
+  }
+  
+  /* Dropdown Content (Hidden by Default) */
+  .dropdown-content{
+    display: none;
+    position: absolute;
+    background-color: #f1f1f1;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+  }
+  
+  /* Links inside the dropdown */
+  .dropdown-content a{
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+  }
+
+  /* Make cursor point on dropdown*/
+  .dropdown{
+    cursor: pointer;
+  }
+  
+  /* Change color of dropdown links on hover */
+  .dropdown-content a:hover {
+    background-color: darkgrey
+  }
+  
+  /* Show the dropdown menu on hover */
+  .dropdown:hover .dropdown-content, .dropdown-content:hover{
+    display: block;
+  }
+  
+  /* Collapse navigation bar*/
+  @media screen and (max-width: 1000px) {
+    .navbar-anchors{
+      display: none;
+    }
+    .navbar{
+      overflow: hidden;
+    }
+  }

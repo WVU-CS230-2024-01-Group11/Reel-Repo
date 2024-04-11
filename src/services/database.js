@@ -93,7 +93,7 @@ export const addEpisodeToWatched =  async (episodeData) => {
 export const totalMovieWatchTime = async (username) => {
   try{
     const response = await axios.get(`${baseURL}/total-user-watch-time`, { params: { username } });
-    return response.data[0].total_watch_time;
+    return response.data;
   } catch (error) {
     console.error('Error fetching movie watch time:', error);
   }
@@ -101,7 +101,7 @@ export const totalMovieWatchTime = async (username) => {
 export const totalTVWatchTime = async (username) => {
   try{
     const response = await axios.get(`${baseURL}/total-tv-watch-time`, { params: { username } });
-    return response.data[0].total_watch_time;
+    return response.data;
   } catch (error) {
     console.error('Error fetching tv watch time:', error);
   }
@@ -110,7 +110,7 @@ export const totalTVWatchTime = async (username) => {
 export const totalWatchTime = async (username) => {
   try{
     const response = await axios.get(`${baseURL}/total-watch-time`, { params: { username } });
-    return response.data[0].total_runtime;
+    return response.data;
   } catch (error) {
     console.error('Error fetching watch time:', error);
   }
@@ -118,7 +118,7 @@ export const totalWatchTime = async (username) => {
 export const totalWatchTimeMonth = async (username) => {
   try{
     const response = await axios.get(`${baseURL}/total-month-watch-time`, { params: { username } });
-    return response.data[0].total_runtime;
+    return response.data;
   } catch (error) {
     console.error('Error fetching watch time:', error);
   }
@@ -126,7 +126,7 @@ export const totalWatchTimeMonth = async (username) => {
 export const totalWatchTimeYear = async (username) => {
   try{
     const response = await axios.get(`${baseURL}/total-year-watch-time`, { params: { username } });
-    return response.data[0].total_runtime;
+    return response.data;
   } catch (error) {
     console.error('Error fetching watch time:', error);
   }
@@ -248,5 +248,70 @@ export const topTVYear = async (username) => {
     return response.data;
   } catch (error) {
     console.error('Error fetching episodes by rating this year:', error);
+  }
+};
+
+export const sendFriendRequest = async (requester, receiver) => {
+  try {
+      const response = await axios.post(`${baseURL}/send-friend-request`, { requester, receiver });
+      return response.data;
+  } catch (error) {
+      console.error('Error sending friend request:', error);
+  }
+};
+export const acceptFriendRequest = async (requester, receiver) => {
+  try {
+      const response = await axios.post(`${baseURL}/accept-friend-request`, { requester, receiver });
+      return response.data;
+  } catch (error) {
+      console.error('Error accepting friend request:', error);
+  }
+};
+export const getReceivedFriendRequests = async (username) => {
+  try {
+      const response = await axios.get(`${baseURL}/friend-requests/received`, { params: { username } });
+      return response.data;
+  } catch (error) {
+      console.error('Error fetching received friend requests:', error);
+  }
+};
+export const getSentFriendRequests = async (username) => {
+  try {
+      const response = await axios.get(`${baseURL}/friend-requests/sent`, { params: { username } });
+      return response.data;
+  } catch (error) {
+      console.error('Error fetching sent friend requests:', error);
+  }
+};
+export const getCurrentFriends = async (username) => {
+  try {
+      const response = await axios.get(`${baseURL}/friends`, { params: { username } });
+      return response.data;
+  } catch (error) {
+      console.error('Error fetching friends:', error);
+  }
+};
+export const declineFriendRequest = async (requester, receiver) => {
+  try {
+      const response = await axios.delete(`${baseURL}/friend-request`, { data: { requester, receiver } });
+      return response.data;
+  } catch (error) {
+      console.error('Error declining friend request:', error);
+  }
+};
+export const removeFriend = async (user1, user2) => {
+  try {
+    const response = await axios.delete(`${baseURL}/friends`, { data: { user1, user2 } });
+      return response.data;
+  } catch (error) {
+      console.error('Error removing friend:', error);
+  }
+};
+export const checkFriendship = async (user1, user2) => {
+  try {
+      const response = await axios.get(`${baseURL}/check-friendship`, { params: { user1, user2 } });
+      return response.data;
+  } catch (error) {
+      console.error('Error checking friendship status:', error);
   }
 };

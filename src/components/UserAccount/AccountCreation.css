@@ -19,7 +19,7 @@ form{
 }
 
 label{
-    color: white;
+    color: black;
     font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
     display: inline-block;
     clear: left;
@@ -27,19 +27,21 @@ label{
     text-align: left;
     font-size: 20px;
 }
+
 input{
     margin-left: -150px;
     padding: 10px;
     margin-bottom: 5px;
+    border-radius: 40px;
     font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-    border: 1px solid white;
+    border: 1px solid black;
 }
+
 button{
-    background-color: white;
-    margin-top: 30px;
+    background-color: darkgray;
+    margin-top: 10px;
     font-size: 20px;
-    padding: 30px 20px;
-    border: 1px solid white;
-    border-radius: 50%;
+    padding: 10px 20px;
+    border-radius: 40px;
     font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
 }

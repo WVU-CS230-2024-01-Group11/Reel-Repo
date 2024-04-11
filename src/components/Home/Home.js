@@ -2,11 +2,8 @@
 // Needed to get to search as of right now
 
 import { useNavigate } from 'react-router-dom';
-import { UsernameContext } from '../../App';
-import { useContext } from 'react';
 
 function Home() {
-    const navigate = useNavigate();
 
     //Pulls username from global context, changes homepage message depending on loggin status 
     const { username } = useContext(UsernameContext);
@@ -19,7 +16,6 @@ function Home() {
     return (
         <div>
             <h1>Temp Homepage</h1>
-            {userDisplay}
             <button onClick={()=>navigate('/search')}>Search</button>
             <button onClick={()=>navigate('/stats')}>Stats</button>
             <button onClick={()=>navigate('/account-creation')}>Account Creation</button>
