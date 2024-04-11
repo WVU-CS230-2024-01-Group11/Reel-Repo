@@ -1,22 +1,23 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { totalMovieWatchTime,movieGenreCounts, allWatchedMovies, moviesWatchedMonth, moviesByRating, moviesWatchedYear} from '../../services/database';
-
+import { UsernameContext } from '../../App';
 //Displays our user data, for now username is hardcoded
-function UserStatistics({ username="test" }) {
- 
+
+function UserStatistics() {
+  //const username = useContext(UsernameContext);
+  const username="test"
   const [stats, setStats] = useState({
     totalMovieWatchTime: [],
     movieGenreCount: [],
     allWatchedMovies: [],
     moviesWatchedMonth: [],
     moviesWatchedYear: [],
-    moviesByRating: [],
-  });
+    moviesByRating: []
+});
   useEffect(() => {
     fetchUserStats();
   },[]);
   const fetchUserStats = async () => {
-    
     const data = {
       totalMovieWatchTime: await totalMovieWatchTime(username),
       movieGenreCount: await movieGenreCounts(username),
@@ -25,12 +26,9 @@ function UserStatistics({ username="test" }) {
       moviesWatchedYear: await moviesWatchedYear(username),
       moviesByRating: await moviesByRating(username)
     };
-    console.log('Stats:', data); 
+    console.log('Stats', data); 
     setStats(data);
   };
-
-
-  
 
   return (
   <div className="UserStatistics">
@@ -45,14 +43,17 @@ function UserStatistics({ username="test" }) {
         </li>
       ))}
     </ul>
-    <p>Movies watched month: </p>
+   
+    <p>Movies watched year: </p>
     <ul>
-      {stats.moviesWatchedMonth.map((movie, index) => (
-        <li key={index}>{movie.movie_name}</li>
+      {stats.moviesWatchedYear.map((movie, index) => (
+        <li key={index}>
+          {movie.movie_name}
+        </li>
       ))}
     </ul>
   </div>
-</div>
+  </div>
   );
 }
 

@@ -1,4 +1,4 @@
-import { addNewAccount, fetchAccountData } from '../../services/database';
+import addNewAccount from '../../services/database';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 //import './AccountCreation.css';
@@ -9,11 +9,13 @@ function AccountCreation() {
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [passwordMatch, setPasswordMatch]= useState('');
   const [userError, setUserError] = useState('');
   const [firstError, setFirstError] = useState('');
   const [lastError, setLastError] = useState('');
   const [emailError, setEmailError] = useState('');
   const [passwordError, setPasswordError] = useState('');
+  const [passwordMatchError, setPasswordMatchError] = useState('');
   //Clears error messages
   const clearErrors = () => {
     setUserError('');
@@ -84,8 +86,13 @@ function AccountCreation() {
     }
     if (password === "") {
       setPasswordError("Password can't be blank");
-    } else if (isStrongPassword!="valid") {
+    } else if (isStrongPassword!=="valid") {
       setPasswordError(isStrongPassword);
+    }
+    if (passwordMatch === "") {
+      setPasswordMatchError("Please confirm your password");
+    } else if (passwordMatch !== password) {
+      setPasswordMatchError("Passwords do not match");
     }
   };
 
@@ -190,6 +197,17 @@ function AccountCreation() {
             />
             <div id="passwordError">{passwordError}</div>
           </div>
+          <div>
+            <label htmlFor="password">Confirm Password</label>
+            <input
+              type="password"
+              name="passwordMatch"
+              id="passwordMatch"
+              value={passwordMatch}
+              onChange={(e) => setPasswordMatch(e.target.value)}
+            />
+            <div id="passwordMatchError">{passwordMatchError}</div>
+          </div>
           <button type="submit">Submit</button>
         </form>
       </div>
@@ -197,4 +215,4 @@ function AccountCreation() {
   );
 }
 
-export default AccountCreation;
+export default AccountCreation
