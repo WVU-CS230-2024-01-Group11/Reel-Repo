@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useLocation } from 'react-router-dom';
 import theMovieDb from '../Utils/themoviedb';
 import './Details.css';
@@ -9,7 +9,7 @@ import  Modal from 'react-bootstrap/Modal';
 import { FormControl, ModalBody, ModalFooter } from 'react-bootstrap';
 import { getMovieWatchProviders, getTVWatchProviders } from '../Utils/watchProviders';
 import NavigationBar from '../NavigationBar/NavigationBar';
-
+import { UsernameContext } from '../Contexts/UsernameContext';
 
 
 function Details() {
@@ -23,7 +23,7 @@ function Details() {
     const [selectedEpisode, setSelectedEpisode] = useState('');
     const [watchProviders, setWatchProviders] = useState('');
     const location = useLocation();
-    const username = "test";
+    const {username, setUsername}=useContext(UsernameContext);
 
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);

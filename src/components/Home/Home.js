@@ -10,9 +10,11 @@ import { useNavigate } from 'react-router-dom';
 import { useContext } from "react";
 import  { UsernameContext } from '../Contexts/UsernameContext';
 
+
 function Home() {
+  const {username,setUsername}=useContext(UsernameContext);
   const navigate = useNavigate();
-    //const username = "test";
+    setUsername("test");
     const [friendsRatings, setFriendsRatings] = useState([]);
 
     useEffect(() => {
@@ -24,7 +26,7 @@ function Home() {
       fetchData();
     }, [username]);
 
-    const {username, setUsername}=useContext(UsernameContext);
+  
     return (
         <>
     <NavigationBar/>

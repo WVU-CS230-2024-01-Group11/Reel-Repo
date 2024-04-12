@@ -129,7 +129,7 @@ function AccountCreation() {
     e.preventDefault();
     console.log("Form submitted");
     clearErrors();
-    const isValid=validateInput();
+    const isValid=await validateInput();
     if(!isValid){
       console.log("inputs not valid");
       return;
