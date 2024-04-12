@@ -93,12 +93,8 @@
   }
 
   .card-tall{
+    overflow-y: auto;
     width: 20vw;
-    height: 42vw;
-  }
-
-  .card-big{
-    width: 42vw;
     height: 42vw;
   }
 
@@ -116,3 +112,59 @@
     border-radius: 50%;
     background-image: conic-gradient(orange 64%, blue 64%, blue 81%, black 81%);
   }
+
+  .card-big {
+    width: 42vw;
+    height: 42vw;
+    overflow: auto; /* Allow scrolling if content overflows */
+}
+
+.card-big table {
+    width: 100%;
+    min-width: 500px; /* Set a minimum width for the table */
+    table-layout: fixed;
+}
+
+.card-big th, .card-big td {
+    padding: 1vw; /* Use responsive units for padding */
+    border-bottom: 1px solid #ddd;
+    word-wrap: break-word;
+    
+}
+
+.card-big th {
+    background-color: #b6b6b6;
+    color: white;
+    text-align: center;
+}
+
+.card-big td {
+  font-size: 0.9vw;
+  padding: 1vw;
+}
+
+.card-big td img {
+    width: 3vw; /* Use responsive units for image width */
+    height: auto;
+    display: block;
+    margin: 0 auto;
+    margin-right: 0.5vw;
+}
+
+.card-big tr:hover {
+    background-color: #f5f5f5;
+}
+.friend-username {
+    font-weight: bold; /* Make the username bold */
+    border-right: 1px solid #ddd; /* Add a border to the right */
+}
+
+.movie-name, .show-name {
+    text-align: left; /* Align the movie and show names to the left */
+    font-weight: 600; /* Light bold */
+    padding-left: 0.5vw;
+}
+
+.card-big thead {
+  font-size: 1.2vw;
+}

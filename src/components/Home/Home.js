@@ -3,8 +3,23 @@
 
 import "./Home.css"
 import NavigationBar from "../NavigationBar/NavigationBar";
+import { useState, useEffect } from "react";
+import { getFriendsTopRatings } from "../../services/database";
+import { useNavigate } from 'react-router-dom';
 
 function Home() {
+  const navigate = useNavigate();
+    const username = "test";
+    const [friendsRatings, setFriendsRatings] = useState([]);
+
+    useEffect(() => {
+      const fetchData = async () => {
+        const ratings = await getFriendsTopRatings(username);
+        setFriendsRatings(ratings);
+      };
+
+      fetchData();
+    }, [username]);
 
     return (
         <>
@@ -17,8 +32,32 @@ function Home() {
       <div className="card-label">Ratings</div>
     </div>
     <div className="card-big card3">
-      <div className="card-label">Friend Rankings</div>
-    </div>
+    <div className="card-label">Friend Rankings</div>
+    <table>
+        <thead>
+            <tr>
+            <th>Friend</th>
+            <th colSpan="2">Top Movie</th>
+            <th>Rating</th>
+            <th colSpan="2">Top TV Show</th>
+            <th>Rating</th>
+            </tr>
+        </thead>
+        <tbody>
+            {friendsRatings.map(friend => (
+                <tr key={friend.friend_username}>
+                    <td className="friend-username" >{friend.friend_username}</td>
+                    <td><img src={`https://image.tmdb.org/t/p/w200${friend.top_movie_poster}`} alt={friend.top_movie} onClick={()=>navigate(`/details/movie/${friend.top_movie_id}`)} /></td>
+                    <td className="movie-name" onClick={()=>navigate(`/details/movie/${friend.top_movie_id}`)}>{friend.top_movie}</td>
+                    <td className="movie-rating">{friend.movie_rating}</td>
+                    <td><img src={`https://image.tmdb.org/t/p/w200${friend.top_show_poster}`} alt={friend.top_show} onClick={()=>navigate(`/details/tv/${friend.top_show_id}`)}/></td>
+                    <td className="show-name" onClick={()=>navigate(`/details/tv/${friend.top_show_id}`)}>{friend.top_show}</td>
+                    <td className="show-rating" >{friend.show_rating}</td>
+                </tr>
+            ))}
+        </tbody>
+      </table>
+  </div>
     <div className="card-wide card4">
       <div className="card-label">Genres Piechart</div>
     </div>
@@ -26,7 +65,7 @@ function Home() {
       <div className="card-label">Recommended &amp; Suggested</div>
     </div>
     <div className="card-long card6">
-      <div className="card-label">Previously Watched</div>
+      <div className="card-label">Watch Later</div>
     </div>
   </div>
 </>

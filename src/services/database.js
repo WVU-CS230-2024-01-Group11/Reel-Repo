@@ -315,3 +315,126 @@ export const checkFriendship = async (user1, user2) => {
       console.error('Error checking friendship status:', error);
   }
 };
+
+export const addMovieToWatchLater = async (user_id, movie_id) => {
+  try {
+      const response = await axios.post(`${baseURL}/watch-later/movies`, { user_id, movie_id });
+      return response.data;
+  } catch (error) {
+      console.error('Error adding movie to watch later list:', error);
+  }
+};
+
+export const addTVShowToWatchLater = async (user_id, show_id) => {
+  try {
+      const response = await axios.post(`${baseURL}/watch-later/tv`, { user_id, show_id });
+      return response.data;
+  } catch (error) {
+      console.error('Error adding TV show to watch later list:', error);
+  }
+};
+export const getWatchLaterMoviesView = async (user_id) => {
+  try {
+      const response = await axios.get(`${baseURL}/watch-later/movies-view`, { params: { user_id } });
+      return response.data;
+  } catch (error) {
+      console.error('Error fetching watch later movies view:', error);
+  }
+};
+export const getWatchLaterTVView = async (user_id) => {
+  try {
+      const response = await axios.get(`${baseURL}/watch-later/tv-view`, { params: { user_id } });
+      return response.data;
+  } catch (error) {
+      console.error('Error fetching watch later TV view:', error);
+  }
+};
+export const getRecentlyWatchedMovies = async (username) => {
+  try {
+      const response = await axios.get(`${baseURL}/recently-watched/movies`, { params: { username } });
+      return response.data;
+  } catch (error) {
+      console.error('Error fetching recently watched movies:', error);
+  }
+};
+export const getRecentlyWatchedEpisodes = async (username) => {
+  try {
+      const response = await axios.get(`${baseURL}/recently-watched/episodes`, { params: { username } });
+      return response.data;
+  } catch (error) {
+      console.error('Error fetching recently watched episodes:', error);
+  }
+};
+export const getAverageEpisodeRating = async (username) => {
+  try {
+      const response = await axios.get(`${baseURL}/average-rating/episodes`, { params: { username } });
+      return response;
+  } catch (error) {
+      console.error('Error fetching average episode rating:', error);
+  }
+};
+export const getAverageMovieRating = async (username) => {
+  try {
+      const response = await axios.get(`${baseURL}/average-rating/movies`, { params: { username } });
+      return response;
+  } catch (error) {
+      console.error('Error fetching average movie rating:', error);
+  }
+};
+export const getUserTopRatedMovie = async (username) => {
+  try {
+      const response = await axios.get(`${baseURL}/top-rated/movie`, { params: { username } });
+      return response.data;
+  } catch (error) {
+      console.error('Error fetching top rated movie:', error);
+  }
+};
+export const getUserTopRatedTVShow = async (username) => {
+  try {
+      const response = await axios.get(`${baseURL}/top-rated/tv-show`, { params: { username } });
+      return response.data;
+  } catch (error) {
+      console.error('Error fetching top rated TV show:', error);
+  }
+};
+export const getUserMovieWatchHistory = async (username) => {
+  try {
+      const response = await axios.get(`${baseURL}/watch-history/movies`, { params: { username } });
+      return response.data;
+  } catch (error) {
+      console.error('Error fetching movie watch history:', error);
+  }
+};
+export const getUserEpisodeWatchHistory = async (username) => {
+  try {
+      const response = await axios.get(`${baseURL}/watch-history/episodes`, { params: { username } });
+      return response.data;
+  } catch (error) {
+      console.error('Error fetching episode watch history:', error);
+  }
+};
+export const deleteUserMovieEntry = async (username, movie_id, date_watched) => {
+  try {
+      const response = await axios.delete(`${baseURL}/user-movies`, { data: { username, movie_id, date_watched } });
+      return response.data;
+  } catch (error) {
+      console.error('Error deleting movie entry:', error);
+  }
+};
+export const deleteUserTVEntry = async (username, show_id, season_number, episode_number, date_watched) => {
+  try {
+      const response = await axios.delete(`${baseURL}/user-tv`, { data: { username, show_id, season_number, episode_number, date_watched } });
+      return response.data;
+  } catch (error) {
+      console.error('Error deleting TV episode entry:', error);
+  }
+};
+export const getFriendsTopRatings = async (username) => {
+  try {
+      const response = await axios.get(`${baseURL}/friends-top-ratings`, { params: { username } });
+      return response.data;
+  } catch (error) {
+      console.error('Error fetching friends\' top ratings:', error);
+      return [];
+  }
+};
