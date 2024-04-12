@@ -8,7 +8,7 @@ import { sendFriendRequest,
 removeFriend, getSentFriendRequests,} from '../../services/database';
 
 const FriendsDemo = () => {
-    const currentUser = "emily";
+    const currentUser = "test";
     const [targetUser, setTargetUser] = useState('');
     const [receivedRequests, setReceivedRequests] = useState([]);
     const [sentRequests, setSentRequests] = useState([]);

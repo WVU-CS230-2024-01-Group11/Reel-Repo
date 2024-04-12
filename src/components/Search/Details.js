@@ -3,7 +3,7 @@ import { useLocation } from 'react-router-dom';
 import theMovieDb from '../Utils/themoviedb';
 import './Details.css';
 import Button from 'react-bootstrap/Button';
-import { addEpisodeToWatched, addMovieToWatched } from '../../services/database';
+import { addEpisodeToWatched, addMovieToWatched, addMovieToWatchLater, addTVShowToWatchLater } from '../../services/database';
 import Form from 'react-bootstrap/Form';
 import  Modal from 'react-bootstrap/Modal';
 import { FormControl, ModalBody, ModalFooter } from 'react-bootstrap';
@@ -96,6 +96,15 @@ function Details() {
         }
     }
 
+    function handleWatchLater(event) {
+        if (mediaType == 'movie') {
+            addMovieToWatchLater(username, mediaId);
+        }
+        else {
+            addTVShowToWatchLater(username, mediaId);
+        }
+    }
+
     return (
         <div>
             <NavigationBar/>
@@ -151,7 +160,7 @@ function Details() {
                         </Button>
                     </ModalFooter>
                 </Modal>
-                    <Button variant="secondary">Watch Later</Button>
+                    <Button variant="secondary" onClick={handleWatchLater}>Watch Later</Button>
                     <div className='overviewDetails'>{mediaDetails.overview}</div>
                     <div className='details-grid'>
                     <div className='releaseYear'>Release year
@@ -271,7 +280,7 @@ function Details() {
                         </Button>
                     </ModalFooter>
                 </Modal>
-                    <Button variant="secondary">Watch Later</Button>
+                    <Button variant="secondary" onClick={handleWatchLater}>Watch Later</Button>
                     <div className='tv-overviewDetails'>{mediaDetails.overview}</div>
                     <div className='tv-details-grid'>
                     <div className='tv-seasonsBox'>Number of seasons

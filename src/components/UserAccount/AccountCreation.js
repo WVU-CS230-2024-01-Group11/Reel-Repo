@@ -30,36 +30,32 @@ function AccountCreation() {
     setPasswordMatchError('');
   };
 
-  //checks if email format is valid 
   const isValidEmail = () => {
-    //Email regex, seems to cover all cases 
     const format = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return format.test(email.toLowerCase());
   };
 
-  //checks for password strength, returns specific message to weakness 
   const isStrongPassword = () => {
     const hasUpper = /[A-Z]/.test(password);
     const hasLower = /[a-z]/.test(password);
     const hasSpecial = /[!@#$%^&*()~`?/;:'"<>]/.test(password);
     const length = password.length;
-    let message="";
+    let message = "";
 
     if (hasUpper && hasLower && hasSpecial && length >= 8) {
-      message="valid"
-      return message;
+      return "valid";
     } else {
       if (!hasLower) {
-        message+="Password must have a lowercase letter\n";
+        message += "Password must have a lowercase letter\n";
       }
       if (!hasUpper) {
-        message+="Password must have an uppercase letter\n";
+        message += "Password must have an uppercase letter\n";
       }
       if (!hasSpecial) {
-        message+="Password must have at least one special character\n";
+        message += "Password must have at least one special character\n";
       }
       if (length < 8) {
-        message+="Password must be at least 8 characters long";
+        message += "Password must be at least 8 characters long";
       }
       return message;
     }
@@ -93,6 +89,7 @@ function AccountCreation() {
       setUserError("Username is already taken");
       return false;
     }
+
     if (email === "") {
       setEmailError("Email can't be blank");
       return false;
@@ -100,14 +97,17 @@ function AccountCreation() {
       setEmailError("Provide a valid email address");
       return false;
     }
+
     if (firstName === "") {
       setFirstError("First name can't be blank");
       return false;
     }
+
     if (lastName === "") {
       setLastError("Last name can't be blank");
       return false;
     }
+
     if (password === "") {
       setPasswordError("Password can't be blank");
       return false;
@@ -222,7 +222,6 @@ function AccountCreation() {
       </div>
     </div>
     </div>
-    
   );
 }
 
