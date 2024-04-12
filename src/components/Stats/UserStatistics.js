@@ -1,11 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { totalMovieWatchTime,movieGenreCounts, allWatchedMovies, moviesWatchedMonth, moviesByRating, moviesWatchedYear} from '../../services/database';
-
+import { totalMovieWatchTime,movieGenreCounts, allWatchedMovies, moviesWatchedMonth, moviesByRating, moviesWatchedYear, getUserTopRatedMovie, getUserTopRatedTVShow} from '../../services/database';
+import './UserStatistics.css'
+import NavigationBar from '../NavigationBar/NavigationBar';
+import TVStats from '../UserAccount/TVStats';
+import TimeStats from '../UserAccount/TimeStats';
 
 function UserStatistics({ username="test" }) {
  
   const [stats, setStats] = useState({
-    totalMovieWatchTime: [],
+    totalMovieWatchTime: [0],
+    getUserTopRatedMovie: [0],
+    getUserTopRatedTVShow: [0],
     movieGenreCount: [],
     allWatchedMovies: [],
     moviesWatchedMonth: [],
@@ -20,6 +25,8 @@ function UserStatistics({ username="test" }) {
   
     const data = {
       totalMovieWatchTime: await totalMovieWatchTime(username),
+      getUserTopRatedMovie: await getUserTopRatedMovie(username),
+      getUserTopRatedTVShow: await getUserTopRatedTVShow(username),
       movieGenreCount: await movieGenreCounts(username),
       allWatchedMovies: await allWatchedMovies(username),
       moviesWatchedMonth: await moviesWatchedMonth(username),
@@ -43,7 +50,9 @@ function UserStatistics({ username="test" }) {
   <div className="UserStatistics">
   <h2>User Statistics for {username}</h2>
   <div className="Stat">
-    <p>Total Watch Time: {stats.totalMovieWatchTime}</p>
+    <p>Top Rated Movie: {stats.getUserTopRatedMovie[0].movie_name}</p>
+    <p>Top Rated Show: {stats.getUserTopRatedTVShow[0].show_name}</p>
+    <p>Total Watch Time: {stats.totalMovieWatchTime[0].total_watch_time}</p>
     <p>Movie Genre Count:</p>
     <ul>
       {stats.movieGenreCount.map((genre, index) => (
