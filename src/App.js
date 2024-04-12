@@ -14,12 +14,13 @@ import Settings from './components/Settings/Settings';
 import TVStats from './components/UserAccount/TVStats';
 import TimeStats from './components/UserAccount/TimeStats';
 import FriendsDemo from './components/FriendsTesting/FriendsDemo';
+import {UsernameContext} from './components/Contexts/UsernameContext';
 
 // Used to move around website, different pages
-export const UsernameContext = React.createContext(null);
+
 
 function App() {
-  const [username, setUser] = useState(null);
+  const [username, setUsername] = useState("");
 
   //Each Route is a new page. Path = what you want the extension to be. "/" is the start up page
   // If you want to dynamically add a user Id or something, refer to the Details :id. It adds the movie id
@@ -28,7 +29,7 @@ function App() {
   // Component must be exported in its own file and then imported here for it to work
   return (
     //Username global context wrapper
-    <UsernameContext.Provider value={{  username: username, setUser: setUser}}>
+    <UsernameContext.Provider value={{username, setUsername}}>
       <BrowserRouter>
         <Routes>
           <Route

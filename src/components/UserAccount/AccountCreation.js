@@ -1,10 +1,12 @@
-import addNewAccount from '../../services/database';
-import React, { useState } from 'react';
+import {addNewAccount, fetchAccountData, fetchUsernames} from '../../services/database';
+import React, { useState,useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-//import './AccountCreation.css';
+import  { UsernameContext } from '../Contexts/UsernameContext';
+import ReCAPTCHA from "react-google-recaptcha";
+//6Lc3SrkpAAAAAMwwC84Vcu_qXSQS7WFrmpLb-pPC
 function AccountCreation() {
   const navigate = useNavigate();
-  const [username, setUsername] = useState('');
+  const {username, setUsername}=useContext(UsernameContext);
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
@@ -16,6 +18,8 @@ function AccountCreation() {
   const [emailError, setEmailError] = useState('');
   const [passwordError, setPasswordError] = useState('');
   const [passwordMatchError, setPasswordMatchError] = useState('');
+  const [capVal, setCapVal]=useState(null);
+
   //Clears error messages
   const clearErrors = () => {
     setUserError('');
@@ -23,6 +27,7 @@ function AccountCreation() {
     setLastError('');
     setEmailError('');
     setPasswordError('');
+    setPasswordMatchError('');
   };
 
   //checks if email format is valid 
@@ -59,40 +64,63 @@ function AccountCreation() {
       return message;
     }
   };
-  //Checks username availability 
-  const usernameTaken = () => {
-   // const data= fetchAccountData();
-    //return data.find(user => user.username === username);;
+  
+  //Checks if username is already in db
+  const usernameTaken = async () => {
+    console.log("fetching usernames");
+    const users= await fetchUsernames();
+    console.log("looking for usernames");
+    const foundUser= users.find((user)=> user.username===username)
+      if (foundUser){
+        if (foundUser.password===password){
+          return true;
+        }
+        else{
+          console.log("username taken");
+          return false;
+        }
+      }
   }
 
   //Checks inputs
-  const validateInput = () => {
+  const validateInput = async() => {
     clearErrors();
+    const isTaken=await usernameTaken();
     if (username === "") {
       setUserError("Username can't be blank");
-    } else if (!usernameTaken()){
+      return false;
+    } else if (isTaken){
       setUserError("Username is already taken");
+      return false;
     }
     if (email === "") {
       setEmailError("Email can't be blank");
+      return false;
     } else if (!isValidEmail()) {
       setEmailError("Provide a valid email address");
+      return false;
     }
     if (firstName === "") {
       setFirstError("First name can't be blank");
+      return false;
     }
     if (lastName === "") {
       setLastError("Last name can't be blank");
+      return false;
     }
     if (password === "") {
       setPasswordError("Password can't be blank");
+      return false;
     } else if (isStrongPassword!=="valid") {
       setPasswordError(isStrongPassword);
+      return false;
     }
     if (passwordMatch === "") {
       setPasswordMatchError("Please confirm your password");
+      return false;
     } else if (passwordMatch !== password) {
       setPasswordMatchError("Passwords do not match");
+      return false;
     }
   };
 
@@ -100,42 +128,18 @@ function AccountCreation() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log("Form submitted");
-    let valid = false;
-  //Ensures all inputs are valid before adding new user
-  do {
-    console.log("Form submitted");
-    validateInput();
-    valid = !(userError || firstError || lastError || emailError || passwordError);
-    if (!valid) {
-      console.log("Fix the errors and resubmit.");
+    clearErrors();
+    const isValid=validateInput();
+    if(!isValid){
+      console.log("inputs not valid");
+      return;
     }
-  } while (!valid);
-  //Adding new user
-  let newUser={username, firstName, lastName, email, password};
-  try {
+    //Adding new user
+    console.log("adding user");
+    let newUser={username, firstName, lastName, email, password};
     const response= await addNewAccount(newUser);
-    if (response.success) {
-      console.log("User created success");
-      setUsername('');
-      setFirstName('');
-      setLastName('');
-      setEmail('');
-      setPassword('');
-      clearErrors();
-    } else {
-      console.log("Failed to create user", response.error);
-    }
-  } catch (error) {
-    console.error("Error adding new user", error);
-      setUsername('Username already taken');
-      setFirstName('');
-      setLastName('');
-      setEmail('');
-      setPassword('');
-      clearErrors();
-  }
-  };
-  
+    navigate("/");
+  } 
 
   return (
     <div className='content'>
@@ -209,7 +213,11 @@ function AccountCreation() {
             />
             <div id="passwordMatchError">{passwordMatchError}</div>
           </div>
-          <button type="submit">Submit</button>
+          <ReCAPTCHA
+          sitekey="6Lc3SrkpAAAAAMwwC84Vcu_qXSQS7WFrmpLb-pPC"
+          onChange={(val)=>setCapVal(val)} 
+          />
+          <button type="submit" disabled={!capVal}>Submit</button>
         </form>
       </div>
     </div>

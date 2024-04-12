@@ -1,37 +1,44 @@
-import { fetchAccountData } from '../../services/database';
 import React, { useState,useContext } from 'react';
-import { UsernameContext } from '../../App';
-
+import { UsernameContext } from '../Contexts/UsernameContext';
+import { fetchAccountData } from '../../services/database';
+import { useNavigate } from 'react-router-dom';
+import ReCAPTCHA from "react-google-recaptcha";
+//6Lc3SrkpAAAAAMwwC84Vcu_qXSQS7WFrmpLb-pPC
 function AccountLogin(){
-  const [username, setUsername] = useState('');
+  const {username,setUsername}=useContext(UsernameContext);
+  const navigate = useNavigate();
   const [password, setPassword] = useState('');
   const [userError, setUserError] = useState('');
   const [passwordError, setPasswordError] = useState('');
-  const {setUser} = useContext(UsernameContext);
+  const [capVal, setCapVal]=useState(null);
 
-
-  const validateInfo = () => {
-    //const data= fetchAccountData();
-   // return data.find(user => user.username === username);;
-  }
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     console.log("Form submitted");
     let valid = false;
+    setUserError("");
+    setPasswordError("");
   //Ensures all inputs are valid before adding new user
-  do {
-    console.log("Form submitted");
-    //validateInfo();
-    valid = !(userError || passwordError);
-    if (!valid) {
-      console.log("Fix the errors and resubmit.");
+    try {
+      const users= await fetchAccountData();
+      const foundUser= users.find((user)=> user.username===username)
+      if (foundUser){
+        if (foundUser.password===password){
+          navigate("/"); 
+        }
+        else{
+          setPasswordError("Incorrect password");
+        }
+      }
+      else{
+        setUserError("Username not found");
+      }
+      console.log(foundUser);
     }
-  } while (!valid);
-    setUser(username);
+    catch(error){
 
-  };
-  
-
+    }
+  }
 
   return (
     <div className="App">
@@ -60,10 +67,14 @@ function AccountLogin(){
             />
             <div id="passwordError">{passwordError}</div>
           </div>
-          <button type="submit">Submit</button>
+          <ReCAPTCHA
+          sitekey="6Lc3SrkpAAAAAMwwC84Vcu_qXSQS7WFrmpLb-pPC"
+          onChange={(val)=>setCapVal(val)} 
+          />
+          <button type="submit" disabled={!capVal}>Submit</button>
         </form>
       </div>
     </div>
   );
-  }
+}
 export default AccountLogin;

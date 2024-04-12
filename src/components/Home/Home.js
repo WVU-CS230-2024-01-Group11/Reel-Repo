@@ -1,26 +1,42 @@
 // Temporary homepage, shows how to navigate via useNavigate
 // Needed to get to search as of right now
 
-import { useNavigate } from 'react-router-dom';
+
+import "./Home.css"
+import NavigationBar from "../NavigationBar/NavigationBar";
+import { useContext } from "react";
+import  { UsernameContext } from '../Contexts/UsernameContext';
 
 function Home() {
-
-    //Pulls username from global context, changes homepage message depending on loggin status 
-    const { username } = useContext(UsernameContext);
-    let userDisplay;
-    if (username) {
-        userDisplay = <p>Logged in as {username}</p>;
-    } else {
-        userDisplay = <p>Please log in.</p>;
-    }
+    const {username, setUsername}=useContext(UsernameContext);
     return (
-        <div>
-            <h1>Temp Homepage</h1>
-            <button onClick={()=>navigate('/search')}>Search</button>
-            <button onClick={()=>navigate('/stats')}>Stats</button>
-            <button onClick={()=>navigate('/account-creation')}>Account Creation</button>
-            <button onClick={()=>navigate('/account-login')}>Account Login</button>
-        </div>
+        <>
+    <NavigationBar/>
+    <div style={{ marginTop: '150px' }}>
+    Logged in as: {username} 
+   </div>
+  <div className="content">
+    <div className="card-normal card1">
+      <div className="card-label">Time</div>
+    </div>
+    <div className="card-normal card2">
+      <div className="card-label">Ratings</div>
+    </div>
+    <div className="card-big card3">
+      <div className="card-label">Friend Rankings</div>
+    </div>
+    <div className="card-wide card4">
+      <div className="card-label">Genres Piechart</div>
+    </div>
+    <div className="card-long card5">
+      <div className="card-label">Recommended &amp; Suggested</div>
+    </div>
+    <div className="card-long card6">
+      <div className="card-label">Previously Watched</div>
+    </div>
+   
+  </div>
+</>
     );
 }
 
