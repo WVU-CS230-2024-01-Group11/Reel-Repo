@@ -1,4 +1,5 @@
-:root {
+
+  :root {
     font-size: 16pt;
     font-family: "Arial";
     --text-primary: #b6b6b6;
@@ -6,6 +7,16 @@
     --bg-primary: #23232e;
     --bg-secondary: #141418;
     --transition-speed: 600ms;
+  }
+
+  .content{
+    display: grid;
+    justify-content: center;
+    align-content: center;
+    margin: 100px;
+    margin-top: 12vw;
+    padding: auto;
+    gap: 2vw;
   }
 
   .movie{
@@ -21,6 +32,23 @@
     flex-direction: column;
     background-color: lightgrey;
     padding: 50px;
+    
     border-radius: 40px;
     width: 100%;
+  }
+
+  .card-big.repositoryCard {
+    height: fit-content;
+    width: 90vw !important;
+    padding-top: 0px !important;
+    margin-top: 0px !important;
+    min-height: 45vw;
+  }
+  .card-big.repositoryCard:hover {
+  
+    width: 93vw !important;
+  }
+
+  .Tabs {
+    padding: 0;
   }
