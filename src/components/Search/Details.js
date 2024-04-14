@@ -1,3 +1,4 @@
+// Import necessary React libraries and hooks, navigation tools, themoviedb API, and components
 import React, { useState, useEffect, useContext } from 'react';
 import { useLocation } from 'react-router-dom';
 import theMovieDb from '../Utils/themoviedb';
@@ -13,6 +14,7 @@ import { UsernameContext } from '../Contexts/UsernameContext';
 
 
 function Details() {
+    // State hooks for managing media details, types, ID, rating, and modal visibility
     const [mediaDetails, setMediaDetails] = useState(null);
     const [mediaType, setMediaType] = useState("");
     const [mediaId, setMediaId] = useState('');
@@ -25,9 +27,12 @@ function Details() {
     const location = useLocation();
     const {username, setUsername}=useContext(UsernameContext);
 
+    // Function to close the modal dialog
     const handleClose = () => setShow(false);
+    // Function to open the modal dialog
     const handleShow = () => setShow(true);
 
+    // Effect hook to fetch media details based on the current URL path
     useEffect(() => {
         const pathParts = location.pathname.split('/');
         const type = pathParts[pathParts.length - 2]; 
@@ -48,20 +53,23 @@ function Details() {
         }
     }, [location.pathname]);
 
+    // Callback function on successful retrieval of media details
     function detailsSuccess(details) {
         const parsedDetails = JSON.parse(details);
         setMediaDetails(parsedDetails);
     }
 
-
+    // Error callback function
     function errorCB(error) {
         console.error('Error fetching data:', error);
     }
 
+    // Event handler for watched button to open modal
     function handleWatchedButton(event) {
         handleShow();
     }
 
+    // Submit movie data to the database
     function submitMovieData(event) {
         event.preventDefault();
         handleClose();
@@ -74,6 +82,7 @@ function Details() {
         addMovieToWatched(movieData);
     }
 
+    // Submit TV show data to the database
     function submitTVData(event) {
         event.preventDefault();
         handleClose();
@@ -95,7 +104,7 @@ function Details() {
             addEpisodeToWatched(episodeData);
         }
     }
-
+    // Event handler for adding to watch later list
     function handleWatchLater(event) {
         if (mediaType == 'movie') {
             addMovieToWatchLater(username, mediaId);
@@ -105,6 +114,7 @@ function Details() {
         }
     }
 
+    // Render function displaying navigation bar, media details, buttons for actions, and modal dialogs
     return (
         <div>
             <NavigationBar/>

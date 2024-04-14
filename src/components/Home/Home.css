@@ -163,6 +163,7 @@
     text-align: left; /* Align the movie and show names to the left */
     font-weight: 600; /* Light bold */
     padding-left: 0.5vw;
+    font-size: 0.8vw !important;
 }
 
 .card-big thead {
