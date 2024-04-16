@@ -10,7 +10,7 @@ import  Modal from 'react-bootstrap/Modal';
 import { FormControl, ModalBody, ModalFooter } from 'react-bootstrap';
 import { getMovieWatchProviders, getTVWatchProviders } from '../Utils/watchProviders';
 import NavigationBar from '../NavigationBar/NavigationBar';
-import { UsernameContext } from '../Contexts/UsernameContext';
+import { useUsername } from '../Contexts/UsernameContext';
 
 
 function Details() {
@@ -25,7 +25,7 @@ function Details() {
     const [selectedEpisode, setSelectedEpisode] = useState('');
     const [watchProviders, setWatchProviders] = useState('');
     const location = useLocation();
-    const {username, setUsername}=useContext(UsernameContext);
+    const { username, setUsername } = useUsername();
 
     // Function to close the modal dialog
     const handleClose = () => setShow(false);
@@ -106,13 +106,24 @@ function Details() {
     }
     // Event handler for adding to watch later list
     function handleWatchLater(event) {
-        if (mediaType == 'movie') {
-            addMovieToWatchLater(username, mediaId);
+        if (mediaType === 'movie') {
+            const movieData = {
+                username,
+                movieData: mediaDetails,
+            };
+            addMovieToWatchLater(movieData);
         }
         else {
-            addTVShowToWatchLater(username, mediaId);
+                
+                const showData = {
+                    username,
+                    showDetails: mediaDetails,
+                };
+
+                addTVShowToWatchLater(showData);
+            }
         }
-    }
+    
 
     // Render function displaying navigation bar, media details, buttons for actions, and modal dialogs
     return (

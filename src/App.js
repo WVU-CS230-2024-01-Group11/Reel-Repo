@@ -1,5 +1,5 @@
 import React from 'react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 import Details from './components/Search/Details';
@@ -14,13 +14,17 @@ import Settings from './components/Settings/Settings';
 import TVStats from './components/UserAccount/TVStats';
 import TimeStats from './components/UserAccount/TimeStats';
 import FriendsDemo from './components/FriendsTesting/FriendsDemo';
-import {UsernameContext} from './components/Contexts/UsernameContext';
-
+import { UsernameProvider } from './components/Contexts/UsernameContext';
 // Used to move around website, different pages
 
 
 function App() {
-  const [username, setUsername] = useState("");
+  const [username, setUsername] = useState(localStorage.getItem('username') || "");
+
+  // Update local storage whenever username changes
+  useEffect(() => {
+    localStorage.setItem('username', username);
+  }, [username]);
 
   //Each Route is a new page. Path = what you want the extension to be. "/" is the start up page
   // If you want to dynamically add a user Id or something, refer to the Details :id. It adds the movie id
@@ -29,13 +33,13 @@ function App() {
   // Component must be exported in its own file and then imported here for it to work
   return (
     //Username global context wrapper
-    <UsernameContext.Provider value={{username, setUsername}}>
+    <UsernameProvider>
       <BrowserRouter>
         <Routes>
           <Route
             exact 
             path="/"
-            element={<Home />}
+            element={<AccountLogin />}
           />
           <Route
             exact 
@@ -69,8 +73,8 @@ function App() {
             />
             <Route 
             exact 
-            path="/account-login" 
-            element={<AccountLogin />} 
+            path="/home" 
+            element={<Home />} 
             />
             <Route
             exact
@@ -89,7 +93,7 @@ function App() {
             />
         </Routes>
       </BrowserRouter>
-      </UsernameContext.Provider>
+      </UsernameProvider>
   )
 }
 

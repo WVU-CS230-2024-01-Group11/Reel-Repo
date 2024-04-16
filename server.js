@@ -319,7 +319,7 @@ app.get('/api/check-friendship', (req, res) => {
 app.get('/api/watch-later/movies-view', async (req, res) => {
     const { user_id } = req.query;
     try {
-        const [movies] = await queryAsync('SELECT * FROM WatchLaterMoviesView WHERE user_id = ?', [user_id]);
+        const movies = await queryAsync('SELECT * FROM WatchLaterMoviesView WHERE user_id = ?', [user_id]);
         res.json(movies);
     } catch (error) {
         console.error('Error fetching watch later movies view:', error);
@@ -329,7 +329,7 @@ app.get('/api/watch-later/movies-view', async (req, res) => {
 app.get('/api/watch-later/tv-view', async (req, res) => {
     const { user_id } = req.query;
     try {
-        const [shows] = await queryAsync('SELECT * FROM WatchLaterTVView WHERE user_id = ?', [user_id]);
+        const shows = await queryAsync('SELECT * FROM WatchLaterTVView WHERE user_id = ?', [user_id]);
         res.json(shows);
     } catch (error) {
         console.error('Error fetching watch later TV view:', error);
@@ -339,7 +339,7 @@ app.get('/api/watch-later/tv-view', async (req, res) => {
 app.get('/api/recently-watched/movies', async (req, res) => {
     const { username } = req.query;
     try {
-        const [movies] = await queryAsync('SELECT * FROM RecentlyWatchedMovies WHERE username = ?', [username]);
+        const movies = await queryAsync('SELECT * FROM RecentlyWatchedMovies WHERE username = ?', [username]);
         res.json(movies);
     } catch (error) {
         console.error('Error fetching recently watched movies:', error);
@@ -349,7 +349,7 @@ app.get('/api/recently-watched/movies', async (req, res) => {
 app.get('/api/recently-watched/episodes', async (req, res) => {
     const { username } = req.query;
     try {
-        const [episodes] = await queryAsync('SELECT * FROM RecentlyWatchedEpisodes WHERE username = ?', [username]);
+        const episodes = await queryAsync('SELECT * FROM RecentlyWatchedEpisodes WHERE username = ?', [username]);
         res.json(episodes);
     } catch (error) {
         console.error('Error fetching recently watched episodes:', error);
@@ -537,27 +537,63 @@ app.post('/api/accept-friend-request', async (req, res) => {
 });
 
 app.post('/api/watch-later/movies', async (req, res) => {
-    const { user_id, movie_id } = req.body;
+    const { username, movieData } = req.body;  // Assuming movieData includes all necessary movie details
+
     try {
-        await queryAsync('INSERT IGNORE INTO watchLaterMovies (user_id, movie_id) VALUES (?, ?)', [user_id, movie_id]);
+        await queryAsync('START TRANSACTION');
+
+        // Insert or update movie details
+        await queryAsync(
+            'INSERT INTO movies (movie_id, movie_name, average_rating, poster_path, runtime, release_date) VALUES (?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE movie_id=movie_id', 
+            [movieData.id, movieData.title, movieData.vote_average, movieData.poster_path, movieData.runtime, movieData.release_date]
+        );
+
+        for (const genre of movieData.genres) {
+            await queryAsync('INSERT IGNORE INTO movieGenres (movieGenre_id, movieGenre_name) VALUES (?, ?)', [genre.id, genre.name]);
+            await queryAsync('INSERT IGNORE INTO MovieGenreAssociations (movie_id, genre_id) VALUES (?, ?)', [movieData.id, genre.id]);
+        }
+
+        // Add to watch later list
+        await queryAsync('INSERT IGNORE INTO watchLaterMovies (user_id, movie_id) VALUES (?, ?)', [username, movieData.id]);
+
+        await queryAsync('COMMIT');
         res.send('Movie added to watch later list successfully');
     } catch (error) {
+        await queryAsync('ROLLBACK');
         console.error('Error adding movie to watch later list:', error);
         res.status(500).send('Error adding movie to watch later list');
     }
 });
 
 app.post('/api/watch-later/tv', async (req, res) => {
-    const { user_id, show_id } = req.body;
+    const { username, showDetails } = req.body;  // showDetails includes show ID and other necessary details
+
     try {
-        await queryAsync('INSERT IGNORE INTO watchLaterTV (user_id, show_id) VALUES (?, ?)', [user_id, show_id]);
+        await queryAsync('START TRANSACTION');
+
+        // Insert or update TV show details
+        await queryAsync(
+            'INSERT INTO tvShows (show_id, show_name, average_rating, poster_path, number_of_seasons, number_of_episodes) VALUES (?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE show_id=show_id',
+            [showDetails.id, showDetails.name, showDetails.vote_average, showDetails.poster_path, showDetails.number_of_seasons, showDetails.number_of_episodes]
+        );
+
+        // Insert genres if they are not already present and associate them with the show
+        for (const genre of showDetails.genres) {
+            await queryAsync('INSERT IGNORE INTO tvGenres (tvGenre_id, tvGenre_name) VALUES (?, ?)', [genre.id, genre.name]);
+            await queryAsync('INSERT IGNORE INTO TVGenreAssociations (show_id, tvGenre_id) VALUES (?, ?)', [showDetails.id, genre.id]);
+        }
+
+        // Add to watch later list
+        await queryAsync('INSERT IGNORE INTO watchLaterTV (user_id, show_id) VALUES (?, ?)', [username, showDetails.id]);
+
+        await queryAsync('COMMIT');
         res.send('TV show added to watch later list successfully');
     } catch (error) {
+        await queryAsync('ROLLBACK');
         console.error('Error adding TV show to watch later list:', error);
         res.status(500).send('Error adding TV show to watch later list');
     }
 });
-
 
 // NEED TO ALTER
 app.delete('/api/accounts/:username', (req, res) => {

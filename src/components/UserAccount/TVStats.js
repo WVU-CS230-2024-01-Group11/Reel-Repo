@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { totalMovieWatchTime,movieGenreCounts, allWatchedMovies, moviesWatchedMonth, moviesByRating, moviesWatchedYear} from '../../services/database';
 import { totalTVWatchTime, TVGenreCounts, allWatchedEpisodes, TVWatchedMonth, TVWatchedYear, TVByRating } from '../../services/database';
-import  { UsernameContext } from '../Contexts/UsernameContext';
+import  { useUsername } from '../Contexts/UsernameContext';
 
 function TVStats() {
-  const {username, setUsername}=useContext(UsernameContext);
+  const { username, setUsername } = useUsername();
   const [stats, setStats] = useState({
     totalTVWatchTime: [0],
     TVGenreCount: [],

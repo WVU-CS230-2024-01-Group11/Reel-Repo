@@ -1,11 +1,11 @@
 import React, { useState,useContext } from 'react';
-import { UsernameContext } from '../Contexts/UsernameContext';
+import { useUsername } from '../Contexts/UsernameContext';
 import { fetchAccountData } from '../../services/database';
 import { useNavigate } from 'react-router-dom';
 import ReCAPTCHA from "react-google-recaptcha";
 //6Lc3SrkpAAAAAMwwC84Vcu_qXSQS7WFrmpLb-pPC
 function AccountLogin(){
-  const {username,setUsername}=useContext(UsernameContext);
+  const { username, setUsername } = useUsername();
   const navigate = useNavigate();
   const [password, setPassword] = useState('');
   const [userError, setUserError] = useState('');
@@ -24,7 +24,7 @@ function AccountLogin(){
       const foundUser= users.find((user)=> user.username===username)
       if (foundUser){
         if (foundUser.password===password){
-          navigate("/"); 
+          navigate("/home"); 
         }
         else{
           setPasswordError("Incorrect password");

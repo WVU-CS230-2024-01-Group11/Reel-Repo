@@ -316,18 +316,18 @@ export const checkFriendship = async (user1, user2) => {
   }
 };
 
-export const addMovieToWatchLater = async (user_id, movie_id) => {
+export const addMovieToWatchLater = async (movieData) => {
   try {
-      const response = await axios.post(`${baseURL}/watch-later/movies`, { user_id, movie_id });
+      const response = await axios.post(`${baseURL}/watch-later/movies`, movieData);
       return response.data;
   } catch (error) {
       console.error('Error adding movie to watch later list:', error);
   }
 };
 
-export const addTVShowToWatchLater = async (user_id, show_id) => {
+export const addTVShowToWatchLater = async (showData) => {
   try {
-      const response = await axios.post(`${baseURL}/watch-later/tv`, { user_id, show_id });
+      const response = await axios.post(`${baseURL}/watch-later/tv`, showData);
       return response.data;
   } catch (error) {
       console.error('Error adding TV show to watch later list:', error);

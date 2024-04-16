@@ -209,3 +209,35 @@
 .card-big thead {
   font-size: 1.2vw;
 }
+
+.watchLaterBox img {
+   height: 18vw;
+   width: auto;
+}
+
+.watchLaterBox div {
+  text-align: center; /* Center the movie name text */
+  padding: 10px 0; /* Add padding above and below the text */
+  font-size: 1vw; /* Adjust font size as needed */
+  overflow: hidden;
+}
+
+.carousel-container, .carousel-item-padding-40-px {
+  transition: all 0.5s ease; /* Mimics the inline setting */
+  overflow: hidden;
+  
+}
+.watchLaterBox {
+ /* Add padding inside each box */
+  margin: 10px 0; /* Add some space between each box */
+  font-weight: bold;
+}
+
+.card-long.card6 {
+  height: 30vw;
+}
+
+.watchLaterBox img:hover {
+  transition-duration: 0.4s;
+  box-shadow: 0px 8px 16px 0px #141418;
+ }

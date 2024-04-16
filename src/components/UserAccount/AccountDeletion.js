@@ -2,10 +2,10 @@ import React, { useState, useContext } from 'react';
 import { Modal, Button } from 'react-bootstrap';
 import { deleteAccount } from '../../services/database';
 import NavigationBar from '../NavigationBar/NavigationBar';
-import { UsernameContext } from '../Contexts/UsernameContext';
+import { useUsername } from '../Contexts/UsernameContext';
 const AccountDeletion = () => {
     const [showModal, setShowModal] = useState(false);
-    const {username,setUsername}=useContext(UsernameContext);
+    const { username, setUsername } = useUsername();
     const handleDelete = async () => {
         setShowModal(false); // Close the modal
         try {

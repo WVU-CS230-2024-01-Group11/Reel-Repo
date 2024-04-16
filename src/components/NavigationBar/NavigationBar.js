@@ -6,7 +6,7 @@ export default function NavigationBar() {
   return (
     <nav className="navigation-bar">
       <div className="navbar-logo">
-        <a href="/" className="logo-text">
+        <a href="/home" className="logo-text">
           Reel Repo
         </a>
       </div>
@@ -34,7 +34,7 @@ export default function NavigationBar() {
               <a href="/friends">Friends</a>
               <a href="/settings">Settings</a>
               <a href="/account-creation">Create Account</a>
-              <a href="/account-login">Login</a>
+              <a href="/">Login</a>
               <a href="/">Logout</a>
             </div>
           </div>

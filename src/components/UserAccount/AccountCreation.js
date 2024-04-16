@@ -1,12 +1,12 @@
 import {addNewAccount, fetchAccountData, fetchUsernames} from '../../services/database';
 import React, { useState,useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-import  { UsernameContext } from '../Contexts/UsernameContext';
+import  { useUsername } from '../Contexts/UsernameContext';
 import ReCAPTCHA from "react-google-recaptcha";
 //6Lc3SrkpAAAAAMwwC84Vcu_qXSQS7WFrmpLb-pPC
 function AccountCreation() {
   const navigate = useNavigate();
-  const {username, setUsername}=useContext(UsernameContext);
+  const { username, setUsername } = useUsername();
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
@@ -138,7 +138,7 @@ function AccountCreation() {
     console.log("adding user");
     let newUser={username, firstName, lastName, email, password};
     const response= await addNewAccount(newUser);
-    navigate("/");
+    navigate("/home");
   } 
 
   return (

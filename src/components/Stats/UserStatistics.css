@@ -1,4 +1,118 @@
 .UserStatistics{
     margin-top: 200px;
     margin-left: 100px;
+  }
+.tab-content {
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-top: none;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Movie Container for the top movie */
+.movie-container {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.movie-container img {
+    margin-right: 20px;
+}
+
+/* Genre box styles */
+.genre-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px; /* space between genre boxes */
+}
+
+.genre-box {
+    background-color: #f0f0f0;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Monthly movies layout */
+.monthly-movies {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px; /* space between movie boxes */
+}
+
+.movie-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Center the movie details under the image */
+}
+
+.movie-box img {
+    width: 100px;
+    height: auto;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    margin-bottom: 5px;
+}
+
+/* TV Show Container */
+.show-container {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.show-container img {
+    margin-right: 20px;
+}
+
+/* Genre box styles */
+.genre-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.genre-box {
+    background-color: #f0f0f0;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Shows container */
+.shows-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.show-details {
+    display: flex;
+    align-items: start;
+    gap: 10px;
+}
+
+.show-info {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.season-details {
+    margin-left: 20px;
+}
+
+.episode-details {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding-bottom: 10px;
+}
+
+.episode-details img {
+    width: auto;
+    height: 75px;
+
 }

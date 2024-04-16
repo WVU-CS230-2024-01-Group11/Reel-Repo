@@ -1,4 +1,8 @@
 
+.Details{
+  margin-top: 300px;
+  margin-left: 100px;
+}
 .movie-details-container{
   max-width: 1200px;
   margin: 40px auto;
@@ -56,7 +60,7 @@
   overflow-y: auto; /* Enable scrolling if content exceeds max height */
 }
 
-.movie-details-container {
+.movie-details-container, .tv-details-container {
     max-width: 1200px;
     margin: 150px auto;
     margin-top: 150px;

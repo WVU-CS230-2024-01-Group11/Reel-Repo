@@ -5,20 +5,22 @@ import NavigationBar from '../NavigationBar/NavigationBar'
 import styles from './/Repository.css';
 import { Tab } from 'react-bootstrap';
 import { Tabs, Accordion, Table } from 'react-bootstrap';
+import { useUsername } from '../Contexts/UsernameContext';
 
-function Repository({ currentUser="test" }) {
+function Repository() {
+  const { username, setUsername } = useUsername();
   // State for storing movie and episode watch histories
   const [movieHistory, setMovieHistory] = useState(new Map());
   const [episodeHistory, setEpisodeHistory] = useState([]);
   // State for controlling active tab
   const [key, setKey] = useState('movie');
 
-  // Effect hook to fetch data on component mount or when currentUser changes
+  // Effect hook to fetch data on component mount or when username changes
   useEffect(() => {
     const fetchData = async () => {
         // Fetch movie and episode watch history for the current user
-        const movies = await getUserMovieWatchHistory(currentUser);
-        const episodes = await getUserEpisodeWatchHistory(currentUser);
+        const movies = await getUserMovieWatchHistory(username);
+        const episodes = await getUserEpisodeWatchHistory(username);
         // Organize movies by date for better structure
         const sortedMovies = organizeMoviesByDate(movies);
         setMovieHistory(sortedMovies)
@@ -26,7 +28,7 @@ function Repository({ currentUser="test" }) {
     };
 
     fetchData();
-}, [currentUser]);
+}, [username]);
 
   // Helper object to convert month names to numbers for sorting
   const monthToNumber = {
