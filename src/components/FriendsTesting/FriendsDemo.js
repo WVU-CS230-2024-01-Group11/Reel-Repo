@@ -6,9 +6,9 @@ import { sendFriendRequest,
     getReceivedFriendRequests,
     getCurrentFriends,
 removeFriend, getSentFriendRequests,} from '../../services/database';
-
+import { useUsername } from '../Contexts/UsernameContext';
 const FriendsDemo = () => {
-    const currentUser = "test";
+    const { username, setUsername } = useUsername();
     const [targetUser, setTargetUser] = useState('');
     const [receivedRequests, setReceivedRequests] = useState([]);
     const [sentRequests, setSentRequests] = useState([]);
@@ -17,39 +17,39 @@ const FriendsDemo = () => {
 
     useEffect(() => {
         const fetchData = async () => {
-            const received = await getReceivedFriendRequests(currentUser);
-            const sent = await getSentFriendRequests(currentUser);
-            const friends = await getCurrentFriends(currentUser);
+            const received = await getReceivedFriendRequests(username);
+            const sent = await getSentFriendRequests(username);
+            const friends = await getCurrentFriends(username);
             setReceivedRequests(received);
             setSentRequests(sent);
             setCurrentFriends(friends);
         };
 
         fetchData();
-    }, [currentUser]);
+    }, [username]);
 
     const handleSendRequest = async () => {
-        await sendFriendRequest(currentUser, targetUser);
+        await sendFriendRequest(username, targetUser);
         alert('Friend request sent!');
     };
 
     const handleAcceptRequest = async (requester) => {
-        await acceptFriendRequest(requester, currentUser);
+        await acceptFriendRequest(requester, username);
         alert('Friend request accepted!');
     };
 
     const handleDeclineRequest = async (requester) => {
-        await declineFriendRequest(requester, currentUser);
+        await declineFriendRequest(requester, username);
         alert('Friend request declined!');
     };
 
     const handleCheckFriendship = async () => {
-        const status = await checkFriendship(currentUser, targetUser);
+        const status = await checkFriendship(username, targetUser);
         setIsFriends(status);
     };
 
     const handleRemoveFriend = async (friend) => {
-        await removeFriend(currentUser, friend);
+        await removeFriend(username, friend);
         alert('Friend removed!');
     };
 

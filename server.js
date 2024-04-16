@@ -429,6 +429,28 @@ app.get('/api/friends-top-ratings', async (req, res) => {
     }
 });
 
+app.get('/api/user-shows-by-rating', async (req, res) => {
+    const { username } = req.query;
+    try {
+        const shows = await queryAsync('SELECT * FROM UserAllShowsByRating WHERE user_id = ? ORDER BY avg_user_rating DESC LIMIT 5', [username]);
+        res.json(shows);
+    } catch (error) {
+        console.error('Error fetching TV shows by user rating:', error);
+        res.status(500).send('Error fetching TV shows by user rating');
+    }
+});
+
+app.get('/api/movies-by-rating-max', (req, res) => {
+    const username = req.query.username;
+    queryAsync('SELECT * FROM UserTopRatedMovies WHERE username = ? ORDER BY highest_user_rating DESC LIMIT 5', [username], (error, results) => {
+        if (error) {
+            console.error('Error fetching movies by rating:', error);
+            res.status(500).send('Error fetching movies by rating');
+        } else {
+            res.json(results);
+        }
+    });
+});
 
 app.post('/api/accounts', (req, res) => {
     const newData = req.body;

@@ -438,3 +438,19 @@ export const getFriendsTopRatings = async (username) => {
       return [];
   }
 };
+export const fetchFiveShowsByRating = async (username) => {
+  try {
+    const response = await axios.get(`${baseURL}/user-shows-by-rating`, { params: { username } });
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching user shows by rating:', error);
+  }
+};
+export const fetchFiveMoviesByRating = async (username) => {
+  try {
+    const response = await axios.get(`${baseURL}/movies-by-rating-max`, { params: { username } });
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching user shows by rating:', error);
+  }
+};

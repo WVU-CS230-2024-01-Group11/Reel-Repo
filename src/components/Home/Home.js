@@ -1,14 +1,16 @@
-import "./Home.css"
 import NavigationBar from "../NavigationBar/NavigationBar";
 import { useState, useEffect } from "react";
+import theMovieDb from "../Utils/themoviedb";
 import { getFriendsTopRatings } from "../../services/database";
 import { useNavigate } from 'react-router-dom';
-import { useContext } from "react";
 import  { useUsername } from '../Contexts/UsernameContext';
-import { totalMovieWatchTime, totalTVWatchTime, totalWatchTime, getCurrentFriends, movieGenreCounts, getWatchLaterMoviesView, getWatchLaterTVView} from '../../services/database';
+import { fetchFiveMoviesByRating, fetchFiveShowsByRating, totalMovieWatchTime, totalTVWatchTime, totalWatchTime, getCurrentFriends, movieGenreCounts, getWatchLaterMoviesView, getWatchLaterTVView} from '../../services/database';
 import profile_placeholder from "./profile_placeholder.png"
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
+import { Dropdown } from "react-bootstrap";
+import "./Home.css"
+import "../NavigationBar/NavigationBar.css";
 
 //Colors for piechart
 const colorList = ["Dimgrey", "FloralWhite", "Gainsboro", "LightSlateGrey", "MintCream", "OldLace", "SeaShell", "Silver", "HoneyDew", "WhiteSmoke"];
@@ -21,7 +23,7 @@ function Home() {
   const responsive = {
     desktop: {
       breakpoint: { max: 3000, min: 1024 },
-      items: 4,
+      items: 4 ,
       slidesToSlide: 1 // optional, default to 1.
     },
     tablet: {
@@ -51,6 +53,12 @@ function Home() {
   const [genreCount, setGenreCount] = useState([]);
   const [watchLaterMovies, setWatchLaterMovies] = useState([]);
   const [watchLaterTV, setWatchLaterTV] = useState([]);
+  const [watchLaterSelectedContent, setWatchLaterSelectedContent] = useState('Movies');
+  const [recommendedSelectedContent, setRecommendedSelectedContent] = useState('Movies');
+  const [movieRecommendations, setMovieRecommendations] = useState([]);
+  const [showRecommendations, setShowRecommendations] = useState([]);
+  const [topMovies, setTopMovies] = useState([]);
+  const [topShows, setTopShows] = useState([]);
   //Fetches frinds, friends ratings, watch time, and genre counts when username changes
   useEffect(() => {
     const fetchData = async () => {
@@ -81,6 +89,8 @@ function Home() {
       const tvList = await getWatchLaterTVView(username);
       setWatchLaterTV(tvList);
     }
+   
+
     //Only fetch from database is username is not empty
     if(username !== ''){
       fetchData();
@@ -88,8 +98,30 @@ function Home() {
       fetchFriends();
       fetchGenres();
       fetchWatchLaterMovies();
+      fetchWatchLaterTV();
+      
     }
   }, [username]);
+
+  useEffect(() => {
+    const fetchTopMovies = async () => {
+      const movies = await fetchFiveMoviesByRating(username);
+      setTopMovies(movies);
+    };
+    const fetchTopShows = async () => {
+      const shows = await fetchFiveShowsByRating(username);
+      setTopShows(shows);
+    };
+    if(username !== '') {
+      fetchTopMovies();
+      fetchTopShows();
+    }
+  }, [username]);
+
+  useEffect(() => {
+    getMovieRecommendations(topMovies);
+    getShowRecommendations(topShows);
+  }, [topMovies, topShows]);
 
   //Creates formatted strings to display watch time when watch time change
   useEffect(() => {
@@ -152,6 +184,59 @@ function Home() {
     }
   }, [genreCount]);
   
+  const handleWatchLaterSelect = (eventKey) => {
+    setWatchLaterSelectedContent(eventKey);
+
+  }
+
+  const handleRecommendedSelect = (eventKey) => {
+    setRecommendedSelectedContent(eventKey);
+  }
+
+  const getMovieRecommendations = (topMovies) => {
+    let recommended = [];
+    const movieIds = topMovies.map(movie => movie.movie_id);
+    let completedCalls = 0;
+
+    movieIds.forEach(id => {
+      theMovieDb.movies.getRecommendations({"id": id}, successCB, errorCB);
+      function successCB(data) {
+          const parsedData = JSON.parse(data).results.slice(0, 2);
+          completedCalls++;
+          recommended = [...recommended, ...parsedData];
+
+          if (completedCalls === movieIds.length) {
+            setMovieRecommendations(recommended);
+          }
+      }
+
+      function errorCB(error) {
+          console.error('Error fetching data:', error);
+      }
+    });
+  };
+  const getShowRecommendations = (topShows) => {
+    let recommended = [];
+    const showIds = topShows.map(show => show.show_id);
+    let completedCalls = 0;
+
+    showIds.forEach(id => {
+      theMovieDb.tv.getRecommendations({"id": id}, successCB, errorCB);
+      function successCB(data) {
+          const parsedData = JSON.parse(data).results.slice(0, 2);
+          completedCalls++;
+          recommended = [...recommended, ...parsedData];
+
+          if (completedCalls === showIds.length) {
+            setShowRecommendations(recommended);
+          }
+      }
+
+      function errorCB(error) {
+          console.error('Error fetching data:', error);
+      }
+    });
+  };
   return (
     <>
       <NavigationBar/>
@@ -186,17 +271,37 @@ function Home() {
                     </tr>
                 </thead>
                 <tbody>
-                    {friendsRatings.map(friend => (
-                        <tr key={friend.friend_username}>
-                            <td className="friend-username" >{friend.friend_username}</td>
-                            <td><img src={`https://image.tmdb.org/t/p/w200${friend.top_movie_poster}`} alt={friend.top_movie} onClick={()=>navigate(`/details/movie/${friend.top_movie_id}`)} /></td>
-                            <td className="movie-name" onClick={()=>navigate(`/details/movie/${friend.top_movie_id}`)}>{friend.top_movie}</td>
-                            <td className="movie-rating">{friend.movie_rating}</td>
-                            <td><img src={`https://image.tmdb.org/t/p/w200${friend.top_show_poster}`} alt={friend.top_show} onClick={()=>navigate(`/details/tv/${friend.top_show_id}`)}/></td>
-                            <td className="show-name" onClick={()=>navigate(`/details/tv/${friend.top_show_id}`)}>{friend.top_show}</td>
-                            <td className="show-rating" >{friend.show_rating}</td>
-                        </tr>
-                    ))}
+                  {friendsRatings.map(friend => (
+                    <tr key={friend.friend_username}>
+                      <td className="friend-username">{friend.friend_username}</td>
+                      <td>
+                        {friend.top_movie_poster ? (
+                          <img src={`https://image.tmdb.org/t/p/original${friend.top_movie_poster}`} alt={friend.top_movie || 'No Movie'} onClick={() => navigate(`/details/movie/${friend.top_movie_id}`)} />
+                        ) : (
+                          <span>No Movie</span>
+                        )}
+                      </td>
+                      <td className="movie-name" onClick={() => friend.top_movie_id ? navigate(`/details/movie/${friend.top_movie_id}`) : null}>
+                        {friend.top_movie || 'No Movie'}
+                      </td>
+                      <td className="movie-rating">
+                        {friend.movie_rating || 'No Rating'}
+                      </td>
+                      <td>
+                        {friend.top_show_poster ? (
+                          <img src={`https://image.tmdb.org/t/p/original${friend.top_show_poster}`} alt={friend.top_show || 'No Show'} onClick={() => navigate(`/details/tv/${friend.top_show_id}`)} />
+                        ) : (
+                          <span>No Show</span>
+                        )}
+                      </td>
+                      <td className="show-name" onClick={() => friend.top_show_id ? navigate(`/details/tv/${friend.top_show_id}`) : null}>
+                        {friend.top_show || 'No Show'}
+                      </td>
+                      <td className="show-rating">
+                        {friend.show_rating || 'No Rating'}
+                      </td>
+                    </tr>
+                  ))}
                 </tbody>
               </table>
           </div>
@@ -221,11 +326,17 @@ function Home() {
               </div>
             </div>
             <div className="card-long card5">
-              <div className="card-label">Recommended &amp; Suggested</div>
-              
-            </div>
-            <div className="card-long card6" >
-              <div className="card-label">Watch Later Movies</div>
+              <div className="card-label">Recommended &amp; Suggested
+              <Dropdown onSelect={handleRecommendedSelect} >
+                  <Dropdown.Toggle id="dropdown-basic">
+                      {recommendedSelectedContent}
+                    </Dropdown.Toggle>
+                    <Dropdown.Menu>
+                      <Dropdown.Item eventKey="Movies">Movies</Dropdown.Item>
+                      <Dropdown.Item eventKey="TV">TV</Dropdown.Item>
+                    </Dropdown.Menu>
+                  </Dropdown>
+              </div>
               <Carousel
                 swipeable={false}
                 draggable={false}
@@ -235,23 +346,78 @@ function Home() {
                 infinite={true}
                 autoPlay={false}
                 keyBoardControl={true}
-                customTransition="all .5s ease-in-out"
+                customTransition="transform 500ms ease-in-out"
                 transitionDuration={500}
                 containerClass="carousel-container"
                 removeArrowOnDeviceType={["tablet", "mobile"]}
                 deviceType={responsive.desktop}
-                dotListClass="custom-dot-list-style"
+                dotListClass="custom-dot-list-style"    
                 itemClass="carousel-item-padding-40-px"
               >
-                  {watchLaterMovies.map(movie => (
+                {recommendedSelectedContent === 'Movies' ? (
+                  movieRecommendations.map(movie => (
+                    <div key={movie.id} className="watchLaterBox" onClick={()=>navigate(`/details/movie/${movie.id}`)}>
+                    <img src={`https://image.tmdb.org/t/p/original${movie.poster_path}`} />
+                    <div>{movie.title}</div>
+                    </div>
+                  ))
+                ) : (
+                  showRecommendations.map(show => (
+                    <div key={show.id} className="watchLaterBox" onClick={()=>navigate(`/details/tv/${show.id}`)}>
+                    <img src={`https://image.tmdb.org/t/p/original${show.poster_path}`} />
+                    <div>{show.name}</div>
+                    </div>
+                  ))
+                )}
+            </Carousel>
+            </div>
+            <div className="card-long card6" >
+              <div className="card-label">Watch Later 
+                  <Dropdown onSelect={handleWatchLaterSelect} >
+                  <Dropdown.Toggle id="dropdown-basic">
+                      {watchLaterSelectedContent}
+                    </Dropdown.Toggle>
+                    <Dropdown.Menu>
+                      <Dropdown.Item eventKey="Movies">Movies</Dropdown.Item>
+                      <Dropdown.Item eventKey="TV">TV</Dropdown.Item>
+                    </Dropdown.Menu>
+                  </Dropdown>
+              </div>
+              <Carousel
+                swipeable={false}
+                draggable={false}
+                showDots={true}
+                responsive={responsive}
+                ssr={true} // means to render carousel on server-side.
+                infinite={true}
+                autoPlay={false}
+                keyBoardControl={true}
+                customTransition="transform 500ms ease-in-out"
+                transitionDuration={500}
+                containerClass="carousel-container"
+                removeArrowOnDeviceType={["tablet", "mobile"]}
+                deviceType={responsive.desktop}
+                dotListClass="custom-dot-list-style"    
+                itemClass="carousel-item-padding-40-px"
+              >
+                {watchLaterSelectedContent === 'Movies' ? (
+                  watchLaterMovies.map(movie => (
                     <div key={movie.movie_id} className="watchLaterBox" onClick={()=>navigate(`/details/movie/${movie.movie_id}`)}>
-                    <img src={`https://image.tmdb.org/t/p/w200${movie.poster_path}`} />
+                    <img src={`https://image.tmdb.org/t/p/original${movie.poster_path}`} />
                     <div>{movie.movie_name}</div>
                     </div>
-                  ))}
-                  
+                  ))
+                ) : (
+                  watchLaterTV.map(show => (
+                    <div key={show.show_id} className="watchLaterBox" onClick={()=>navigate(`/details/tv/${show.show_id}`)}>
+                    <img src={`https://image.tmdb.org/t/p/original${show.poster_path}`} />
+                    <div>{show.show_name}</div>
+                    </div>
+                  ))
+                )}
+            
             </Carousel>
-</div>
+          </div>
           </div>
         </>
     );

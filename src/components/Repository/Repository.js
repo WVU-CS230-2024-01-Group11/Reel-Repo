@@ -109,7 +109,7 @@ const organizeMoviesByDate = (movies) => {
                               <tbody className='movieTableBody'>
                                 {movieHistory.get(year).get(monthYearKey).map(movie => (
                                   <tr key={movie.movie_id}>
-                                    <td><img className='movieImage'src={`https://image.tmdb.org/t/p/w200${movie.poster_path}`}></img></td>
+                                    <td><img className='movieImage'src={`https://image.tmdb.org/t/p/original${movie.poster_path}`}></img></td>
                                     <td className='movieName'>{movie.movie_name}</td>
                                     <td className='userRating'>{movie.user_rating}</td>
                                     <td className='averageRating'>{movie.average_rating}</td>
