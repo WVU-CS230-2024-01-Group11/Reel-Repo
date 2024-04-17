@@ -5,13 +5,13 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const util = require('util');
 
-
 const app = express();
 const port = 3001;
 
 
 app.use(cors());
 app.use(bodyParser.json());
+
 
 const db = mysql.createConnection( {
     host: 'database-1.c1m4ekg4o6v6.us-east-1.rds.amazonaws.com',

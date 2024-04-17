@@ -3,10 +3,15 @@ import React, { useState,useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import  { useUsername } from '../Contexts/UsernameContext';
 import ReCAPTCHA from "react-google-recaptcha";
-//6Lc3SrkpAAAAAMwwC84Vcu_qXSQS7WFrmpLb-pPC
+import axios from 'axios';
+//Abstract API 
+const apiKey = '8ae6693aed28402592266ed6eed9a016';
+const apiURL = 'https://emailvalidation.abstractapi.com/v1/'+apiKey;
+//6Lc3SrkpAAAAAMwwC84Vcu_qXSQS7WFrmpLb-pPC   Captcha key
 function AccountCreation() {
   const navigate = useNavigate();
   const { username, setUsername } = useUsername();
+  const [tempUsername,setTempUsername]=useState('');
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
@@ -30,11 +35,36 @@ function AccountCreation() {
     setPasswordMatchError('');
   };
 
-  const isValidEmail = () => {
+  const isValidEmail = async () => {
     const format = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-    return format.test(email.toLowerCase());
+    const validFormat=format.test(email.toLowerCase());
+    const validEmail=await sendEmailValidationRequest();
+    if (!validFormat){
+      return 1;
+    }
+    if (!validEmail){
+      return 2;
+    }
+    return 0;
   };
-
+  const sendEmailValidationRequest = async () => {
+    if (email===''){
+      return false;
+    }
+    try {
+      const response = await axios.get(`https://emailvalidation.abstractapi.com/v1?api_key=8ae6693aed28402592266ed6eed9a016&email=${email}`);
+      console.log (response.data.is_disposable_email.value);
+      return response.data.is_disposable_email.value;
+  } catch (error) {
+      if (error.response && error.response.status === 429) {
+          //standard plan is 1 request a second
+          await new Promise(resolve => setTimeout(resolve, 2000)); 
+          return sendEmailValidationRequest(); 
+      } else {
+          throw error; 
+      }
+  }
+  }
   const isStrongPassword = () => {
     const hasUpper = /[A-Z]/.test(password);
     const hasLower = /[a-z]/.test(password);
@@ -81,47 +111,57 @@ function AccountCreation() {
   //Checks inputs
   const validateInput = async() => {
     clearErrors();
+    let passedAll=true
     const isTaken=await usernameTaken();
-    if (username === "") {
+    if (tempUsername === "") {
       setUserError("Username can't be blank");
-      return false;
+      passedAll=false;
     } else if (isTaken){
       setUserError("Username is already taken");
-      return false;
+      passedAll=false;
     }
-
+    console.log("checking emails");
     if (email === "") {
       setEmailError("Email can't be blank");
-      return false;
-    } else if (!isValidEmail()) {
-      setEmailError("Provide a valid email address");
-      return false;
+      passedAll=false;
+    } 
+    console.log("checking if valid email");
+    const emailValidationResult = await isValidEmail();
+    if (emailValidationResult===1) {
+      console.log("format wrong");
+      setEmailError("Provide a valid email format");
+      passedAll=false;
+    } else if (emailValidationResult===2){
+      console.log("email error set");
+      setEmailError("Provide a valid email");
+      passedAll=false; 
     }
 
     if (firstName === "") {
       setFirstError("First name can't be blank");
-      return false;
+      passedAll=false;
     }
 
     if (lastName === "") {
       setLastError("Last name can't be blank");
-      return false;
+      passedAll=false;
     }
 
     if (password === "") {
       setPasswordError("Password can't be blank");
-      return false;
+      passedAll=false;
     } else if (isStrongPassword!=="valid") {
       setPasswordError(isStrongPassword);
-      return false;
+      passedAll=false;
     }
     if (passwordMatch === "") {
       setPasswordMatchError("Please confirm your password");
-      return false;
+      passedAll=false;
     } else if (passwordMatch !== password) {
       setPasswordMatchError("Passwords do not match");
-      return false;
+      passedAll=false;
     }
+    return passedAll;
   };
 
   //Makes sure only validated user data is added to db
@@ -136,8 +176,9 @@ function AccountCreation() {
     }
     //Adding new user
     console.log("adding user");
-    let newUser={username, firstName, lastName, email, password};
+    let newUser={tempUsername, firstName, lastName, email, password};
     const response= await addNewAccount(newUser);
+    setUsername(tempUsername);
     navigate("/home");
   } 
 
@@ -175,8 +216,8 @@ function AccountCreation() {
               type="text"
               name="user"
               id="user"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
+              value={tempUsername}
+              onChange={(e) => setTempUsername(e.target.value)}
             />
             <div id="userError">{userError}</div>
           </div>
@@ -217,7 +258,7 @@ function AccountCreation() {
           sitekey="6Lc3SrkpAAAAAMwwC84Vcu_qXSQS7WFrmpLb-pPC"
           onChange={(val)=>setCapVal(val)} 
           />
-          <button type="submit" disabled={!capVal}>Submit</button>
+          <button type="submit" disabled={capVal}>Submit</button>
         </form>
       </div>
     </div>
