@@ -19,7 +19,7 @@ function Home() {
   //Username context
   const { username, setUsername } = useUsername();
   //setUsername("test");
-
+  const [key, setKey] = useState(0); 
   const responsive = {
     superWide: {
       breakpoint: { max: 5000, min: 3001 },  // Covers screens wider than 3000px
@@ -189,6 +189,18 @@ function Home() {
     }
   }, [genreCount]);
   
+  useEffect(() => {
+    const handleResize = () => {
+        // Update the key to force re-render
+        setKey(prevKey => prevKey + 1);
+    };
+
+    window.addEventListener('resize', handleResize);
+
+    // Cleanup the event listener on component unmount
+    return () => window.removeEventListener('resize', handleResize);
+}, []);
+
   const handleWatchLaterSelect = (eventKey) => {
     setWatchLaterSelectedContent(eventKey);
 
@@ -347,7 +359,7 @@ function Home() {
                 draggable={false}
                 showDots={true}
                 responsive={responsive}
-                ssr={true} // means to render carousel on server-side.
+                ssr={true} // Server-side rendering enabled for SEO
                 infinite={true}
                 autoPlay={false}
                 keyBoardControl={true}
@@ -355,9 +367,11 @@ function Home() {
                 transitionDuration={500}
                 containerClass="carousel-container"
                 removeArrowOnDeviceType={["tablet", "mobile"]}
-                dotListClass="custom-dot-list-style"    
+                dotListClass="custom-dot-list-style"
                 itemClass="carousel-item-padding-40-px"
-              >
+                key={key}  // Use key to force re-render
+            >
+              
                 {recommendedSelectedContent === 'Movies' ? (
                   movieRecommendations.map(movie => (
                     <div key={movie.id} className="watchLaterBox" onClick={()=>navigate(`/details/movie/${movie.id}`)}>
@@ -388,21 +402,21 @@ function Home() {
                   </Dropdown>
               </div>
               <Carousel
-                swipeable={false}
-                draggable={false}
-                showDots={true}
-                responsive={responsive}
-                ssr={true} // means to render carousel on server-side.
-                infinite={true}
-                autoPlay={false}
-                keyBoardControl={true}
-                customTransition="transform 500ms ease-in-out"
-                transitionDuration={500}
-                containerClass="carousel-container"
-                removeArrowOnDeviceType={["tablet", "mobile"]}
-               
-                dotListClass="custom-dot-list-style"    
-                itemClass="carousel-item-padding-40-px"
+                  swipeable={false}
+                  draggable={false}
+                  showDots={true}
+                  responsive={responsive}
+                  ssr={true} // Server-side rendering enabled for SEO
+                  infinite={true}
+                  autoPlay={false}
+                  keyBoardControl={true}
+                  customTransition="transform 500ms ease-in-out"
+                  transitionDuration={500}
+                  containerClass="carousel-container"
+                  removeArrowOnDeviceType={["tablet", "mobile"]}
+                  dotListClass="custom-dot-list-style"
+                  itemClass="carousel-item-padding-40-px"
+                  key={key}  // Use key to force re-render
               >
                 {watchLaterSelectedContent === 'Movies' ? (
                   watchLaterMovies.map(movie => (
