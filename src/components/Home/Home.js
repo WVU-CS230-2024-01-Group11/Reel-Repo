@@ -21,6 +21,11 @@ function Home() {
   //setUsername("test");
 
   const responsive = {
+    superWide: {
+      breakpoint: { max: 5000, min: 3001 },  // Covers screens wider than 3000px
+      items: 4,
+      slidesToSlide: 1
+    },
     desktop: {
       breakpoint: { max: 3000, min: 1024 },
       items: 4 ,
@@ -350,7 +355,6 @@ function Home() {
                 transitionDuration={500}
                 containerClass="carousel-container"
                 removeArrowOnDeviceType={["tablet", "mobile"]}
-                deviceType={responsive.desktop}
                 dotListClass="custom-dot-list-style"    
                 itemClass="carousel-item-padding-40-px"
               >
@@ -396,7 +400,7 @@ function Home() {
                 transitionDuration={500}
                 containerClass="carousel-container"
                 removeArrowOnDeviceType={["tablet", "mobile"]}
-                deviceType={responsive.desktop}
+               
                 dotListClass="custom-dot-list-style"    
                 itemClass="carousel-item-padding-40-px"
               >
