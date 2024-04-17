@@ -410,7 +410,7 @@ app.get('/api/watch-history/movies', async (req, res) => {
 app.get('/api/watch-history/episodes', async (req, res) => {
     const { username } = req.query;
     try {
-        const [episodes] = await queryAsync('SELECT * FROM UserEpisodeWatchHistory WHERE username = ?', [username]);
+        const episodes = await queryAsync('SELECT * FROM UserEpisodeWatchHistory WHERE username = ?', [username]);
         res.json(episodes);
     } catch (error) {
         console.error('Error fetching episode watch history:', error);

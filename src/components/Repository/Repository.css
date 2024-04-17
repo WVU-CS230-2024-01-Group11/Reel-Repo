@@ -9,24 +9,6 @@
     --transition-speed: 600ms;
   }
 
-  .content{
-    display: grid;
-    justify-content: center;
-    align-content: center;
-    margin: 100px;
-    margin-top: 12vw;
-    padding: auto;
-    gap: 2vw;
-  }
-
-  .movie{
-    list-style: none;
-    background-color: darkgrey;
-    padding: 40px;
-    border-radius: 40px;
-    margin: 10px;
-  }
-
   .movies{
     display: flex;
     flex-direction: column;
@@ -39,16 +21,196 @@
 
   .card-big.repositoryCard {
     height: fit-content;
-    width: 90vw !important;
+    width: 78vw !important;
     padding-top: 0px !important;
     margin-top: 0px !important;
     min-height: 45vw;
   }
   .card-big.repositoryCard:hover {
   
-    width: 93vw !important;
+    width: 83vw !important;
   }
 
-  .Tabs {
-    padding: 0;
+
+  .posterLabel, .movieLabel, .ratingLabel, .averageLabel, .runtimeLabel {
+    font-size: 1.2vw;
+    font-weight: bold;
+    color: #414040;
+
+    }
+  .headerContainer {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-template-rows: 2vw;
+    font-family:Arial, Helvetica, sans-serif;
+  }
+  .inner-accordian {
+    background-color: #b6b6b6; /* General background for the accordion body */
+    padding: 10px; /* Padding around the entire list of items */
+  }
+  
+  .grid-container {
+    background-color: white;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    border-radius: 8px;
+    margin: 10px 0;
+    padding: 10px;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 10px;
+   
+  }
+  
+  .inner-accordian, .outer-accordian {
+    background-color: #f7f3f3;
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+  }
+  
+  .grid-item {
+    display: flex;
+    justify-content: center;
+    height: 10vw;
+    padding-top: 0.5vw;
+    padding-bottom: 0.5vw;
+    font-size: 1.1vw;
+    font-family:monospace;
+    margin-bottom: 1vw;
+  }
+
+  .grid-movieImage{
+    height: 10vw !important;
+  }
+
+  .grid-movieImage, .movieName, .userRating, .averageRating, .runtime {
+    align-items: center;
+    text-wrap: wrap;
+  }
+
+  .accordianHeader {
+    background-color:transparent; /* Example background color */
+    color: white; /* Text color */
+    padding: 10px;
+    cursor: pointer;
+}
+
+.accordianHeader:hover, .outer-header:hover {
+  background-color: #e1e1e1; /* Light grey for hover */
+}
+
+.accordianHeader, .outer-header {
+  transition: background-color 0.3s ease;
+}
+.inner-accordian, .outer-accordian {
+  background: linear-gradient(to bottom, #ffffff, #e9e9e9);
+}
+.accordion-button {
+  background-color: #f5f5f5; /* Default background color */
+  color: #000000; /* Default text color */
+  transition: background-color 0.3s ease, color 0.3s ease; /* Smooth transition for color changes */
+}
+
+.accordion-button[aria-expanded="true"] {
+  background-color: #ffffff; /* Changed background color when expanded */
+  color: #333333; /* Changed text color when expanded */
+}
+.accordion-header {
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+.show-details1 {
+  background-color: white;
+  border-radius: 8px;
+  margin: 10px 0;
+  padding: 10px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  display: grid;
+  grid-template-columns: auto 1fr; /* Image and details */
+  gap: 10px;
+  align-items: start;
+}
+
+.show-info1 {
+  display: grid;
+  grid-template-rows: auto; /* Adjust based on content */
+  gap: 5px;
+}
+
+.season-details1 {
+  background-color: #f1f1f1;
+  padding: 5px;
+  border-radius: 5px;
+  margin-top: 5px;
+}
+
+.episode-details1 {
+  display: grid;
+  grid-template-columns: auto 1fr; /* Image and episode info */
+  gap: 5px;
+  align-items: center;
+  padding: 5px;
+  background-color: #ffffff;
+  border-radius: 5px;
+  margin-bottom: 5px;
+  text-wrap: wrap;
+}
+
+.show-details1 img, .episode-details img {
+  width: 100px; /* Adjust width as necessary */
+  height: auto;
+  border-radius: 5px;
+  text-wrap: wrap;
+}
+
+.grid-container1 {
+  background-color: white;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  border-radius: 8px;
+  margin: 10px 0;
+  padding: 10px;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 10px;
+  align-content: center;
+  text-wrap: wrap;
+}
+.grid-item1 {
+  align-content: center;
+  justify-content: center;
+  height: 10vw;
+  padding-top: 0.5vw;
+  padding-bottom: 0.5vw;
+  font-size: 1.1vw;
+  font-family:monospace;
+  margin-bottom: 1vw;
+  
+}
+
+.headerContainer1 {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: 2vw;
+  font-family:Arial, Helvetica, sans-serif;
+  margin-left: 24vw;
+}
+
+.tvPoster {
+  width: 10vw !important;
+  vertical-align:bottom !important;
+  align-items: center;
+}
+.tvPoster, .showName {
+  display: block;
+  text-wrap: wrap;
+}
+ .episodeLabel, .ratingLabel1, .averageLabel1, .runtimeLabel1 {
+  font-size: 1.2vw;
+  font-weight: bold;
+  color: #414040;
+  text-wrap: wrap;
+
+  }
+
+  .showName1 {
+    text-wrap:pretty;
   }
