@@ -1,0 +1,45 @@
+.round-button {
+    justify-content: 'center';
+    text-align: center;
+    height: 50px;
+    width: "250px";
+    padding: 10px 20px;
+    margin: 10px;
+    background-color: '#FCCD0D';
+    align-self: 'center';
+    border-radius: 40px;
+    font-size: 1vw;
+    float: right; 
+}
+
+.round-button:hover {
+    background-color: #ddd;
+}
+
+.round-button:active {
+    background-color: #aaa;
+    margin: 40px auto;
+    padding: 40px;
+    background: #ebeaeed4;
+    border-radius: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    color: #333;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+.rect-button {
+    height: 50px;
+    width: 150px;
+    padding: 10px 20px;
+    margin: 10px;
+    background-color: #a4a4a3;
+    border-radius: 20px;
+    font-size: 1vw;
+    float: right;
+}
+.button-row {
+    display: flex;
+    justify-content: space-between;
+    width: 100%; /* make the button row take up the full width of its parent */
+    padding: 0 10px; /* add some padding to the sides of the row */
+}
