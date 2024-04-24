@@ -130,6 +130,7 @@
 
   .piechart{
     margin: 20px;
+    margin-top: 0;
     background-color: var(--bg-primary);
     width: 8vw;
     height: 8vw;

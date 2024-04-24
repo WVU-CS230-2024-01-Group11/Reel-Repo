@@ -4,7 +4,7 @@ import theMovieDb from "../Utils/themoviedb";
 import { getFriendsTopRatings } from "../../services/database";
 import { useNavigate } from 'react-router-dom';
 import  { useUsername } from '../Contexts/UsernameContext';
-import { fetchFiveMoviesByRating, fetchFiveShowsByRating, totalMovieWatchTime, totalTVWatchTime, totalWatchTime, getCurrentFriends, movieGenreCounts, getWatchLaterMoviesView, getWatchLaterTVView} from '../../services/database';
+import { fetchFiveMoviesByRating, fetchFiveShowsByRating, totalMovieWatchTime, totalTVWatchTime, totalWatchTime, getCurrentFriends, movieGenreCounts, TVGenreCounts, getWatchLaterMoviesView, getWatchLaterTVView} from '../../services/database';
 import profile_placeholder from "./profile_placeholder.png"
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
@@ -55,11 +55,14 @@ function Home() {
   });
   const [watchTimeString, setWatchTimeString] = useState([]);
   const [currentFriends, setCurrentFriends] = useState([]);
-  const [genreCount, setGenreCount] = useState([]);
+  const [movieGenreCount, setMovieGenreCount] = useState([]);
+  const [showGenreCount, setShowGenreCount] = useState([]);
+  const [piechart, setPiechart] = useState([]);
   const [watchLaterMovies, setWatchLaterMovies] = useState([]);
   const [watchLaterTV, setWatchLaterTV] = useState([]);
   const [watchLaterSelectedContent, setWatchLaterSelectedContent] = useState('Movies');
   const [recommendedSelectedContent, setRecommendedSelectedContent] = useState('Movies');
+  const [genreSelectedContent, setGenreSelectedContent] = useState('Movie')
   const [movieRecommendations, setMovieRecommendations] = useState([]);
   const [showRecommendations, setShowRecommendations] = useState([]);
   const [topMovies, setTopMovies] = useState([]);
@@ -82,9 +85,14 @@ function Home() {
       const friends = await getCurrentFriends(username);
       setCurrentFriends(friends);
     };
-    const fetchGenres = async () => {
+    const fetchMovieGenres = async () => {
       const genres = await movieGenreCounts(username);
-      setGenreCount(genres);
+      setMovieGenreCount(genres);
+    };
+    const fetchShowGenres = async () => {
+      const genres = await TVGenreCounts(username);
+      setShowGenreCount(genres);
+      console.log(genres)
     };
     const fetchWatchLaterMovies = async () => {
       const movieList = await getWatchLaterMoviesView(username);
@@ -101,10 +109,10 @@ function Home() {
       fetchData();
       fetchUserWatchTime();
       fetchFriends();
-      fetchGenres();
+      fetchMovieGenres();
+      fetchShowGenres();
       fetchWatchLaterMovies();
       fetchWatchLaterTV();
-      
     }
   }, [username]);
 
@@ -124,8 +132,10 @@ function Home() {
   }, [username]);
 
   useEffect(() => {
-    getMovieRecommendations(topMovies);
-    getShowRecommendations(topShows);
+    if(topMovies != '' && topShows != ''){
+      getMovieRecommendations(topMovies);
+      getShowRecommendations(topShows);
+    }
   }, [topMovies, topShows]);
 
   //Creates formatted strings to display watch time when watch time change
@@ -169,25 +179,48 @@ function Home() {
 
   //Creates string for piehchart style when genre count changes
   useEffect(() => {
-    //Only create string is genreCount has data
-    if(genreCount.length !== 0){
-      var str = "conic-gradient(";
-      var degree = 0;
-      var total = 0;
-      //Find total genre count
-      for(var i=0; i<genreCount.length && colorList.length; i++){
-        total += genreCount[i].titles_watched;
+    //Only create string is movieGenreCount has data
+    //media_count
+    if(movieGenreCount.length !== 0){
+      var genres;
+      if(genreSelectedContent == 'Movie'){
+        genres = movieGenreCount
+        var str = "conic-gradient(";
+        var degree = 0;
+        var total = 0;
+        //Find total genre count
+        for(var i=0; i<genres.length && colorList.length; i++){
+          total += genres[i].titles_watched;
+        }
+        //Create style string
+        for(var j=0; j<genres.length && colorList.length; j++){
+          str += colorList[j] + " " + degree + "deg, ";
+          degree += 360*genres[j].titles_watched/total;
+          str += colorList[j] + " " + degree + "deg, ";
+        }
+        str = str.substring(0, str.length-2) + ")";
+        document.getElementsByClassName("piechart")[0].style.backgroundImage = str;
       }
-      //Create style string
-      for(var j=0; j<genreCount.length && colorList.length; j++){
-        str += colorList[j] + " " + degree + "deg, ";
-        degree += 360*genreCount[j].titles_watched/total;
-        str += colorList[j] + " " + degree + "deg, ";
-      }
-      str = str.substring(0, str.length-2) + ")";
-      document.getElementsByClassName("piechart")[0].style.backgroundImage = str;
+      else if(genreSelectedContent == 'TV'){
+        genres = showGenreCount
+        var str = "conic-gradient(";
+        var degree = 0;
+        var total = 0;
+        //Find total genre count
+        for(var i=0; i<genres.length && colorList.length; i++){
+          total += genres[i].media_count;
+        }
+        //Create style string
+        for(var j=0; j<genres.length && colorList.length; j++){
+          str += colorList[j] + " " + degree + "deg, ";
+          degree += 360*genres[j].media_count/total;
+          str += colorList[j] + " " + degree + "deg, ";
+        }
+        str = str.substring(0, str.length-2) + ")";
+        document.getElementsByClassName("piechart")[0].style.backgroundImage = str;
+        }
     }
-  }, [genreCount]);
+  }, [movieGenreCount, showGenreCount, genreSelectedContent]);
   
   useEffect(() => {
     const handleResize = () => {
@@ -208,6 +241,10 @@ function Home() {
 
   const handleRecommendedSelect = (eventKey) => {
     setRecommendedSelectedContent(eventKey);
+  }
+
+  const handleGenreSelect = (eventKey) => {
+    setGenreSelectedContent(eventKey);
   }
 
   const getMovieRecommendations = (topMovies) => {
@@ -322,24 +359,60 @@ function Home() {
                 </tbody>
               </table>
           </div>
-            <div className="card-wide card4" onClick={()=>navigate('/repository')}>
-              <div className="card-label">Movie Genres</div>
+            <div className="card-wide card4">
+            <div className="card-label">
+              <Dropdown onSelect={handleGenreSelect} >
+                  <Dropdown.Toggle id="dropdown-basic">
+                      {genreSelectedContent}
+                  </Dropdown.Toggle>
+                    <Dropdown.Menu>
+                      <Dropdown.Item eventKey="Movie">Movie</Dropdown.Item>
+                      <Dropdown.Item eventKey="TV">TV</Dropdown.Item>
+                    </Dropdown.Menu>
+              </Dropdown>
+              Genres
+              </div>
               <div className="card-content card-pie">
-              <div className="piechart"></div>
+              {genreSelectedContent == 'Movie' ? 
+                (<>
+                <div className="piechart"></div>
                 <div className="genre-column">
-                  <div><div className="legend" style={(genreCount.length > 0) ? {backgroundColor: colorList[0]} : {backgroundColor: ""}}></div>{(genreCount.length > 0) ? genreCount[0].movieGenre_name : " "}</div>
-                  <div><div className="legend" style={(genreCount.length > 1) ? {backgroundColor: colorList[1]} : {backgroundColor: ""}}></div>{(genreCount.length > 1) ? genreCount[1].movieGenre_name : " "}</div>
-                  <div><div className="legend" style={(genreCount.length > 2) ? {backgroundColor: colorList[2]} : {backgroundColor: ""}}></div>{(genreCount.length > 2) ? genreCount[2].movieGenre_name : " "}</div>
-                  <div><div className="legend" style={(genreCount.length > 3) ? {backgroundColor: colorList[3]} : {backgroundColor: ""}}></div>{(genreCount.length > 3) ? genreCount[3].movieGenre_name : " "}</div>
-                  <div><div className="legend" style={(genreCount.length > 4) ? {backgroundColor: colorList[4]} : {backgroundColor: ""}}></div>{(genreCount.length > 4) ? genreCount[4].movieGenre_name : " "}</div>
+                  <div><div className="legend" style={(movieGenreCount.length > 0) ? {backgroundColor: colorList[0]} : {backgroundColor: ""}}></div>{(movieGenreCount.length > 0) ? movieGenreCount[0].movieGenre_name : " "}</div>
+                  <div><div className="legend" style={(movieGenreCount.length > 1) ? {backgroundColor: colorList[1]} : {backgroundColor: ""}}></div>{(movieGenreCount.length > 1) ? movieGenreCount[1].movieGenre_name : " "}</div>
+                  <div><div className="legend" style={(movieGenreCount.length > 2) ? {backgroundColor: colorList[2]} : {backgroundColor: ""}}></div>{(movieGenreCount.length > 2) ? movieGenreCount[2].movieGenre_name : " "}</div>
+                  <div><div className="legend" style={(movieGenreCount.length > 3) ? {backgroundColor: colorList[3]} : {backgroundColor: ""}}></div>{(movieGenreCount.length > 3) ? movieGenreCount[3].movieGenre_name : " "}</div>
+                  <div><div className="legend" style={(movieGenreCount.length > 4) ? {backgroundColor: colorList[4]} : {backgroundColor: ""}}></div>{(movieGenreCount.length > 4) ? movieGenreCount[4].movieGenre_name : " "}</div>
                 </div>
                 <div className="genre-column">
-                  <div><div className="legend" style={(genreCount.length > 5) ? {backgroundColor: colorList[5]} : {backgroundColor: ""}}></div>{(genreCount.length > 5) ? genreCount[5].movieGenre_name : " "}</div>
-                  <div><div className="legend" style={(genreCount.length > 6) ? {backgroundColor: colorList[6]} : {backgroundColor: ""}}></div>{(genreCount.length > 6) ? genreCount[6].movieGenre_name : " "}</div>
-                  <div><div className="legend" style={(genreCount.length > 7) ? {backgroundColor: colorList[7]} : {backgroundColor: ""}}></div>{(genreCount.length > 7) ? genreCount[7].movieGenre_name : " "}</div>
-                  <div><div className="legend" style={(genreCount.length > 8) ? {backgroundColor: colorList[8]} : {backgroundColor: ""}}></div>{(genreCount.length > 8) ? genreCount[8].movieGenre_name : " "}</div>
-                  <div><div className="legend" style={(genreCount.length > 9) ? {backgroundColor: colorList[9]} : {backgroundColor: ""}}></div>{(genreCount.length > 9) ? genreCount[9].movieGenre_name : " "}</div>
+                  <div><div className="legend" style={(movieGenreCount.length > 5) ? {backgroundColor: colorList[5]} : {backgroundColor: ""}}></div>{(movieGenreCount.length > 5) ? movieGenreCount[5].movieGenre_name : " "}</div>
+                  <div><div className="legend" style={(movieGenreCount.length > 6) ? {backgroundColor: colorList[6]} : {backgroundColor: ""}}></div>{(movieGenreCount.length > 6) ? movieGenreCount[6].movieGenre_name : " "}</div>
+                  <div><div className="legend" style={(movieGenreCount.length > 7) ? {backgroundColor: colorList[7]} : {backgroundColor: ""}}></div>{(movieGenreCount.length > 7) ? movieGenreCount[7].movieGenre_name : " "}</div>
+                  <div><div className="legend" style={(movieGenreCount.length > 8) ? {backgroundColor: colorList[8]} : {backgroundColor: ""}}></div>{(movieGenreCount.length > 8) ? movieGenreCount[8].movieGenre_name : " "}</div>
+                  <div><div className="legend" style={(movieGenreCount.length > 9) ? {backgroundColor: colorList[9]} : {backgroundColor: ""}}></div>{(movieGenreCount.length > 9) ? movieGenreCount[9].movieGenre_name : " "}</div>
                 </div>
+                </>)
+                :
+                (
+                <>
+                <div className="piechart"></div>
+                <div className="genre-column">
+                  <div><div className="legend" style={(showGenreCount.length > 0) ? {backgroundColor: colorList[0]} : {backgroundColor: ""}}></div>{(showGenreCount.length > 0) ? showGenreCount[0].tvGenre_name : " "}</div>
+                  <div><div className="legend" style={(showGenreCount.length > 1) ? {backgroundColor: colorList[1]} : {backgroundColor: ""}}></div>{(showGenreCount.length > 1) ? showGenreCount[1].tvGenre_name : " "}</div>
+                  <div><div className="legend" style={(showGenreCount.length > 2) ? {backgroundColor: colorList[2]} : {backgroundColor: ""}}></div>{(showGenreCount.length > 2) ? showGenreCount[2].tvGenre_name : " "}</div>
+                  <div><div className="legend" style={(showGenreCount.length > 3) ? {backgroundColor: colorList[3]} : {backgroundColor: ""}}></div>{(showGenreCount.length > 3) ? showGenreCount[3].tvGenre_name : " "}</div>
+                  <div><div className="legend" style={(showGenreCount.length > 4) ? {backgroundColor: colorList[4]} : {backgroundColor: ""}}></div>{(showGenreCount.length > 4) ? showGenreCount[4].tvGenre_name : " "}</div>
+                </div>
+                <div className="genre-column">
+                  <div><div className="legend" style={(showGenreCount.length > 5) ? {backgroundColor: colorList[5]} : {backgroundColor: ""}}></div>{(showGenreCount.length > 5) ? showGenreCount[5].tvGenre_name : " "}</div>
+                  <div><div className="legend" style={(showGenreCount.length > 6) ? {backgroundColor: colorList[6]} : {backgroundColor: ""}}></div>{(showGenreCount.length > 6) ? showGenreCount[6].tvGenre_name : " "}</div>
+                  <div><div className="legend" style={(showGenreCount.length > 7) ? {backgroundColor: colorList[7]} : {backgroundColor: ""}}></div>{(showGenreCount.length > 7) ? showGenreCount[7].tvGenre_name : " "}</div>
+                  <div><div className="legend" style={(showGenreCount.length > 8) ? {backgroundColor: colorList[8]} : {backgroundColor: ""}}></div>{(showGenreCount.length > 8) ? showGenreCount[8].tvGenre_name : " "}</div>
+                  <div><div className="legend" style={(showGenreCount.length > 9) ? {backgroundColor: colorList[9]} : {backgroundColor: ""}}></div>{(showGenreCount.length > 9) ? showGenreCount[9].tvGenre_name : " "}</div>
+                </div>
+              </>
+                )
+              }
+              
               </div>
             </div>
             <div className="card-long card5">

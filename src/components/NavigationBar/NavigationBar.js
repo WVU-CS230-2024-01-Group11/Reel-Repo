@@ -8,7 +8,7 @@ export default function NavigationBar() {
   return (
     <nav className="navigation-bar">
       <div className="navbar-logo">
-        <a href="/" className="logo-text">
+        <a href="/home" className="logo-text">
           Reel Repo
         </a>
       </div>

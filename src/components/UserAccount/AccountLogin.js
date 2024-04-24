@@ -41,11 +41,12 @@ function AccountLogin(){
   }
 
   return (
-    <div className="App">
-      <div>
+    <div className="App" style={{fontFamily: "arial"}}>
+      <div style={{marginTop: "50px"}}><h1 style={{fontSize: "50pt"}}>Reel Repo</h1></div>
+      <div style={{position: "absolute", top: "50%", left: "50%", transform: "translate(-50%,-70%)"}}>
         <form id="form" onSubmit={handleSubmit}>
-          <h1>Account Login</h1>
-          <div>
+          <h2 style={{margin: "50px", fontSize: "26pt"}} >Account Login</h2>
+          <div style={{marginLeft: "auto", marginRight: "auto", marginBottom: "15px", width: "fit-content"}}>
             <label htmlFor="user">Username</label>
             <input
               type="text"
@@ -56,7 +57,7 @@ function AccountLogin(){
             />
             <div id="userError">{userError}</div>
           </div>
-          <div>
+          <div style={{marginLeft: "auto", marginRight: "auto", marginBottom: "15px", width: "fit-content"}}>
             <label htmlFor="password">Password</label>
             <input
               type="password"
@@ -67,11 +68,11 @@ function AccountLogin(){
             />
             <div id="passwordError">{passwordError}</div>
           </div>
-          <ReCAPTCHA
+          <ReCAPTCHA style={{marginLeft: "auto", marginRight: "auto", marginBottom: "15px", width: "fit-content"}}
           sitekey="6Lc3SrkpAAAAAMwwC84Vcu_qXSQS7WFrmpLb-pPC"
           onChange={(val)=>setCapVal(val)} 
           />
-          <button type="submit" disabled={!capVal}>Submit</button>
+          <button style={{display: "block", marginLeft: "auto", marginRight: "auto", marginBottom: "15px", width: "fit-content"}} type="submit" disabled={!capVal}>Submit</button>
         </form>
       </div>
     </div>
