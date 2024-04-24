@@ -1,12 +1,8 @@
-import React, {useState, useEffect} from 'react';
-import { sendFriendRequest,
-    acceptFriendRequest,
-    declineFriendRequest,
-    checkFriendship,
-    getReceivedFriendRequests,
-    getCurrentFriends,
-removeFriend, getSentFriendRequests,} from '../../services/database';
+import React, { useState, useEffect } from 'react';
+import { sendFriendRequest, acceptFriendRequest, declineFriendRequest, checkFriendship, getReceivedFriendRequests, getCurrentFriends, removeFriend, getSentFriendRequests } from '../../services/database';
 import { useUsername } from '../Contexts/UsernameContext';
+import { Card, Button, Form, Row, Col } from 'react-bootstrap';
+
 const FriendsDemo = () => {
     const { username, setUsername } = useUsername();
     const [targetUser, setTargetUser] = useState('');
@@ -54,46 +50,69 @@ const FriendsDemo = () => {
     };
 
     return (
-        <div>
+        <div className="container">
             <h2>Friends Demo</h2>
-            <input
-                type="text"
-                placeholder="Enter target username"
-                value={targetUser}
-                onChange={(e) => setTargetUser(e.target.value)}
-            />
-            <button onClick={handleSendRequest}>Send Friend Request</button>
-            <button onClick={handleCheckFriendship}>Check Friendship</button>
-            {isFriends !== null && (
-                <div>
-                    {isFriends.isFriends ? 'You are friends' : 'You are not friends'}
-                </div>
-            )}
-            <h3>Received Friend Requests</h3>
-            <ul>
-                {receivedRequests.map(request => (
-                    <li key={request.requester}>
-                        {request.requester}
-                        <button onClick={() => handleAcceptRequest(request.requester)}>Accept</button>
-                        <button onClick={() => handleDeclineRequest(request.requester)}>Decline</button>
-                    </li>
-                ))}
-            </ul>
-            <h3>Sent Friend Requests</h3>
-            <ul>
-                {sentRequests.map(request => (
-                    <li key={request.receiver}>{request.receiver}</li>
-                ))}
-            </ul>
-            <h3>Current Friends</h3>
-            <ul>
-                {currentFriends.map(friend => (
-                    <li key={friend.friend}>
-                        {friend.friend}
-                        <button onClick={() => handleRemoveFriend(friend.friend)}>Remove Friend</button>
-                    </li>
-                ))}
-            </ul>
+            <Row className="mb-3">
+                <Col>
+                    <Form.Control type="text" placeholder="Enter target username" value={targetUser} onChange={(e) => setTargetUser(e.target.value)} />
+                </Col>
+                <Col className="d-flex align-items-end">
+                    <Button className="round-button mr-2" onClick={handleSendRequest}>Send Friend Request</Button>
+                    <Button className="mr-2" onClick={handleCheckFriendship}>Check Friendship</Button>
+                    {isFriends !== null && (
+                        <div>
+                            {isFriends.isFriends ? 'You are friends' : 'You are not friends'}
+                        </div>
+                    )}
+                </Col>
+            </Row>
+            <Row className="mb-3">
+                <Col>
+                    <Card>
+                        <Card.Body>
+                            <Card.Title>Received Friend Requests</Card.Title>
+                            <ul>
+                                {receivedRequests.map(request => (
+                                    <li key={request.requester}>
+                                        {request.requester}
+                                        <Button variant="success" onClick={() => handleAcceptRequest(request.requester)}>Accept</Button>
+                                        <Button variant="danger" onClick={() => handleDeclineRequest(request.requester)}>Decline</Button>
+                                    </li>
+                                ))}
+                            </ul>
+                        </Card.Body>
+                    </Card>
+                </Col>
+                <Col>
+                    <Card>
+                        <Card.Body>
+                            <Card.Title>Sent Friend Requests</Card.Title>
+                            <ul>
+                                {sentRequests.map(request => (
+                                    <li key={request.receiver}>{request.receiver}</li>
+                                ))}
+                            </ul>
+                        </Card.Body>
+                    </Card>
+                </Col>
+            </Row>
+            <Row>
+                <Col>
+                    <Card>
+                        <Card.Body>
+                            <Card.Title>Current Friends</Card.Title>
+                            <ul>
+                                {currentFriends.map(friend => (
+                                    <li key={friend.friend} className="mb-2">
+                                        <span>{friend.friend}</span>
+                                        <Button variant="danger" size="sm" className="ml-2" onClick={() => handleRemoveFriend(friend.friend)}>Remove Friend</Button>
+                                    </li>
+                                ))}
+                            </ul>
+                        </Card.Body>
+                    </Card>
+                </Col>
+            </Row>
         </div>
     );
 };
