@@ -47,6 +47,8 @@ function AccountCreation() {
     }
     return 0;
   };
+
+
   const sendEmailValidationRequest = async () => {
     if (email===''){
       return false;
@@ -93,9 +95,7 @@ function AccountCreation() {
   
   //Checks if username is already in db
   const usernameTaken = async () => {
-    console.log("fetching usernames");
     const users= await fetchUsernames();
-    console.log("looking for usernames");
     const foundUser= users.find((user)=> user.username===username)
       if (foundUser){
         if (foundUser.password===password){
@@ -125,10 +125,8 @@ function AccountCreation() {
       setEmailError("Email can't be blank");
       passedAll=false;
     } 
-    console.log("checking if valid email");
     const emailValidationResult = await isValidEmail();
     if (emailValidationResult===1) {
-      console.log("format wrong");
       setEmailError("Provide a valid email format");
       passedAll=false;
     } else if (emailValidationResult===2){
@@ -258,7 +256,7 @@ function AccountCreation() {
           sitekey="6Lc3SrkpAAAAAMwwC84Vcu_qXSQS7WFrmpLb-pPC"
           onChange={(val)=>setCapVal(val)} 
           />
-          <button type="submit" disabled={capVal}>Submit</button>
+          <button type="submit" disabled={!capVal}>Submit</button>
         </form>
       </div>
     </div>
