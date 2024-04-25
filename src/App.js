@@ -91,7 +91,10 @@ function App() {
             path="/friends"
             element={<FriendsDemo />}
             />
+          <Route path="/" element={<AccountLogin />} />
+          <Route path="/account-creation" element={<AccountCreation />} />
         </Routes>
+        
       </BrowserRouter>
       </UsernameProvider>
   )

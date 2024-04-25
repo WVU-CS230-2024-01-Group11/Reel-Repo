@@ -3,6 +3,9 @@ import { useUsername } from '../Contexts/UsernameContext';
 import { fetchAccountData } from '../../services/database';
 import { useNavigate } from 'react-router-dom';
 import ReCAPTCHA from "react-google-recaptcha";
+import { Link } from 'react-router-dom';
+import { Route } from 'react-router-dom';
+import AccountCreation from './AccountCreation';
 //6Lc3SrkpAAAAAMwwC84Vcu_qXSQS7WFrmpLb-pPC
 function AccountLogin(){
   const { username, setUsername } = useUsername();
@@ -45,8 +48,7 @@ function AccountLogin(){
       <div style={{marginTop: "50px"}}><h1 style={{fontSize: "50pt"}}>Reel Repo</h1></div>
       <div style={{position: "absolute", top: "50%", left: "50%", transform: "translate(-50%,-70%)"}}>
         <form id="form" onSubmit={handleSubmit}>
-          <h2 style={{margin: "50px", fontSize: "26pt"}} >Account Login</h2>
-          <div style={{marginLeft: "auto", marginRight: "auto", marginBottom: "15px", width: "fit-content"}}>
+          <div style={{marginLeft: "auto", marginRight: "auto", marginTop: "200px", marginBottom: "15px", width: "fit-content"}}>
             <label htmlFor="user">Username</label>
             <input
               type="text"
@@ -74,6 +76,9 @@ function AccountLogin(){
           />
           <button style={{display: "block", marginLeft: "auto", marginRight: "auto", marginBottom: "15px", width: "fit-content"}} type="submit" disabled={!capVal}>Submit</button>
         </form>
+        <div>
+          New user? <Link to="/account-creation">Create Account</Link>
+        </div>
       </div>
     </div>
   );

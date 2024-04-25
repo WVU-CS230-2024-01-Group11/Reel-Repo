@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { sendFriendRequest, acceptFriendRequest, declineFriendRequest, checkFriendship, getReceivedFriendRequests, getCurrentFriends, removeFriend, getSentFriendRequests } from '../../services/database';
 import { useUsername } from '../Contexts/UsernameContext';
 import { Card, Button, Form, Row, Col } from 'react-bootstrap';
+import NavigationBar from '../NavigationBar/NavigationBar'
+
 
 const FriendsDemo = () => {
     const { username, setUsername } = useUsername();
@@ -51,10 +53,13 @@ const FriendsDemo = () => {
 
     return (
         <div className="container">
+         <NavigationBar />
+
             <h2>Friends Demo</h2>
+        <div style = {{paddingTop: '100px'}}>
             <Row className="mb-3">
                 <Col>
-                    <Form.Control type="text" placeholder="Enter target username" value={targetUser} onChange={(e) => setTargetUser(e.target.value)} />
+                    <Form.Control type="text" placeholder="Search For User" value={targetUser} onChange={(e) => setTargetUser(e.target.value)} />
                 </Col>
                 <Col className="d-flex align-items-end">
                     <Button className="round-button mr-2" onClick={handleSendRequest}>Send Friend Request</Button>
@@ -113,6 +118,7 @@ const FriendsDemo = () => {
                     </Card>
                 </Col>
             </Row>
+        </div>
         </div>
     );
 };
