@@ -451,6 +451,16 @@ app.get('/api/movies-by-rating-max', (req, res) => {
         }
     });
 });
+app.get('/api/get-avatar', async (req, res) => {
+    const { username } = req.query;
+    try {
+    const result = await queryAsync('SELECT character_icon FROM accounts WHERE username = ?', [username]);
+    res.json(result);
+    } catch (error) {
+        console.error('Error fetching icon:', error);
+    }
+    
+});
 
 app.post('/api/accounts', (req, res) => {
     const newData = req.body;
@@ -614,6 +624,17 @@ app.post('/api/watch-later/tv', async (req, res) => {
         await queryAsync('ROLLBACK');
         console.error('Error adding TV show to watch later list:', error);
         res.status(500).send('Error adding TV show to watch later list');
+    }
+});
+
+app.post('/api/update-character-icon', async (req, res) => {
+    const { username, characterIcon } = req.body;
+    try {
+        const result = queryAsync('UPDATE accounts SET character_icon = ? WHERE username = ?', [characterIcon, username]);
+        res.send({ success: true, message: 'Character icon updated successfully.' });
+    } catch (error) {
+        console.error('Error updating character icon:', error);
+        res.status(500).send({ success: false, message: 'Failed to update character icon.' });
     }
 });
 

@@ -454,3 +454,22 @@ export const fetchFiveMoviesByRating = async (username) => {
     console.error('Error fetching user shows by rating:', error);
   }
 };
+export const updateCharacterIcon = async (username, characterIcon) => {
+  try {
+      const response = await axios.post(`${baseURL}/update-character-icon`, { username, characterIcon });
+      console.log(response.data.message);
+      return response.data;
+  } catch (error) {
+      console.error('Error updating character icon:', error);
+      return { success: false, message: 'Failed to update character icon.' };
+  }
+};
+export const fetchCharacterIcon = async (username) => {
+  try {
+      const response = await axios.get(`${baseURL}/get-avatar`, { params: { username } });
+      return response.data;  
+  } catch (error) {
+      console.error('Error fetching character icon:', error);
+      return { success: false, message: 'Failed to fetch character icon.' };
+  }
+};
