@@ -1,11 +1,10 @@
-import React, { useState,useContext } from 'react';
+import React, { useState } from 'react';
 import { useUsername } from '../Contexts/UsernameContext';
 import { fetchAccountData } from '../../services/database';
 import { useNavigate } from 'react-router-dom';
 import ReCAPTCHA from "react-google-recaptcha";
 import { Link } from 'react-router-dom';
-import { Route } from 'react-router-dom';
-import AccountCreation from './AccountCreation';
+
 //6Lc3SrkpAAAAAMwwC84Vcu_qXSQS7WFrmpLb-pPC
 function AccountLogin(){
   const { username, setUsername } = useUsername();
@@ -18,7 +17,6 @@ function AccountLogin(){
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log("Form submitted");
-    let valid = false;
     setUserError("");
     setPasswordError("");
   //Ensures all inputs are valid before adding new user

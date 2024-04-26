@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { totalMovieWatchTime,totalWatchTimeMonth,totalWatchTimeYear,totalTVWatchTime, totalWatchTime} from '../../services/database';
 import './TimeStats.css';
+import  { useUsername} from '../Contexts/UsernameContext';
 
 
-function TimeStats({ username="test" }) {
- 
+function TimeStats() {
+  const { username } = useUsername();
   const [stats, setStats] = useState({
     totalMovieWatchTime: [0],
     totalWatchTimeMonth: [0],
@@ -31,13 +32,6 @@ function TimeStats({ username="test" }) {
   };
 
 
-  
-  const handleChange = (statName, value) => {
-    setStats(prevStats => ({
-      ...prevStats,
-      [statName]: value
-    }));
-  };
 
   return (
     <div className="UserStatistics">

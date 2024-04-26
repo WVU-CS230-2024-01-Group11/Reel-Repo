@@ -703,51 +703,6 @@ theMovieDb.genres = {
 
 };
 
-/*theMovieDb.guestSession = {
-  getRatedMovies: function(success, error) {
-    'use strict';
-
-    theMovieDb.common.validateRequired(arguments, 3, ["id"]);
-
-    theMovieDb.common.validateCallbacks(success, error);
-
-    theMovieDb.common.client({
-        url: "guest_session/" + options.id + "/rated/movies" + theMovieDb.common.generateQuery()
-      },
-      success,
-      error
-    );
-  },
-  getRatedTvShows: function(success, error) {
-    'use strict';
-
-    theMovieDb.common.validateRequired(arguments, 3, ["id"]);
-
-    theMovieDb.common.validateCallbacks(success, error);
-
-    theMovieDb.common.client({
-        url: "guest_session/" + options.id + "/rated/tv" + theMovieDb.common.generateQuery()
-      },
-      success,
-      error
-    );
-  },
-  getRatedTvEpisodes: function(success, error) {
-    'use strict';
-
-    theMovieDb.common.validateRequired(arguments, 3, ["id"]);
-
-    theMovieDb.common.validateCallbacks(success, error);
-
-    theMovieDb.common.client({
-        url: "guest_session/" + options.id + "/rated/tv/episodes" + theMovieDb.common.generateQuery()
-      },
-      success,
-      error
-    );
-  }
-};*/
-
 theMovieDb.keywords = {
   getById: function(options, success, error) {
     'use strict';

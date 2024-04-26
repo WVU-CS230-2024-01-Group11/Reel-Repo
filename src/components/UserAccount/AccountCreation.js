@@ -1,5 +1,5 @@
-import {addNewAccount, fetchAccountData, fetchUsernames} from '../../services/database';
-import React, { useState,useContext } from 'react';
+import {addNewAccount, fetchUsernames} from '../../services/database';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import  { useUsername } from '../Contexts/UsernameContext';
 import ReCAPTCHA from "react-google-recaptcha";
@@ -148,7 +148,7 @@ function AccountCreation() {
     if (password === "") {
       setPasswordError("Password can't be blank");
       passedAll=false;
-    } else if (isStrongPassword!=="valid") {
+    } else if (isStrongPassword!="valid") {
       setPasswordError(isStrongPassword);
       passedAll=false;
     }
@@ -175,7 +175,7 @@ function AccountCreation() {
     //Adding new user
     console.log("adding user");
     let newUser={tempUsername, firstName, lastName, email, password};
-    const response= await addNewAccount(newUser);
+    addNewAccount(newUser);
     setUsername(tempUsername);
     navigate("/home");
   } 

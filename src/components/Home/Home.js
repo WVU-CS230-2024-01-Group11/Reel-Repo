@@ -1,25 +1,50 @@
 import NavigationBar from "../NavigationBar/NavigationBar";
 import { useState, useEffect } from "react";
 import theMovieDb from "../Utils/themoviedb";
-import { getFriendsTopRatings } from "../../services/database";
 import { useNavigate } from 'react-router-dom';
 import  { useUsername } from '../Contexts/UsernameContext';
-import { fetchFiveMoviesByRating, fetchFiveShowsByRating, totalMovieWatchTime, totalTVWatchTime, totalWatchTime, getCurrentFriends, movieGenreCounts, TVGenreCounts, getWatchLaterMoviesView, getWatchLaterTVView} from '../../services/database';
-import profile_placeholder from "./profile_placeholder.png"
+import { getFriendsTopRatings, fetchFiveMoviesByRating, fetchFiveShowsByRating, totalMovieWatchTime, totalTVWatchTime, totalWatchTime, getCurrentFriends, movieGenreCounts, TVGenreCounts, getWatchLaterMoviesView, getWatchLaterTVView, fetchCharacterIcon} from '../../services/database';
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 import { Dropdown } from "react-bootstrap";
 import "./Home.css"
 import "../NavigationBar/NavigationBar.css";
-
+import avatar1 from '../Avatars/row-1-column-1.jpg'
+import avatar2 from '../Avatars/row-1-column-2.jpg';
+import avatar3 from '../Avatars/row-1-column-3.jpg';
+import avatar4 from '../Avatars/row-1-column-4.jpg';
+import avatar5 from '../Avatars/row-2-column-1.jpg';
+import avatar6 from '../Avatars/row-2-column-2.jpg';
+import avatar7 from '../Avatars/row-2-column-3.jpg';
+import avatar8 from '../Avatars/row-2-column-4.jpg';
+import avatar9 from '../Avatars/row-3-column-1.jpg';
+import avatar10 from '../Avatars/row-3-column-2.jpg';
+import avatar11 from '../Avatars/row-3-column-3.jpg';
+import avatar12 from '../Avatars/row-3-column-4.jpg';
+import defaultAvatar from '../Avatars/blank-profile-picture-973460_1280.jpg'
 //Colors for piechart
 const colorList = ["Dimgrey", "FloralWhite", "Gainsboro", "LightSlateGrey", "MintCream", "OldLace", "SeaShell", "Silver", "HoneyDew", "WhiteSmoke"];
 
 function Home() {
   //Username context
-  const { username, setUsername } = useUsername();
-  //setUsername("test");
-  const [key, setKey] = useState(0); 
+  const { username } = useUsername();
+  const [key, setKey] = useState(0);
+  //Avatar map 
+  const avatarMap = {
+    defaultAvatar: defaultAvatar,
+    avatar1: avatar1,
+    avatar2: avatar2,
+    avatar3: avatar3,
+    avatar4: avatar4,
+    avatar5: avatar5,
+    avatar6: avatar6,
+    avatar7: avatar7,
+    avatar8: avatar8,
+    avatar9: avatar9,
+    avatar10: avatar10,
+    avatar11: avatar11,
+    avatar12: avatar12
+  }; 
   const responsive = {
     superWide: {
       breakpoint: { max: 5000, min: 3001 },  // Covers screens wider than 3000px
@@ -53,6 +78,7 @@ function Home() {
     totalTVWatchTime: [0],
     totalWatchTime: [0],
   });
+  const [avatar,setCurrentAvatar]=useState(0);
   const [watchTimeString, setWatchTimeString] = useState([]);
   const [currentFriends, setCurrentFriends] = useState([]);
   const [movieGenreCount, setMovieGenreCount] = useState([]);
@@ -69,6 +95,10 @@ function Home() {
   const [topShows, setTopShows] = useState([]);
   //Fetches frinds, friends ratings, watch time, and genre counts when username changes
   useEffect(() => {
+    const fetchAvatar = async () => {
+      const result = await fetchCharacterIcon(username);
+      setCurrentAvatar(avatarMap[result[0].character_icon] || defaultAvatar);
+  };
     const fetchData = async () => {
         const ratings = await getFriendsTopRatings(username);
         setFriendsRatings(ratings);
@@ -106,6 +136,7 @@ function Home() {
 
     //Only fetch from database is username is not empty
     if(username !== ''){
+      fetchAvatar();
       fetchData();
       fetchUserWatchTime();
       fetchFriends();
@@ -247,7 +278,7 @@ function Home() {
     setGenreSelectedContent(eventKey);
   }
 
-  const getMovieRecommendations = (topMovies) => {
+  const getMovieRecommendations = () => {
     let recommended = [];
     const movieIds = topMovies.map(movie => movie.movie_id);
     let completedCalls = 0;
@@ -269,7 +300,7 @@ function Home() {
       }
     });
   };
-  const getShowRecommendations = (topShows) => {
+  const getShowRecommendations = () => {
     let recommended = [];
     const showIds = topShows.map(show => show.show_id);
     let completedCalls = 0;
@@ -300,7 +331,7 @@ function Home() {
             <div className="card-normal card1" onClick={()=>navigate('/profile')}>
               <div className="card-label">Profile</div>
               <div className='card-content'>
-                <div id='profile'> <img src={profile_placeholder} alt='Profile'/> {username}</div>
+                <div id='profile'> <img src={avatar || defaultAvatar} alt='Profile'/> {username}</div>
                 <div id='friend-count'>{currentFriends.length} Friends</div>
               </div>
             </div>

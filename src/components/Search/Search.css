@@ -28,7 +28,7 @@ select {
     flex-direction: column;
     position: absolute;
     background-color: darkgrey;
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
     border-radius: 5%;
     width: 40vw;
     max-height: 500px;
