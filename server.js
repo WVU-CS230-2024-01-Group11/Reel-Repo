@@ -54,6 +54,20 @@ app.get('/api/accounts/emails', (req, res) => {
         }
     });
 });
+app.get('/api/user-details', async (req, res) => {
+    const { username } = req.query;
+    try {
+        const result = await queryAsync('SELECT firstname, lastname FROM accounts WHERE username = ?', [username]);
+        if (result.length > 0) {
+            res.json(result[0]);  
+        } else {
+            res.status(404).send('User not found');
+        }
+    } catch (error) {
+        console.error('Error fetching user details:', error);
+        res.status(500).send('Error fetching user details');
+    }
+});
 
 app.get('/api/total-user-watch-time', (req, res) => {
     const username = req.query.username;
@@ -537,7 +551,7 @@ app.post('/api/send-friend-request', (req, res) => {
     const { requester, receiver } = req.body;
     const requestDate = new Date().toISOString().slice(0, 10);
 
-    queryAsync('INSERT INTO friendRequests (requester, receiver, request_date) VALUES (?, ?, ?)', [requester, receiver, requestDate], (error, results) => {
+    queryAsync('INSERT IGNORE INTO friendRequests (requester, receiver, request_date) VALUES (?, ?, ?)', [requester, receiver, requestDate], (error, results) => {
         if (error) {
             console.error('Error sending friend request:', error);
             res.status(500).send('Error sending friend request');

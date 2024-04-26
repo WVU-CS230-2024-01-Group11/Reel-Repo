@@ -4,26 +4,31 @@ import { useState, useEffect } from 'react'
 import  { useUsername } from '../Contexts/UsernameContext'
 import Popup from 'reactjs-popup'
 import 'reactjs-popup/dist/index.css';
-import avatar1 from '../Avatars/row-1-column-1.jpg';
-import avatar2 from '../Avatars/row-1-column-2.jpg';
-import avatar3 from '../Avatars/row-1-column-3.jpg';
-import avatar4 from '../Avatars/row-1-column-4.jpg';
-import avatar5 from '../Avatars/row-2-column-1.jpg';
-import avatar6 from '../Avatars/row-2-column-2.jpg';
-import avatar7 from '../Avatars/row-2-column-3.jpg';
-import avatar8 from '../Avatars/row-2-column-4.jpg';
-import avatar9 from '../Avatars/row-3-column-1.jpg';
-import avatar10 from '../Avatars/row-3-column-2.jpg';
-import avatar11 from '../Avatars/row-3-column-3.jpg';
-import avatar12 from '../Avatars/row-3-column-4.jpg';
-import defaultAvatar from '../Avatars/blank-profile-picture-973460_1280.jpg'
-import { updateCharacterIcon, fetchCharacterIcon } from '../../services/database'
+import avatar1 from './Avatars/row-1-column-1.jpg';
+import avatar2 from './Avatars/row-1-column-2.jpg';
+import avatar3 from './Avatars/row-1-column-3.jpg';
+import avatar4 from './Avatars/row-1-column-4.jpg';
+import avatar5 from './Avatars/row-2-column-1.jpg';
+import avatar6 from './Avatars/row-2-column-2.jpg';
+import avatar7 from './Avatars/row-2-column-3.jpg';
+import avatar8 from './Avatars/row-2-column-4.jpg';
+import avatar9 from './Avatars/row-3-column-1.jpg';
+import avatar10 from './Avatars/row-3-column-2.jpg';
+import avatar11 from './Avatars/row-3-column-3.jpg';
+import avatar12 from './Avatars/row-3-column-4.jpg';
+import defaultAvatar from './Avatars/blank-profile-picture-973460_1280.jpg'
+import { updateCharacterIcon, fetchCharacterIcon, fetchUserDetails, getUserMovieWatchHistory, getUserEpisodeWatchHistory,fetchFiveMoviesByRating, fetchFiveShowsByRating } from '../../services/database'
+import styles from './/Profile.css'
 
 export default function Profile() {
   const { username, setUsername } = useUsername();
-  //Should be like useState(retrieveAvatar(username))
   const [selectedAvatar, setSelectedAvatar] = useState(defaultAvatar);
   const [currentAvatar, setCurrentAvatar] = useState();
+  const [userDetails, setUserDetails] = useState({ firstname: '', lastname: '' });
+  const [movieHistory, setMovieHistory] = useState([]);
+  const [episodeHistory, setEpisodeHistory] = useState([]);
+  const [topMovies, setTopMovies] = useState([]);
+  const [topEpisodes, setTopEpisodes] = useState([]);
 
   const avatarMap = {
     defaultAvatar: defaultAvatar,
@@ -43,13 +48,37 @@ export default function Profile() {
   
   useEffect(() => {
     const loadCharacterIcon = async () => {
-        const result = await fetchCharacterIcon(username);
-        setCurrentAvatar(avatarMap[result[0].character_icon] || defaultAvatar);
+      const result = await fetchCharacterIcon(username);
+      setCurrentAvatar(avatarMap[result[0].character_icon] || defaultAvatar);
         
     };
-  
+    const getUserDetails = async () => {
+      const details = await fetchUserDetails(username);
+      setUserDetails(details);
+    };
+    const getMovieHistory = async () => {
+      const movies = await getUserMovieWatchHistory(username);
+      setMovieHistory(movies.splice(0,5));
+    }
+    const getEpisodeHistory = async () => {
+      const episodes = await getUserEpisodeWatchHistory(username);
+      setEpisodeHistory(episodes.splice(0,5));
+    }
+    const getTopMovies = async () => {
+      const movies = await fetchFiveMoviesByRating(username);
+      setTopMovies(movies);
+    }
+    const getTopEpisodes = async () => {
+      const episodes = await fetchFiveShowsByRating(username);
+      setTopEpisodes(episodes.splice(0,5));
+    }
     if (username) {
         loadCharacterIcon();
+        getUserDetails();
+        getMovieHistory();
+        getEpisodeHistory();
+        getTopMovies();
+        getTopEpisodes();
     }
   }, [username]);
   
@@ -75,25 +104,54 @@ const handleConfirmAvatar = async () => {
       console.error('Error updating avatar:', error);
   }
 };
-  return (
-    <>
+return (
+  <>
     <NavigationBar />
-    <div style={{ paddingTop: '200px' }}>
-      <div> Current:
-        <img src={currentAvatar || defaultAvatar} alt="Current Avatar" style={{ width: '300px', height: '300px' }} />
+    <div className='contentProfile'>
+      <div className='profileHeader'>
+        <img src={currentAvatar} alt="Current Avatar" className='profilePic' />
+        <div>
+          <h2 className='usernameHandle'>@{username}</h2>
+          <h1 className='userFullName'>{userDetails.firstname} {userDetails.lastname}</h1>
+        </div>
+        <Popup trigger={<button className='avatarBtn'>Choose Avatar</button>} modal nested>
+          <div className='avatarSelection'>
+            {Object.entries(avatarMap).map(([key, image]) => (
+              <button key={key} onClick={() => handleAvatarSelect(key)}>
+                <img src={image} alt={`Avatar ${key}`} className='avatarImage' />
+              </button>
+            ))}
+            <button onClick={handleSelection}>Confirm Selection</button>
+          </div>
+        </Popup>
       </div>
-      <div>
-        Selected: <img src={selectedAvatar || defaultAvatar} alt="Selected Avatar" style={{ width: '300px', height: '300px' }} />
+      <div className='dataSection'>
+        <div className='recentlyWatchedMovies'>
+          <h3>Recently Watched Movies</h3>
+          {movieHistory.map(movie => (
+            <div className='movieCard'>{movie.movie_name}</div>
+          ))}
+        </div>
+        <div className='recentlyWatchedEpisodes'>
+          <h3>Recently Watched Episodes</h3>
+          {episodeHistory.map(episode => (
+            <div className='episodeCard'>{episode.show_name}: Season {episode.season_number}, {episode.episode_name}</div>
+          ))}
+        </div>
+        <div className='topMovies'>
+          <h3>Top Movies</h3>
+          {topMovies.map(movie => (
+            <div className='movieCard'>{movie.movie_name}</div>
+          ))}
+        </div>
+        <div className='topShows'>
+          <h3>Top Shows</h3>
+          {topEpisodes.map(show => (
+            <div className='showCard'>{show.show_name}</div>
+          ))}
+        </div>
       </div>
-      <Popup trigger={<button>Choose Avatar</button>} modal nested>
-        {Object.entries(avatarMap).map(([key, image]) => (
-          <button key={key} onClick={() => handleAvatarSelect(key)}>
-            <img src={image} alt={`Avatar ${key}`} style={{ width: '100px', height: '100px' }} />
-          </button>
-        ))}
-        <button onClick={handleSelection}>Confirm Selection</button>
-      </Popup>
     </div>
-    </>
-  )
+  </>
+);
 }

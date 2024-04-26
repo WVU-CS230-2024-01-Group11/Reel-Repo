@@ -43,3 +43,24 @@
     width: 100%; /* make the button row take up the full width of its parent */
     padding: 0 10px; /* add some padding to the sides of the row */
 }
+.search-overlay {
+    position: absolute;
+    background-color: white;
+    width: 50vw;
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+    z-index: 1000;  /* Ensures the overlay is above other content */
+    padding: 10px;
+}
+
+.user-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px;
+    border-bottom: 1px solid #ccc;  /* Light grey border for each item */
+    margin-bottom: 5px; /* Adds space between items */
+}
+
+.send-request-btn {
+    white-space: nowrap; /* Prevents the text inside the button from wrapping */
+}

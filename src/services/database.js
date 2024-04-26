@@ -473,3 +473,12 @@ export const fetchCharacterIcon = async (username) => {
       return { success: false, message: 'Failed to fetch character icon.' };
   }
 };
+export const fetchUserDetails = async (username) => {
+  try {
+      const response = await axios.get(`${baseURL}/user-details`, { params: { username } });
+      return response.data;
+  } catch (error) {
+      console.error('Error fetching user details:', error);
+      throw error;
+  }
+};

@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { sendFriendRequest, acceptFriendRequest, declineFriendRequest, checkFriendship, getReceivedFriendRequests, getCurrentFriends, removeFriend, getSentFriendRequests } from '../../services/database';
+import { sendFriendRequest, acceptFriendRequest, declineFriendRequest, checkFriendship, getReceivedFriendRequests, getCurrentFriends, removeFriend, getSentFriendRequests, fetchUsernames } from '../../services/database';
 import { useUsername } from '../Contexts/UsernameContext';
 import { Card, Button, Form, Row, Col } from 'react-bootstrap';
 import NavigationBar from '../NavigationBar/NavigationBar'
+import styles from './/Friends.css'
 
 
 const FriendsDemo = () => {
@@ -12,6 +13,7 @@ const FriendsDemo = () => {
     const [sentRequests, setSentRequests] = useState([]);
     const [currentFriends, setCurrentFriends] = useState([]);
     const [isFriends, setIsFriends] = useState(null);
+    const [usernames, setUsernames] = useState([]);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -21,12 +23,14 @@ const FriendsDemo = () => {
             setReceivedRequests(received);
             setSentRequests(sent);
             setCurrentFriends(friends);
+            const users = await fetchUsernames();
+            setUsernames(users.filter(user => user.username !== username));
         };
 
         fetchData();
     }, [username]);
 
-    const handleSendRequest = async () => {
+    const handleSendRequest = async (targetUser) => {
         await sendFriendRequest(username, targetUser);
         alert('Friend request sent!');
     };
@@ -60,9 +64,21 @@ const FriendsDemo = () => {
             <Row className="mb-3">
                 <Col>
                     <Form.Control type="text" placeholder="Search For User" value={targetUser} onChange={(e) => setTargetUser(e.target.value)} />
+                    {targetUser && (
+                            <div className="search-overlay" >
+                                <ul>
+                                    {usernames.filter(user => user.username.toLowerCase().includes(targetUser.toLowerCase())).map(filteredUser => (
+                                        <li key={filteredUser.username} className="user-item">
+                                            <span>{filteredUser.username}</span>
+                                            <Button variant="primary" size="sm" className="send-request-btn" onClick={() => handleSendRequest(filteredUser.username)}>Send Friend Request</Button>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+                        )}
                 </Col>
                 <Col className="d-flex align-items-end">
-                    <Button className="round-button mr-2" onClick={handleSendRequest}>Send Friend Request</Button>
+                
                     <Button className="mr-2" onClick={handleCheckFriendship}>Check Friendship</Button>
                     {isFriends !== null && (
                         <div>
