@@ -1,18 +1,27 @@
-import React from 'react'
-import "./NavigationBar.css"
+import React, { useState } from 'react';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import "./NavigationBar.css";
 import Search from '../Search/Search';
-import { useState } from 'react';
 
 export default function NavigationBar(props) {
- 
+  const [darkMode, setDarkMode] = useState(false);
+
+  const toggleDarkMode = () => {
+    setDarkMode(!darkMode);
+    // You can add logic here to toggle dark mode in your application
+    const element = document.body;
+        element.dataset.bsTheme = 
+          element.dataset.bsTheme == "light" ? "dark" : "light";
+  };
+
   return (
-    <nav className="navigation-bar">
+    <nav className={`navigation-bar ${darkMode ? 'dark-mode' : ''}`}>
       <div className="navbar-logo">
         <a href="/home" className="logo-text">
           Reel Repo
         </a>
       </div>
-      <Search/>
+      <Search />
       <ul className="navbar-anchors">
         <li className="navbar-anchor nonhidden-anchors">
           <div className="anchor-link">
@@ -42,6 +51,10 @@ export default function NavigationBar(props) {
           </div>
         </li>
       </ul>
+      <div className="form-check form-switch mx-4" onClick={toggleDarkMode}>
+        <input type="checkbox" className="form-check-input p-2" id='flexSwitchCheckChecked' checked={darkMode} readOnly />
+        <label className="toggle-label"></label>
+      </div>
     </nav>
-  )
+  );
 }
