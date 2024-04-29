@@ -3,7 +3,7 @@ import "./NavigationBar.css"
 import Search from '../Search/Search';
 import { useState } from 'react';
 
-export default function NavigationBar() {
+export default function NavigationBar(props) {
  
   return (
     <nav className="navigation-bar">
@@ -14,14 +14,14 @@ export default function NavigationBar() {
       </div>
       <Search/>
       <ul className="navbar-anchors">
-        <li className="navbar-anchor">
+        <li className="navbar-anchor nonhidden-anchors">
           <div className="anchor-link">
             <a href="/repository" className="anchor-text">
               Repository
             </a>
           </div>
         </li>
-        <li className="navbar-anchor">
+        <li className="navbar-anchor nonhidden-anchors">
           <div className="anchor-link">
             <a href="/stats" className="anchor-text">
               Stats
@@ -32,12 +32,12 @@ export default function NavigationBar() {
           <div className="dropdown">
             <span className="dropdown-text">More</span>
             <div className="dropdown-content">
-              <a href="/profile">Profile</a>
-              <a href="/friends">Friends</a>
-              <a href="/settings">Settings</a>
-              <a href="/account-creation">Create Account</a>
-              <a href="/account-login">Login</a>
-              <a href="/">Logout</a>
+              <a className="hidden-anchors" href="/repository">Repository</a>
+              <a className="hidden-anchors" href="/Stats">Stats</a>
+              <a className="shown-anchors" href="/profile">Profile</a>
+              <a className="shown-anchors" href="/friends">Friends</a>
+              <a className="shown-anchors" href="/settings">Settings</a>
+              <a className="shown-anchors" href="/">Logout</a>
             </div>
           </div>
         </li>

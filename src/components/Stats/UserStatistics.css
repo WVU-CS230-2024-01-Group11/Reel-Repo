@@ -1,7 +1,12 @@
-.UserStatistics{
-    margin-top: 200px;
-    margin-left: 100px;
+:root {
+    font-size: 16pt;
+    font-family: "Arial";
+    --primary: #002855;
+    --secondary: #EAAA00;
+    --accent1: #1C2B39;
+    --accent2: #7F6310;
   }
+
 .tab-content {
     padding: 20px;
     border: 1px solid #ddd;
@@ -26,13 +31,8 @@
     display: flex;
     flex-wrap: wrap;
     gap: 10px; /* space between genre boxes */
-}
-
-.genre-box {
-    background-color: #f0f0f0;
-    padding: 10px;
-    border-radius: 5px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    margin: 10px;
+    color: white;
 }
 
 /* Monthly movies layout */
@@ -75,7 +75,7 @@
 }
 
 .genre-box {
-    background-color: #f0f0f0;
+    background-color: var(--accent2);
     padding: 10px;
     border-radius: 5px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
@@ -98,6 +98,10 @@
     display: flex;
     flex-direction: column;
     gap: 5px;
+}
+
+.stat-item {
+    background-color: var(--secondary);
 }
 
 .season-details {

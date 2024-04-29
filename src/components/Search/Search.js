@@ -81,7 +81,7 @@ function Search() {
     // Unordered list of search results
         // Takes each movie and on click, navigates to the details page for it
     return (
-        <div onBlur={() => setIsFocused(false)} onFocus={() => setIsFocused(true)}>
+        <div style={{flexGrow: "3"}} onBlur={() => setIsFocused(false)} onFocus={() => setIsFocused(true)}>
             <div className="search-bar-container">
             <input className="search-bar" id="searchbar" onKeyUp={getSearch} type="text" name="search" placeholder={"Search "+searchType} />
             <select value={searchType} onChange={handleSearchType}>

@@ -20,7 +20,7 @@ import { UsernameProvider } from './components/Contexts/UsernameContext';
 
 function App() {
   const [username, setUsername] = useState(localStorage.getItem('username') || "");
-
+  
   // Update local storage whenever username changes
   useEffect(() => {
     localStorage.setItem('username', username);
@@ -31,6 +31,8 @@ function App() {
   // to the URL so it can be fetched and details about it can be populated
   // Element is the component you want that page to be. I think it can only be used with Components
   // Component must be exported in its own file and then imported here for it to work
+
+  const colors = ["#002855", "EAAA00", "#1C2B39", " #7F6310"]; //["#FF204E", "#A0153E", "#5D0E41", "#00224D"]
   return (
     //Username global context wrapper
     <UsernameProvider>
@@ -39,7 +41,7 @@ function App() {
           <Route
             exact 
             path="/"
-            element={<AccountLogin />}
+            element={<AccountLogin primary={colors[0]} secondary={colors[1]} accent1={colors[2]}/>}
           />
           <Route
             exact 
@@ -69,12 +71,12 @@ function App() {
              <Route 
             exact 
             path="/account-creation" 
-            element={<AccountCreation />} 
+            element={<AccountCreation primary={colors[0]} secondary={colors[1]} accent1={colors[2]}/>} 
             />
             <Route 
             exact 
             path="/home" 
-            element={<Home />} 
+            element={<Home primary={colors[0]} secondary={colors[1]} accent1={colors[2]} accent2={colors[3]}/>} 
             />
             <Route
             exact
@@ -91,8 +93,6 @@ function App() {
             path="/friends"
             element={<FriendsDemo />}
             />
-          <Route path="/" element={<AccountLogin />} />
-          <Route path="/account-creation" element={<AccountCreation />} />
         </Routes>
         
       </BrowserRouter>

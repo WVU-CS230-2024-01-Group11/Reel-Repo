@@ -1,5 +1,5 @@
 import NavigationBar from "../NavigationBar/NavigationBar";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import theMovieDb from "../Utils/themoviedb";
 import { useNavigate } from 'react-router-dom';
 import  { useUsername } from '../Contexts/UsernameContext';
@@ -9,23 +9,25 @@ import "react-multi-carousel/lib/styles.css";
 import { Dropdown } from "react-bootstrap";
 import "./Home.css"
 import "../NavigationBar/NavigationBar.css";
-import avatar1 from '../Avatars/row-1-column-1.jpg'
-import avatar2 from '../Avatars/row-1-column-2.jpg';
-import avatar3 from '../Avatars/row-1-column-3.jpg';
-import avatar4 from '../Avatars/row-1-column-4.jpg';
-import avatar5 from '../Avatars/row-2-column-1.jpg';
-import avatar6 from '../Avatars/row-2-column-2.jpg';
-import avatar7 from '../Avatars/row-2-column-3.jpg';
-import avatar8 from '../Avatars/row-2-column-4.jpg';
-import avatar9 from '../Avatars/row-3-column-1.jpg';
-import avatar10 from '../Avatars/row-3-column-2.jpg';
-import avatar11 from '../Avatars/row-3-column-3.jpg';
-import avatar12 from '../Avatars/row-3-column-4.jpg';
-import defaultAvatar from '../Avatars/blank-profile-picture-973460_1280.jpg'
+import avatar1 from '../Profile/Avatars/row-1-column-1.jpg'
+import avatar2 from '../Profile/Avatars/row-1-column-2.jpg';
+import avatar3 from '../Profile/Avatars/row-1-column-3.jpg';
+import avatar4 from '../Profile/Avatars/row-1-column-4.jpg';
+import avatar5 from '../Profile/Avatars/row-2-column-1.jpg';
+import avatar6 from '../Profile/Avatars/row-2-column-2.jpg';
+import avatar7 from '../Profile/Avatars/row-2-column-3.jpg';
+import avatar8 from '../Profile/Avatars/row-2-column-4.jpg';
+import avatar9 from '../Profile/Avatars/row-3-column-1.jpg';
+import avatar10 from '../Profile/Avatars/row-3-column-2.jpg';
+import avatar11 from '../Profile/Avatars/row-3-column-3.jpg';
+import avatar12 from '../Profile/Avatars/row-3-column-4.jpg';
+import defaultAvatar from '../Profile/Avatars/blank-profile-picture-973460_1280.jpg'
+import Particles from "react-tsparticles";
+import { loadSlim } from "tsparticles-slim";
 //Colors for piechart
 const colorList = ["Dimgrey", "FloralWhite", "Gainsboro", "LightSlateGrey", "MintCream", "OldLace", "SeaShell", "Silver", "HoneyDew", "WhiteSmoke"];
 
-function Home() {
+function Home(props) {
   //Username context
   const { username } = useUsername();
   const [key, setKey] = useState(0);
@@ -322,16 +324,26 @@ function Home() {
       }
     });
   };
+
+  const particlesInit = useCallback(async engine => {
+    console.log(engine);
+    await loadSlim(engine);
+  }, []);
+
+  const particlesLoaded = useCallback(async container => {
+    await console.log(container);
+  }, []);
+
   return (
     <>
-      <NavigationBar/>
+      <NavigationBar />
       <div>
         </div>
           <div className="content">
             <div className="card-normal card1" onClick={()=>navigate('/profile')}>
               <div className="card-label">Profile</div>
               <div className='card-content'>
-                <div id='profile'> <img src={avatar || defaultAvatar} alt='Profile'/> {username}</div>
+                <div id='profile'> <img src={avatar || defaultAvatar} alt='Profile' style={{borderRadius: "50%"}}/> @{username}</div>
                 <div id='friend-count'>{currentFriends.length} Friends</div>
               </div>
             </div>
@@ -345,14 +357,14 @@ function Home() {
             </div>
             <div className="card-big card3" >
             <div className="card-label">Friend Rankings</div>
-            <table>
+            <table >
                 <thead>
                     <tr>
-                    <th>Friend</th>
-                    <th colSpan="2">Top Movie</th>
-                    <th>Rating</th>
-                    <th colSpan="2">Top TV Show</th>
-                    <th>Rating</th>
+                    <th style={{backgroundColor: props.accent2}}>Friend</th>
+                    <th colSpan="2" style={{backgroundColor: props.accent2}}>Top Movie</th>
+                    <th style={{backgroundColor: props.accent2}}>Rating</th>
+                    <th colSpan="2" style={{backgroundColor: props.accent2}}>Top TV Show</th>
+                    <th style={{backgroundColor: props.accent2}}>Rating</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -541,6 +553,72 @@ function Home() {
             </Carousel>
           </div>
           </div>
+          <Particles
+            id="tsparticles"
+            init={particlesInit}
+            loaded={particlesLoaded}
+            options={{
+                fullScreen: {
+                    enable: true,
+                    zIndex: -1
+                },
+                fpsLimit: 120,
+                interactivity: {
+                    events: {
+                        onClick: {
+                            enable: false,
+                            mode: "push",
+                        },
+                        onHover: {
+                            enable: false,
+                            mode: "repulse",
+                        },
+                        resize: true,
+                    },
+                    modes: {
+                        push: {
+                            quantity: 4,
+                        },
+                        repulse: {
+                            distance: 200,
+                            duration: 0.4,
+                        },
+                    },
+                },
+                particles: {
+                    color: {
+                        value: props.primary,
+                    },
+                    move: {
+                        direction: "none",
+                        enable: true,
+                        outModes: {
+                            default: "bounce",
+                        },
+                        random: false,
+                        speed: 8,
+                        straight: false,
+                    },
+                    number: {
+                        density: {
+                            enable: true,
+                            area: 4000,
+                        },
+                        value: 80,
+                    },
+                    opacity: {
+                        value: 1,
+                    },
+                    shape: {
+                        type: "square",
+                    },
+                    size: {
+                        value: { min: 10, max: 20 },
+                    },
+                },
+                detectRetina: true,
+            }}
+          />
         </>
     );
 }

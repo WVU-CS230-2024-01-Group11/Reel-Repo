@@ -91,15 +91,15 @@ function UserStatistics() {
   
   <div className="UserStatistics">
     <NavigationBar />
-
+    <div className="content">
   <Tabs
       id="controlled-tab-example"
       activeKey={key}
       onSelect={(k) => setKey(k)}
       className="mb-3"
     >
-  <Tab eventKey="time" title="Time">
-  <h2>Time {username} Spent Watching</h2>
+  <Tab eventKey="time" title="Both">
+  <h2 style={{marginBottom: "50px"}}>Time Spent Watching</h2>
     <div className="Stat">
     <div className="stat-row">
       <div className="stat-item">
@@ -107,21 +107,21 @@ function UserStatistics() {
         <p className="stat-data">{stats.totalWatchTime[0] ? stats.totalWatchTime[0].total_runtime : 0} min</p>
       </div>
       <div className="stat-item">
-        <p className="stat-title">Watch Time This Year:</p>
+        <p className="stat-title">Total Watch Time This Year:</p>
         <p className="stat-data">{stats.totalWatchTimeYear[0] ? stats.totalWatchTimeYear[0].total_runtime : 0} min</p>
       </div>
       <div className="stat-item">
-        <p className="stat-title">Watch Time This Month:</p>
+        <p className="stat-title">Total Watch Time This Month:</p>
         <p className="stat-data">{stats.totalWatchTimeMonth[0] ? stats.totalWatchTimeMonth[0].total_runtime : 0} min</p>
       </div>
     </div>
     <div className="stat-row">
       <div className="stat-item">
-        <p className="stat-title">Time Spent Watching Movies:</p>
+        <p className="stat-title">Movie Watch Time:</p>
         <p className="stat-data">{stats.totalMovieWatchTime[0] ? stats.totalMovieWatchTime[0].total_watch_time : 0} min</p>
       </div>
       <div className="stat-item">
-        <p className="stat-title">Time Spent Watching TV:</p>
+        <p className="stat-title">TV Watch Time:</p>
         <p className="stat-data">{stats.totalTVWatchTime[0] ? stats.totalTVWatchTime[0].total_watch_time : 0} min</p>
       </div>
     </div>
@@ -201,7 +201,7 @@ function UserStatistics() {
   </div>
 </Tab>
 </Tabs>
-  
+</div>
 </div>
   );
 }

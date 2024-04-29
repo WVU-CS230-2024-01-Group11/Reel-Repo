@@ -1,14 +1,28 @@
 import {addNewAccount, fetchUsernames} from '../../services/database';
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import  { useUsername } from '../Contexts/UsernameContext';
 import ReCAPTCHA from "react-google-recaptcha";
 import axios from 'axios';
+import { Link } from 'react-router-dom';
+import Particles from "react-tsparticles";
+import { loadSlim } from "tsparticles-slim";
+
 //Abstract API 
 const apiKey = '8ae6693aed28402592266ed6eed9a016';
 const apiURL = 'https://emailvalidation.abstractapi.com/v1/'+apiKey;
+
 //6Lc3SrkpAAAAAMwwC84Vcu_qXSQS7WFrmpLb-pPC   Captcha key
-function AccountCreation() {
+function AccountCreation(props) {
+  const particlesInit = useCallback(async engine => {
+    console.log(engine);
+    await loadSlim(engine);
+  }, []);
+  
+  const particlesLoaded = useCallback(async container => {
+    await console.log(container);
+  }, []);
+
   const navigate = useNavigate();
   const { username, setUsername } = useUsername();
   const [tempUsername,setTempUsername]=useState('');
@@ -181,86 +195,165 @@ function AccountCreation() {
   } 
 
   return (
-    <div className='content'>
-      <div className="App">
-      <div>
+    <>
+      <div className="App" style={{fontFamily: "arial", color: "white"}}>
+      <div style={{marginTop: "50px"}}><h1 style={{fontSize: "50pt"}}>Reel Repo</h1></div>
         <form id="form" onSubmit={handleSubmit}>
-          <h1>Account Creation</h1>
-          <div>
-            <label htmlFor="first">First Name</label>
+          <h2 style={{marginTop: "50px", marginBottom: "25px"}}>Account Creation</h2>
+          <div style={{marginLeft: "auto", marginRight: "auto", marginBottom: "15px", width: "fit-content", whiteSpace: "nowrap"}}>
+            <label htmlFor="first" style={{marginRight: "10px"}}>First Name:</label>
             <input
               type="text"
               name="first"
               id="first"
               value={firstName}
               onChange={(e) => setFirstName(e.target.value)}
+              style={{borderRadius: "10px", border: "none"}}
             />
-            <div id="firstError">{firstError}</div>
+            <div id="firstError" style={{marginLeft: "auto", marginRight: "auto", width: "fit-content", whiteSpace: "nowrap"}}>{firstError} </div>
           </div>
-          <div>
-            <label htmlFor="last">Last Name</label>
+          <div style={{marginLeft: "auto", marginRight: "auto", marginBottom: "15px", width: "fit-content", whiteSpace: "nowrap"}}>
+            <label htmlFor="last" style={{marginRight: "10px"}}>Last Name:</label>
             <input
               type="text"
               name="last"
               id="last"
               value={lastName}
               onChange={(e) => setLastName(e.target.value)}
+              style={{borderRadius: "10px", border: "none"}}
             />
-            <div id="lastError">{lastError}</div>
+            <div id="lastError" style={{marginLeft: "auto", marginRight: "auto", width: "fit-content", whiteSpace: "nowrap"}}>{lastError}</div>
           </div>
-          <div>
-            <label htmlFor="user">Username</label>
+          <div style={{marginLeft: "auto", marginRight: "auto", marginBottom: "15px", width: "fit-content", whiteSpace: "nowrap"}}>
+            <label htmlFor="user" style={{marginRight: "10px"}}>Username:</label>
             <input
               type="text"
               name="user"
               id="user"
               value={tempUsername}
               onChange={(e) => setTempUsername(e.target.value)}
+              style={{borderRadius: "10px", border: "none"}}
             />
-            <div id="userError">{userError}</div>
+            <div id="userError" style={{marginLeft: "auto", marginRight: "auto", width: "fit-content", whiteSpace: "nowrap"}}>{userError}</div>
           </div>
-          <div>
-            <label htmlFor="email">Email</label>
+          <div style={{marginLeft: "auto", marginRight: "auto", marginBottom: "15px", width: "fit-content", whiteSpace: "nowrap"}}>
+            <label htmlFor="email" style={{marginRight: "10px"}}>Email: </label>
             <input
               type="text"
               name="email"
               id="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              style={{borderRadius: "10px", border: "none"}}
             />
-            <div id="emailError">{emailError}</div>
+            <div id="emailError" style={{marginLeft: "auto", marginRight: "auto", width: "fit-content", whiteSpace: "nowrap"}}>{emailError}</div>
           </div>
-          <div>
-            <label htmlFor="password">Password</label>
+          <div style={{marginLeft: "auto", marginRight: "auto", marginBottom: "15px", width: "fit-content", whiteSpace: "nowrap"}}>
+            <label htmlFor="password" style={{marginRight: "10px"}}>Password: </label>
             <input
               type="password"
               name="password"
               id="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              style={{borderRadius: "10px", border: "none"}}
             />
-            <div id="passwordError">{passwordError}</div>
+            <div id="passwordError" style={{marginLeft: "auto", marginRight: "auto", width: "fit-content", whiteSpace: "nowrap"}}>{passwordError}</div>
           </div>
-          <div>
-            <label htmlFor="password">Confirm Password</label>
+          <div style={{marginLeft: "auto", marginRight: "auto", marginBottom: "15px", width: "fit-content", whiteSpace: "nowrap"}}>
+            <label htmlFor="password" style={{marginRight: "10px"}}>Confirm Password: </label>
             <input
               type="password"
               name="passwordMatch"
               id="passwordMatch"
               value={passwordMatch}
               onChange={(e) => setPasswordMatch(e.target.value)}
+              style={{borderRadius: "10px", border: "none"}}
             />
-            <div id="passwordMatchError">{passwordMatchError}</div>
+            <div id="passwordMatchError" style={{marginLeft: "auto", marginRight: "auto", width: "fit-content", whiteSpace: "nowrap"}}>{passwordMatchError}</div>
           </div>
-          <ReCAPTCHA
+          <ReCAPTCHA style={{marginLeft: "auto", marginRight: "auto", marginBottom: "15px", width: "fit-content", whiteSpace: "nowrap"}}
           sitekey="6Lc3SrkpAAAAAMwwC84Vcu_qXSQS7WFrmpLb-pPC"
           onChange={(val)=>setCapVal(val)} 
           />
-          <button type="submit" disabled={!capVal}>Submit</button>
+          <button type="submit" disabled={!capVal} style={{display: "block", marginLeft: "auto", marginRight: "auto", marginBottom: "15px", width: "fit-content", borderRadius: "15px", border: "none", boxShadow: "0px 8px 16px 0px rgba(0,0,0,0.2)"}}>Submit</button>
         </form>
+        <div style={{marginLeft: "auto", marginRight: "auto", marginBottom: "15px", width: "fit-content", whiteSpace: "nowrap"}}>
+          Already have an account? <Link to="/">Login</Link>
+        </div>
       </div>
-    </div>
-    </div>
+      <Particles
+            id="tsparticles"
+            init={particlesInit}
+            loaded={particlesLoaded}
+            options={{
+                fullScreen: {
+                    enable: true,
+                    zIndex: -1
+                },
+                background: {
+                    color: {
+                        value: props.primary,
+                    },
+                },
+                fpsLimit: 120,
+                interactivity: {
+                    events: {
+                        onClick: {
+                            enable: false,
+                            mode: "push",
+                        },
+                        onHover: {
+                            enable: true,
+                            mode: "repulse",
+                        },
+                        resize: true,
+                    },
+                    modes: {
+                        push: {
+                            quantity: 4,
+                        },
+                        repulse: {
+                            distance: 200,
+                            duration: 0.4,
+                        },
+                    },
+                },
+                particles: {
+                    color: {
+                        value: props.secondary,
+                    },
+                    move: {
+                        direction: "none",
+                        enable: true,
+                        outModes: {
+                            default: "bounce",
+                        },
+                        random: false,
+                        speed: 8,
+                        straight: false,
+                    },
+                    number: {
+                        density: {
+                            enable: true,
+                            area: 2000,
+                        },
+                        value: 80,
+                    },
+                    opacity: {
+                        value: 1,
+                    },
+                    shape: {
+                        type: "square",
+                    },
+                    size: {
+                        value: { min: 10, max: 20 },
+                    },
+                },
+                detectRetina: true,
+            }}
+          />
+    </>
   );
 }
 
