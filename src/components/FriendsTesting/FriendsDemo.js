@@ -3,6 +3,7 @@ import { sendFriendRequest, acceptFriendRequest, declineFriendRequest, checkFrie
 import { useUsername } from '../Contexts/UsernameContext';
 import { Card, Button, Form, Row, Col } from 'react-bootstrap';
 import NavigationBar from '../NavigationBar/NavigationBar'
+import { useNavigate } from 'react-router-dom';
 import styles from './/Friends.css'
 
 
@@ -14,21 +15,33 @@ const FriendsDemo = () => {
     const [currentFriends, setCurrentFriends] = useState([]);
     const [isFriends, setIsFriends] = useState(null);
     const [usernames, setUsernames] = useState([]);
-
+    const navigate = useNavigate();
     useEffect(() => {
         const fetchData = async () => {
-            const received = await getReceivedFriendRequests(username);
-            const sent = await getSentFriendRequests(username);
-            const friends = await getCurrentFriends(username);
-            setReceivedRequests(received);
-            setSentRequests(sent);
-            setCurrentFriends(friends);
-            const users = await fetchUsernames();
-            setUsernames(users.filter(user => user.username !== username));
+           try {
+              // Fetch necessary data
+              const received = await getReceivedFriendRequests(username);
+              const sent = await getSentFriendRequests(username);
+              const friends = await getCurrentFriends(username);
+              
+              // Set states for fetched data
+              setReceivedRequests(received);
+              setSentRequests(sent);
+              setCurrentFriends(friends);
+              
+              // Convert friend list to a Set for fast lookup
+              const friendUsernames = new Set(friends.map(friend => friend.friend));
+     
+              // Fetch all usernames and filter out current friends
+              const users = await fetchUsernames();
+              setUsernames(users.filter(user => user.username !== username && !friendUsernames.has(user.username)));
+           } catch (error) {
+              console.error("Error fetching data:", error);
+           }
         };
-
+     
         fetchData();
-    }, [username]);
+     }, [username]);
 
     const handleSendRequest = async (targetUser) => {
         await sendFriendRequest(username, targetUser);
@@ -45,10 +58,6 @@ const FriendsDemo = () => {
         alert('Friend request declined!');
     };
 
-    const handleCheckFriendship = async () => {
-        const status = await checkFriendship(username, targetUser);
-        setIsFriends(status);
-    };
 
     const handleRemoveFriend = async (friend) => {
         await removeFriend(username, friend);
@@ -68,8 +77,8 @@ const FriendsDemo = () => {
                             <div className="search-overlay" >
                                 <ul>
                                     {usernames.filter(user => user.username.toLowerCase().includes(targetUser.toLowerCase())).map(filteredUser => (
-                                        <li key={filteredUser.username} className="user-item">
-                                            <span>{filteredUser.username}</span>
+                                        <li key={filteredUser.username} onClick={() => navigate(`/profile/${filteredUser.username}`)} className="user-item">
+                                            <span >{filteredUser.username}</span>
                                             <Button variant="primary" size="sm" className="send-request-btn" onClick={() => handleSendRequest(filteredUser.username)}>Send Friend Request</Button>
                                         </li>
                                     ))}
@@ -79,12 +88,7 @@ const FriendsDemo = () => {
                 </Col>
                 <Col className="d-flex align-items-end">
                 
-                    <Button className="mr-2" onClick={handleCheckFriendship}>Check Friendship</Button>
-                    {isFriends !== null && (
-                        <div>
-                            {isFriends.isFriends ? 'You are friends' : 'You are not friends'}
-                        </div>
-                    )}
+                    
                 </Col>
             </Row>
             <Row className="mb-3">
@@ -94,7 +98,7 @@ const FriendsDemo = () => {
                             <Card.Title>Received Friend Requests</Card.Title>
                             <ul>
                                 {receivedRequests.map(request => (
-                                    <li key={request.requester}>
+                                    <li key={request.requester} onClick={() => navigate(`/profile/${request.requester}`)} >
                                         {request.requester}
                                         <Button variant="success" onClick={() => handleAcceptRequest(request.requester)}>Accept</Button>
                                         <Button variant="danger" onClick={() => handleDeclineRequest(request.requester)}>Decline</Button>
@@ -110,7 +114,7 @@ const FriendsDemo = () => {
                             <Card.Title>Sent Friend Requests</Card.Title>
                             <ul>
                                 {sentRequests.map(request => (
-                                    <li key={request.receiver}>{request.receiver}</li>
+                                    <li key={request.receiver} onClick={() => navigate(`/profile/${request.receiver}`)}>{request.receiver}</li>
                                 ))}
                             </ul>
                         </Card.Body>
@@ -125,7 +129,7 @@ const FriendsDemo = () => {
                             <ul>
                                 {currentFriends.map(friend => (
                                     <li key={friend.friend} className="mb-2">
-                                        <span>{friend.friend}</span>
+                                        <span onClick={() => navigate(`/profile/${friend.friend}`)}>{friend.friend}</span>
                                         <Button variant="danger" size="sm" className="ml-2" onClick={() => handleRemoveFriend(friend.friend)}>Remove Friend</Button>
                                     </li>
                                 ))}

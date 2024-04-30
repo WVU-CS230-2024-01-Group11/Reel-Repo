@@ -368,7 +368,7 @@ export const getRecentlyWatchedEpisodes = async (username) => {
 export const getAverageEpisodeRating = async (username) => {
   try {
       const response = await axios.get(`${baseURL}/average-rating/episodes`, { params: { username } });
-      return response;
+      return response.data[0] || { avg_episode_rating: 0 };
   } catch (error) {
       console.error('Error fetching average episode rating:', error);
   }
@@ -376,7 +376,7 @@ export const getAverageEpisodeRating = async (username) => {
 export const getAverageMovieRating = async (username) => {
   try {
       const response = await axios.get(`${baseURL}/average-rating/movies`, { params: { username } });
-      return response;
+      return response.data[0] || { avg_movie_rating: 0 };
   } catch (error) {
       console.error('Error fetching average movie rating:', error);
   }

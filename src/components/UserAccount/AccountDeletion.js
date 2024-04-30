@@ -2,16 +2,40 @@ import React, { useState, useContext } from 'react';
 import { Modal, Button } from 'react-bootstrap';
 import { deleteAccount } from '../../services/database';
 import NavigationBar from '../NavigationBar/NavigationBar';
+import { useNavigate } from 'react-router-dom';
 import { useUsername } from '../Contexts/UsernameContext';
+
+/**
+ * AccountDeletion Component
+ *
+ * A React component for deleting a user's account. Provides UI elements for deleting the account,
+ * including a confirmation modal. It also handles the account deletion logic and navigates to the homepage upon successful deletion.
+ *
+ * @returns {JSX.Element} - The JSX structure of the AccountDeletion component.
+ */
 const AccountDeletion = () => {
+    // State variable to control the visibility of the modal
     const [showModal, setShowModal] = useState(false);
+    // Username context variables for accessing and updating the current user's username
     const { username, setUsername } = useUsername();
+    const navigate = useNavigate();
+
+    /**
+     * handleDelete Function
+     *
+     * Handles the deletion of the user's account by calling the `deleteAccount` function,
+     * then clearing the username context and navigating to the homepage.
+     *
+     * @returns {void}
+     */
     const handleDelete = async () => {
+        
         setShowModal(false); // Close the modal
         try {
             const response = await deleteAccount(username);
             alert(response); // Show success message
-            // Implement what should happen after account is deleted (e.g., redirect)
+            setUsername(''); // Clear the username context
+            navigate('/'); // Redirect to the homepage
         } catch (error) {
             alert('Failed to delete account. Please try again later.');
         }

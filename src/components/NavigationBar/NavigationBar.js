@@ -48,7 +48,7 @@ export default function NavigationBar(props) {
             <div className="dropdown-content">
               <a className="hidden-anchors" href="/repository">Repository</a>
               <a className="hidden-anchors" href="/Stats">Stats</a>
-              <a className="shown-anchors" href="/profile">Profile</a>
+              <a className="shown-anchors" href={`/profile/${username}`}>Profile</a>
               <a className="shown-anchors" href="/friends">Friends</a>
               <a className="shown-anchors" href="/settings">Settings</a>
               <a onClick={logout} className="shown-anchors" href="/">Logout</a>

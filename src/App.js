@@ -60,7 +60,7 @@ function App() {
           />
           <Route
             exact 
-            path="/profile"
+            path="/profile/:username"
             element={<Profile />}
           />
           <Route
