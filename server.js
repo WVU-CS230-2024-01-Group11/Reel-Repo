@@ -479,7 +479,7 @@ app.get('/api/preferences/theme-mode', async (req, res) => {
     const { username } = req.query;
 
     try {
-        const [results] = await queryAsync('SELECT theme_mode FROM UserThemeMode WHERE username = ?', [username]);
+        const results = await queryAsync('SELECT theme_mode FROM UserThemeMode WHERE username = ?', [username]);
         res.json(results[0]);
     } catch (error) {
         console.error('Error fetching theme mode:', error);
@@ -490,7 +490,7 @@ app.get('/api/preferences/particles-mode', async (req, res) => {
     const { username } = req.query;
 
     try {
-        const [results] = await queryAsync('SELECT particles_mode FROM UserParticlesMode WHERE username = ?', [username]);
+        const results = await queryAsync('SELECT particles_mode FROM UserParticlesMode WHERE username = ?', [username]);
         res.json(results[0]);
     } catch (error) {
         console.error('Error fetching particles mode:', error);
