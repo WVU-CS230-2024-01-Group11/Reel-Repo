@@ -482,3 +482,33 @@ export const fetchUserDetails = async (username) => {
       throw error;
   }
 };
+export const updateThemeMode = async (username, theme_mode) => {
+  try {
+      await axios.post(`${baseURL}/preferences/theme-mode`, { username, theme_mode });
+  } catch (error) {
+      console.error('Error updating theme mode:', error);
+  }
+};
+export const updateParticlesMode = async (username, particles_mode) => {
+  try {
+      await axios.post(`${baseURL}/preferences/particles-mode`, { username, particles_mode });
+  } catch (error) {
+      console.error('Error updating particles mode:', error);
+  }
+};
+export const fetchThemeMode = async (username) => {
+  try {
+      const response = await axios.get(`${baseURL}/preferences/theme-mode`, { params: { username } });
+      return response.data;
+  } catch (error) {
+      console.error('Error fetching theme mode:', error);
+  }
+};
+export const fetchParticlesMode = async (username) => {
+  try {
+      const response = await axios.get(`${baseURL}/preferences/particles-mode`, { params: { username } });
+      return response.data;
+  } catch (error) {
+      console.error('Error fetching particles mode:', error);
+  }
+};

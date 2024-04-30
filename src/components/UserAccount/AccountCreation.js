@@ -53,10 +53,12 @@ function AccountCreation(props) {
     const format = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     const validFormat=format.test(email.toLowerCase());
     const validEmail=await sendEmailValidationRequest();
+    console.log(validEmail);
+    console.log(validFormat);
     if (!validFormat){
       return 1;
     }
-    if (!validEmail){
+    if (validEmail){
       return 2;
     }
     return 0;
@@ -65,12 +67,13 @@ function AccountCreation(props) {
 
   const sendEmailValidationRequest = async () => {
     if (email===''){
-      return false;
+      return true;
     }
     try {
-      const response = await axios.get(`https://emailvalidation.abstractapi.com/v1?api_key=8ae6693aed28402592266ed6eed9a016&email=${email}`);
-      console.log (response.data.is_disposable_email.value);
-      return response.data.is_disposable_email.value;
+      //const response = await axios.get(`https://emailvalidation.abstractapi.com/v1?api_key=8ae6693aed28402592266ed6eed9a016&email=${email}`);
+      //console.log (response.data.is_disposable_email.value);
+      //return response.data.is_disposable_email.value;
+      return false;
   } catch (error) {
       if (error.response && error.response.status === 429) {
           //standard plan is 1 request a second
@@ -89,7 +92,7 @@ function AccountCreation(props) {
     let message = "";
 
     if (hasUpper && hasLower && hasSpecial && length >= 8) {
-      return "valid";
+      return true;
     } else {
       if (!hasLower) {
         message += "Password must have a lowercase letter\n";
@@ -110,7 +113,10 @@ function AccountCreation(props) {
   //Checks if username is already in db
   const usernameTaken = async () => {
     const users= await fetchUsernames();
-    const foundUser= users.find((user)=> user.username===username)
+    
+    const foundUser= users.find((user)=> user.username===tempUsername);
+    console.log(tempUsername);
+    console.log(foundUser);
       if (foundUser){
         if (foundUser.password===password){
           return true;
@@ -120,6 +126,10 @@ function AccountCreation(props) {
           return false;
         }
       }
+
+      else {
+        return false;
+      }
   }
 
   //Checks inputs
@@ -127,6 +137,7 @@ function AccountCreation(props) {
     clearErrors();
     let passedAll=true
     const isTaken=await usernameTaken();
+    console.log(isTaken);
     if (tempUsername === "") {
       setUserError("Username can't be blank");
       passedAll=false;
@@ -140,6 +151,7 @@ function AccountCreation(props) {
       passedAll=false;
     } 
     const emailValidationResult = await isValidEmail();
+    console.log(emailValidationResult);
     if (emailValidationResult===1) {
       setEmailError("Provide a valid email format");
       passedAll=false;
@@ -148,30 +160,33 @@ function AccountCreation(props) {
       setEmailError("Provide a valid email");
       passedAll=false; 
     }
-
+    console.log(`email validation: ${passedAll}`);
     if (firstName === "") {
       setFirstError("First name can't be blank");
       passedAll=false;
     }
-
+    console.log(`firstname: ${passedAll}`);
     if (lastName === "") {
       setLastError("Last name can't be blank");
       passedAll=false;
     }
-
+    console.log(`lastname: ${passedAll}`);
     if (password === "") {
       setPasswordError("Password can't be blank");
       passedAll=false;
-    } else if (isStrongPassword!="valid") {
+    } else if (!isStrongPassword) {
       setPasswordError(isStrongPassword);
       passedAll=false;
     }
+    console.log(`password strong/blank: ${passedAll}`);
     if (passwordMatch === "") {
       setPasswordMatchError("Please confirm your password");
       passedAll=false;
+      console.log(`password match blank: ${passedAll}`);
     } else if (passwordMatch !== password) {
       setPasswordMatchError("Passwords do not match");
       passedAll=false;
+      console.log(`[password not matched: ${passedAll}`);
     }
     return passedAll;
   };
@@ -182,15 +197,18 @@ function AccountCreation(props) {
     console.log("Form submitted");
     clearErrors();
     const isValid=await validateInput();
+    console.log(isValid);
     if(!isValid){
       console.log("inputs not valid");
       return;
     }
     //Adding new user
     console.log("adding user");
-    let newUser={tempUsername, firstName, lastName, email, password};
-    addNewAccount(newUser);
+    const character_icon = "defaultAvatar";
+    let newUser={tempUsername, firstName, lastName, email, password, character_icon};
     setUsername(tempUsername);
+    addNewAccount(newUser);
+  
     navigate("/home");
   } 
 

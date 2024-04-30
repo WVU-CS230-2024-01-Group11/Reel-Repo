@@ -29,7 +29,7 @@ const colorList = ["Dimgrey", "FloralWhite", "Gainsboro", "LightSlateGrey", "Min
 
 function Home(props) {
   //Username context
-  const { username } = useUsername();
+  const { username, setUsername } = useUsername();
   const [key, setKey] = useState(0);
   //Avatar map 
   const avatarMap = {
@@ -124,7 +124,6 @@ function Home(props) {
     const fetchShowGenres = async () => {
       const genres = await TVGenreCounts(username);
       setShowGenreCount(genres);
-      console.log(genres)
     };
     const fetchWatchLaterMovies = async () => {
       const movieList = await getWatchLaterMoviesView(username);
@@ -152,6 +151,7 @@ function Home(props) {
   useEffect(() => {
     const fetchTopMovies = async () => {
       const movies = await fetchFiveMoviesByRating(username);
+      console.log(movies);
       setTopMovies(movies);
     };
     const fetchTopShows = async () => {
@@ -165,11 +165,11 @@ function Home(props) {
   }, [username]);
 
   useEffect(() => {
-    if(topMovies != '' && topShows != ''){
-      getMovieRecommendations(topMovies);
-      getShowRecommendations(topShows);
+    if (username !== '') {
+       getMovieRecommendations(topMovies);
+       getShowRecommendations(topShows);
     }
-  }, [topMovies, topShows]);
+ }, [username, topMovies, topShows]);
 
   //Creates formatted strings to display watch time when watch time change
   useEffect(() => {
@@ -283,6 +283,7 @@ function Home(props) {
   const getMovieRecommendations = () => {
     let recommended = [];
     const movieIds = topMovies.map(movie => movie.movie_id);
+    console.log(movieIds);
     let completedCalls = 0;
 
     movieIds.forEach(id => {
@@ -294,6 +295,7 @@ function Home(props) {
 
           if (completedCalls === movieIds.length) {
             setMovieRecommendations(recommended);
+            console.log(recommended);
           }
       }
 

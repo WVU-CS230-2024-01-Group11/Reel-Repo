@@ -475,13 +475,54 @@ app.get('/api/get-avatar', async (req, res) => {
     }
     
 });
+app.get('/api/preferences/theme-mode', async (req, res) => {
+    const { username } = req.query;
 
-app.post('/api/accounts', (req, res) => {
+    try {
+        const [results] = await queryAsync('SELECT theme_mode FROM UserThemeMode WHERE username = ?', [username]);
+        res.json(results[0]);
+    } catch (error) {
+        console.error('Error fetching theme mode:', error);
+        res.status(500).send('Error fetching theme mode');
+    }
+});
+app.get('/api/preferences/particles-mode', async (req, res) => {
+    const { username } = req.query;
+
+    try {
+        const [results] = await queryAsync('SELECT particles_mode FROM UserParticlesMode WHERE username = ?', [username]);
+        res.json(results[0]);
+    } catch (error) {
+        console.error('Error fetching particles mode:', error);
+        res.status(500).send('Error fetching particles mode');
+    }
+});
+
+app.post('/api/accounts', async (req, res) => {
     const newData = req.body;
-    queryAsync('INSERT INTO accounts SET ?', newData, (error, results) => {
-        if (error) throw error;
+
+    try {
+        await db.query('START TRANSACTION');
+
+        // Insert into accounts table
+        await db.query('INSERT INTO accounts (username, firstname, lastname, email, password, character_icon) VALUES (?,?,?,?,?,?)', [newData.tempUsername, newData.firstName, newData.lastName, newData.email, newData.password, newData.character_icon]);
+
+        const username = newData.tempUsername;
+
+        // Insert default values into UserThemeMode
+        await db.query('INSERT INTO UserThemeMode (username, theme_mode) VALUES (?, "light")', [username]);
+
+        // Insert default values into UserParticlesMode
+        await db.query('INSERT INTO UserParticlesMode (username, particles_mode) VALUES (?, true)', [username]);
+
+        await db.query('COMMIT');
+
         res.send('Data added successfully');
-    });
+    } catch (error) {
+        await db.query('ROLLBACK');
+        console.error('Error creating account:', error);
+        res.status(500).send('Error creating account');
+    }
 });
 app.post('/api/UserMovies', async (req, res) => {
     const {username, movieData, date_watched, rating} = req.body;
@@ -649,6 +690,34 @@ app.post('/api/update-character-icon', async (req, res) => {
     } catch (error) {
         console.error('Error updating character icon:', error);
         res.status(500).send({ success: false, message: 'Failed to update character icon.' });
+    }
+});
+app.post('/api/preferences/theme-mode', async (req, res) => {
+    const { username, theme_mode } = req.body;
+
+    try {
+        await queryAsync(
+            'INSERT INTO UserThemeMode (username, theme_mode) VALUES (?, ?) ON DUPLICATE KEY UPDATE theme_mode = VALUES(theme_mode)',
+            [username, theme_mode]
+        );
+        res.send('Theme mode updated successfully');
+    } catch (error) {
+        console.error('Error updating theme mode:', error);
+        res.status(500).send('Error updating theme mode');
+    }
+});
+app.post('/api/preferences/particles-mode', async (req, res) => {
+    const { username, particles_mode } = req.body;
+
+    try {
+        await queryAsync(
+            'INSERT INTO UserParticlesMode (username, particles_mode) VALUES (?, ?) ON DUPLICATE KEY UPDATE particles_mode = VALUES(particles_mode)',
+            [username, particles_mode]
+        );
+        res.send('Particles mode updated successfully');
+    } catch (error) {
+        console.error('Error updating particles mode:', error);
+        res.status(500).send('Error updating particles mode');
     }
 });
 

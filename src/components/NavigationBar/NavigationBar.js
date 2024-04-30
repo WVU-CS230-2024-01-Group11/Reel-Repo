@@ -2,9 +2,11 @@ import React, { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import "./NavigationBar.css";
 import Search from '../Search/Search';
+import { useUsername } from '../Contexts/UsernameContext';
 
 export default function NavigationBar(props) {
   const [darkMode, setDarkMode] = useState(false);
+  const { username, setUsername } = useUsername();
 
   const toggleDarkMode = () => {
     setDarkMode(!darkMode);
@@ -14,6 +16,9 @@ export default function NavigationBar(props) {
           element.dataset.bsTheme == "light" ? "dark" : "light";
   };
 
+  function logout() {
+    setUsername('');
+  }
   return (
     <nav className={`navigation-bar ${darkMode ? 'dark-mode' : ''}`}>
       <div className="navbar-logo">
@@ -46,7 +51,7 @@ export default function NavigationBar(props) {
               <a className="shown-anchors" href="/profile">Profile</a>
               <a className="shown-anchors" href="/friends">Friends</a>
               <a className="shown-anchors" href="/settings">Settings</a>
-              <a className="shown-anchors" href="/">Logout</a>
+              <a onClick={logout} className="shown-anchors" href="/">Logout</a>
             </div>
           </div>
         </li>
