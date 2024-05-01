@@ -85,15 +85,26 @@ const FriendsDemo = (props) => {
         await removeFriend(username, friend);
         alert('Friend removed!');
     };
+
+    //State variables to keep track of settings
     const [particlesMode, setParticlesMode] = useState();
     const [themeMode, setThemeMode] = useState();
     const [particlesColor, setParticlesColor] = useState();
     const [cardColor, setCardColor] = useState();
 
+    //Fetch user settings when username changes
     useEffect(() => {
         fetchUserSettings();
-      }, [username]);
-      const fetchUserSettings = async () => {
+    }, [username]);
+
+    /**
+     * fetchUser Settings Function
+     *
+     * Fetches all the user's settings and stores them in state variables
+     * 
+     * @returns {void}
+     */
+    const fetchUserSettings = async () => {
         const fetchedParticlesMode = await fetchParticlesMode(username);
         const fetchedThemeMode = await fetchThemeMode(username);
         setParticlesMode(fetchedParticlesMode.particles_mode);
@@ -102,15 +113,29 @@ const FriendsDemo = (props) => {
         setCardColor('light' === fetchedThemeMode.theme_mode ? props.secondary : props.accent2);
         const element = document.body;
         element.dataset.bsTheme = fetchedThemeMode.theme_mode;
-      }
+    }
   
-  const particlesInit = useCallback(async engine => {
-    await loadSlim(engine);
-}, []);
+    /**
+     * particlesInit Function
+     *
+     * Loads particle simulation
+     *
+     * @returns {void}
+     */
+    const particlesInit = useCallback(async engine => {
+        await loadSlim(engine);
+    }, []);
 
-const particlesLoaded = useCallback(async container => {
-    await console.log(container);
-}, []);
+    /**
+     * particlesLoaded Function
+     *
+     * Keeps track of particles currently loaded
+     *
+     * @returns {void}
+     */
+    const particlesLoaded = useCallback(async container => {
+        await console.log(container);
+    }, []);
 
     return (
         <>

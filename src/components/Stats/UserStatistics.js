@@ -23,6 +23,7 @@ import { loadSlim } from "tsparticles-slim";
  * It fetches the necessary data from API endpoints and renders the statistics in a tabbed layout.
  */
 function UserStatistics(props) {
+  // State variables to keep track of username and stats
   const { username, setUsername } = useUsername();
   const [key, setKey] = useState('time');
   const [stats, setStats] = useState({
@@ -44,12 +45,20 @@ function UserStatistics(props) {
     TVWatchedYear: [],
     TVByRating: [],
   });
+
+  //Fetch user stats
   useEffect(() => {
     fetchUserStats();
   }, []);
+
+  /**
+  * fetchUserStats Function
+  *
+  * Fetches user stats and stores them in state variables
+  * 
+  * @returns {void}
+  */
   const fetchUserStats = async () => {
-    
-  
     const data = {
       totalMovieWatchTime: await totalMovieWatchTime(username),
       totalWatchTimeMonth: await totalWatchTimeMonth(username),
@@ -74,7 +83,15 @@ function UserStatistics(props) {
   };
 
 
-  
+  /**
+  * handleChange Function
+  *
+  * Handles changing a single stat
+  * 
+  * @param statName name of statistic to be changed
+  * @param value value to be changed to
+  * @returns {void}
+  */
   const handleChange = (statName, value) => {
     setStats(prevStats => ({
       ...prevStats,
@@ -82,7 +99,7 @@ function UserStatistics(props) {
     }));
   };
 
-
+  //Organzies month statistics
   const organizedMonthData = stats.TVWatchedMonth.reduce((acc, episode) => {
     const { show_name, season_number, poster_path } = episode;
   
@@ -101,34 +118,58 @@ function UserStatistics(props) {
     return acc;
   }, {});
 
+  //State variables to keep track of settings
   const [particlesMode, setParticlesMode] = useState();
   const [particlesColor, setParticlesColor] = useState();
   const [cardColor, setCardColor] = useState();
-    const [themeMode, setThemeMode] = useState();
-    useEffect(() => {
-        fetchUserSettings();
-      }, [username]);
-      const fetchUserSettings = async () => {
-        const fetchedParticlesMode = await fetchParticlesMode(username);
-        const fetchedThemeMode = await fetchThemeMode(username);
-        setParticlesMode(fetchedParticlesMode.particles_mode);
-        setThemeMode(fetchedThemeMode.theme_mode);
-        setParticlesColor('light' === fetchedThemeMode.theme_mode ? props.primary : props.secondary);
-        setCardColor('light' === fetchedThemeMode.theme_mode ? props.secondary : props.accent2);
-        const element = document.body;
-        element.dataset.bsTheme = fetchedThemeMode.theme_mode;
-    }
+  const [themeMode, setThemeMode] = useState();
+
+  //Fetch user settings when username changes
+  useEffect(() => {
+    fetchUserSettings();
+  }, [username]);
+
+  /**
+  * fetchUser Settings Function
+  *
+  * Fetches all the user's settings and stores them in state variables
+  * 
+  * @returns {void}
+  */
+  const fetchUserSettings = async () => {
+    const fetchedParticlesMode = await fetchParticlesMode(username);
+    const fetchedThemeMode = await fetchThemeMode(username);
+    setParticlesMode(fetchedParticlesMode.particles_mode);
+    setThemeMode(fetchedThemeMode.theme_mode);
+    setParticlesColor('light' === fetchedThemeMode.theme_mode ? props.primary : props.secondary);
+    setCardColor('light' === fetchedThemeMode.theme_mode ? props.secondary : props.accent2);
+    const element = document.body;
+    element.dataset.bsTheme = fetchedThemeMode.theme_mode;
+  }
   
+  /**
+  * particlesInit Function
+  *
+  * Loads particle simulation
+  *
+  * @returns {void}
+  */
   const particlesInit = useCallback(async engine => {
     await loadSlim(engine);
-}, []);
+  }, []);
 
-const particlesLoaded = useCallback(async container => {
+  /**
+  * particlesLoaded Function
+  *
+  * Keeps track of particles currently loaded
+  *
+  * @returns {void}
+  */
+  const particlesLoaded = useCallback(async container => {
     await console.log(container);
-}, []);
+  }, []);
 
   return (
-  
   <div className="UserStatistics">
     <NavigationBar />
     <div className="content">

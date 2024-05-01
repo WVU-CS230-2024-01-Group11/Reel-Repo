@@ -207,30 +207,54 @@ function Details(props) {
             }
         }
     
-        const [particlesMode, setParticlesMode] = useState();
-        const [particlesColor, setParticlesColor] = useState();
-          const [themeMode, setThemeMode] = useState();
-          useEffect(() => {
-              fetchUserSettings();
-            }, [username]);
-            const fetchUserSettings = async () => {
-              const fetchedParticlesMode = await fetchParticlesMode(username);
-              const fetchedThemeMode = await fetchThemeMode(username);
-              setParticlesMode(fetchedParticlesMode.particles_mode);
-              setThemeMode(fetchedThemeMode.theme_mode);
-              setParticlesColor('light' === fetchedThemeMode.theme_mode ? props.primary : props.secondary);
-              const element = document.body;
-              element.dataset.bsTheme = fetchedThemeMode.theme_mode;
-          }
-        
-        const particlesInit = useCallback(async engine => {
-          await loadSlim(engine);
-      }, []);
-      
-      const particlesLoaded = useCallback(async container => {
-          await console.log(container);
-      }, []);
-  
+    //State variables to keep track of settings
+    const [particlesMode, setParticlesMode] = useState();
+    const [particlesColor, setParticlesColor] = useState();
+    const [themeMode, setThemeMode] = useState();
+
+    //Fetch user settings when username changes
+    useEffect(() => {
+        fetchUserSettings();
+    }, [username]);
+            
+    /**
+     * fetchUser Settings Function
+     *
+     * Fetches all the user's settings and stores them in state variables
+     * 
+     * @returns {void}
+     */
+    const fetchUserSettings = async () => {
+        const fetchedParticlesMode = await fetchParticlesMode(username);
+        const fetchedThemeMode = await fetchThemeMode(username);
+        setParticlesMode(fetchedParticlesMode.particles_mode);
+        setThemeMode(fetchedThemeMode.theme_mode);
+        setParticlesColor('light' === fetchedThemeMode.theme_mode ? props.primary : props.secondary);
+        const element = document.body;
+        element.dataset.bsTheme = fetchedThemeMode.theme_mode;
+    }
+    
+    /**
+     * particlesInit Function
+     *
+     * Loads particle simulation
+     *
+     * @returns {void}
+     */
+    const particlesInit = useCallback(async engine => {
+        await loadSlim(engine);
+    }, []);
+    
+    /**
+     * particlesLoaded Function
+     *
+     * Keeps track of particles currently loaded
+     *
+     * @returns {void}
+     */
+    const particlesLoaded = useCallback(async container => {
+        await console.log(container);
+    }, []);
 
     // Render function displaying navigation bar, media details, buttons for actions, and modal dialogs
     return (

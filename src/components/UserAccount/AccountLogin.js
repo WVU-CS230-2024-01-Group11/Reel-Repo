@@ -17,15 +17,36 @@ function AccountLogin(props){
   const [passwordError, setPasswordError] = useState('');
   const [capVal, setCapVal]=useState(null);
   
+  /**
+  * particlesInit Function
+  *
+  * Loads particle simulation
+  *
+  * @returns {void}
+  */
   const particlesInit = useCallback(async engine => {
     console.log(engine);
     await loadSlim(engine);
   }, []);
 
+  /**
+  * particlesLoaded Function
+  *
+  * Keeps track of particles currently loaded
+  *
+  * @returns {void}
+  */
   const particlesLoaded = useCallback(async container => {
     await console.log(container);
   }, []);
 
+  /**
+  * handleSubmit Function
+  *
+  * Insures user exists and their password is correct
+  *
+  * @returns {void}
+  */
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log("Form submitted");

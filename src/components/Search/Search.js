@@ -120,10 +120,21 @@ function Search(props) {
         }
     }
 
+    //State variables to keep track of settings
     const [themeMode, setThemeMode] = useState();
+
+    //Fetch user settings when username changes
     useEffect(() => {
         fetchUserSettings();
-      }, [username, searchResults]);
+    }, [username, searchResults]);
+
+    /**
+     * fetchUser Settings Function
+     *
+     * Fetches all the user's settings and stores them in state variables
+     * 
+     * @returns {void}
+     */
     const fetchUserSettings = async () => {
         const fetchedThemeMode = await fetchThemeMode(username);
         setThemeMode(fetchedThemeMode.theme_mode);

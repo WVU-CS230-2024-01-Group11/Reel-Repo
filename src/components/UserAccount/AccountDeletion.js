@@ -43,12 +43,23 @@ const AccountDeletion = (props) => {
         }
     };
 
+    //State variables to keep track of settings
     const [particlesMode, setParticlesMode] = useState();
     const [particlesColor, setParticlesColor] = useState();
     const [themeMode, setThemeMode] = useState();
+
+    //Fetch user settings when username changes
     useEffect(() => {
         fetchUserSettings();
-      }, [username]);
+    },[username])
+
+    /**
+     * fetchUser Settings Function
+     *
+     * Fetches all the user's settings and stores them in state variables
+     * 
+     * @returns {void}
+     */
     const fetchUserSettings = async () => {
         const fetchedParticlesMode = await fetchParticlesMode(username);
         const fetchedThemeMode = await fetchThemeMode(username);
@@ -59,6 +70,13 @@ const AccountDeletion = (props) => {
         element.dataset.bsTheme = fetchedThemeMode.theme_mode;
     }
 
+    /**
+     * changeThemeMode Function
+     *
+     * Changes the theme made to dark if it's light and vice versa
+     *
+     * @returns {void}
+     */
     const changeThemeMode = () => {
         try {
             const mode = 'light' === themeMode ? 'dark' : 'light';
@@ -72,6 +90,13 @@ const AccountDeletion = (props) => {
         }
     }
 
+    /**
+     * changeThemeMode Function
+     *
+     * Changes the particle effect to off if it's on and vice versa
+     *
+     * @returns {void}
+     */
     const changeParticleMode = async () => {
         try {
             const mode = particlesMode ? 0 : 1;
@@ -83,10 +108,24 @@ const AccountDeletion = (props) => {
         }
     }
 
+    /**
+     * particlesInit Function
+     *
+     * Loads particle simulation
+     *
+     * @returns {void}
+     */
     const particlesInit = useCallback(async engine => {
         await loadSlim(engine);
     }, []);
-    
+
+    /**
+     * particlesLoaded Function
+     *
+     * Keeps track of particles currently loaded
+     *
+     * @returns {void}
+     */
     const particlesLoaded = useCallback(async container => {
         await console.log(container);
     }, []);

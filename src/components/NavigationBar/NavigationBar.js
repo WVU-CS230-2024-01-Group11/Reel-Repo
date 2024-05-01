@@ -12,16 +12,16 @@ import logo from './logo.png'
  * @returns {JSX.Element} - The rendered NavigationBar component.
  */
 export default function NavigationBar(props) {
-  const { username, setUsername } = useUsername();
+const { username, setUsername } = useUsername();
 
-  /**
-   * Logs out the user by resetting the username in the context.
-   */
-  function logout() {
-    setUsername('');
-  }
+/**
+* Logs out the user by resetting the username in the context.
+*/
+function logout() {
+  setUsername('');
+}
 
-  return (
+return (
     <nav className="navigation-bar">
       <img src={logo} alt="logo" style={{width: "50px", margin: "10px", marginLeft: "25px"}}/>
       <div className="navbar-logo">

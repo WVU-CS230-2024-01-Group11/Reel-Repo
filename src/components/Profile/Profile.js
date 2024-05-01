@@ -194,7 +194,7 @@ export default function Profile(props) {
     if (activeProfile !== username) {
         checkFriends();
     }
-}, [activeProfile, username]);
+  }, [activeProfile, username]);
 
   /**
      * useEffect Hook
@@ -282,7 +282,7 @@ export default function Profile(props) {
      */
   const handleAvatarSelect = (key) => {
     setSelectedAvatar(avatarMap[key]);
-};
+  };
   /**
      * handleSelection Function
      *
@@ -329,13 +329,24 @@ export default function Profile(props) {
     alert('Friend request sent!');
   };
 
+  //State variables to keep track of settings
   const [particlesMode, setParticlesMode] = useState();
   const [themeMode, setThemeMode] = useState();
   const [particlesColor, setParticlesColor] = useState();
   const [cardColor, setCardColor] = useState();
+
+  //Fetch user settings when username changes
   useEffect(() => {
     fetchUserSettings();
   }, [username]);
+
+  /**
+  * fetchUser Settings Function
+  *
+  * Fetches all the user's settings and stores them in state variables
+  * 
+  * @returns {void}
+  */
   const fetchUserSettings = async () => {
     const fetchedParticlesMode = await fetchParticlesMode(username);
     const fetchedThemeMode = await fetchThemeMode(username);
@@ -348,17 +359,31 @@ export default function Profile(props) {
     console.log("Theme: "+fetchedThemeMode)
   }
 
-const particlesInit = useCallback(async engine => {
-  await loadSlim(engine);
-}, []);
+  /**
+  * particlesInit Function
+  *
+  * Loads particle simulation
+  *
+  * @returns {void}
+  */
+  const particlesInit = useCallback(async engine => {
+    await loadSlim(engine);
+  }, []);
 
-const particlesLoaded = useCallback(async container => {
-  await console.log(container);
-}, []);
+  /**
+  * particlesLoaded Function
+  *
+  * Keeps track of particles currently loaded
+  *
+  * @returns {void}
+  */
+  const particlesLoaded = useCallback(async container => {
+    await console.log(container);
+  }, []);
 
-// Rendering of profile content, including navigation, avatars, media statistics, and interactions
-return (
-  <>
+  // Rendering of profile content, including navigation, avatars, media statistics, and interactions
+  return (
+    <>
     <NavigationBar />
     <div className='content'>
       <div className='profileHeader' style={{opacity: "0.97", borderRadius:"20px", backgroundColor: themeMode === "dark" ? props.accent1 : "D3D3D3"}}>
