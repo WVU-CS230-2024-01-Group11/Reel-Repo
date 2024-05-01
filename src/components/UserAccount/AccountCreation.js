@@ -7,6 +7,7 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 import Particles from "react-tsparticles";
 import { loadSlim } from "tsparticles-slim";
+import logo from "../NavigationBar/logo.png"
 
 //Abstract API 
 const apiKey = '8ae6693aed28402592266ed6eed9a016';
@@ -207,7 +208,7 @@ function AccountCreation(props) {
   return (
     <>
       <div className="App" style={{fontFamily: "arial", color: "white"}}>
-      <div style={{marginTop: "50px"}}><h1 style={{fontSize: "50pt"}}>Reel Repo</h1></div>
+      <div style={{marginTop: "50px"}}><h1 style={{fontSize: "50pt"}}><img src={logo} style={{width:"100px"}}/>Reel Repo</h1></div>
         <form id="form" onSubmit={handleSubmit}>
           <h2 style={{marginTop: "50px", marginBottom: "25px"}}>Account Creation</h2>
           <div style={{marginLeft: "auto", marginRight: "auto", marginBottom: "15px", width: "fit-content", whiteSpace: "nowrap"}}>

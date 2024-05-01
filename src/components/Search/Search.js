@@ -120,21 +120,13 @@ function Search(props) {
         }
     }
 
-    const [particlesMode, setParticlesMode] = useState();
-    const [particlesColor, setParticlesColor] = useState();
     const [themeMode, setThemeMode] = useState();
     useEffect(() => {
         fetchUserSettings();
       }, [username]);
     const fetchUserSettings = async () => {
-        const fetchedParticlesMode = await fetchParticlesMode(username);
         const fetchedThemeMode = await fetchThemeMode(username);
-        setParticlesMode(fetchedParticlesMode.particles_mode);
         setThemeMode(fetchedThemeMode.theme_mode);
-        setParticlesColor('light' === fetchedThemeMode.theme_mode ? props.primary : props.secondary);
-        const element = document.body;
-        element.dataset.bsTheme = fetchedThemeMode.theme_mode;
-        console.log(fetchThemeMode)
     }
     
    /**
@@ -172,7 +164,7 @@ function Search(props) {
                         <img className="movie-poster"src={`https://image.tmdb.org/t/p/w200${result.poster_path}`} alt="Media Poster" />
                     </div>
                     ) : (
-                        <div className = "search-result-item" key={result.id} onClick={()=>navigate(`/details/${searchType}/${result.id}`)}>
+                        <div className = "search-result-item" style={{color: "white", backgroundColor: props.accent1}} key={result.id} onClick={()=>navigate(`/details/${searchType}/${result.id}`)}>
                             <div className='title-year-box'>
                                 <span className="title">{searchType === 'tv' ? result.name : result.title }</span>
                             
