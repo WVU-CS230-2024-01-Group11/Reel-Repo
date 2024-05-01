@@ -65,6 +65,6 @@
 }
 
 .mb-3 .card-body {
-    width: 30vw;
+    min-width: 30vw;
     min-height: 18vh;
 }

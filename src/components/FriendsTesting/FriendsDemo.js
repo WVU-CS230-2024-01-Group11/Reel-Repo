@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { fetchParticlesMode, fetchThemeMode, sendFriendRequest, acceptFriendRequest, declineFriendRequest, checkFriendship, getReceivedFriendRequests, getCurrentFriends, removeFriend, getSentFriendRequests, fetchUsernames } from '../../services/database';
+import { fetchParticlesMode, fetchThemeMode, sendFriendRequest, acceptFriendRequest, declineFriendRequest, getReceivedFriendRequests, getCurrentFriends, removeFriend, getSentFriendRequests, fetchUsernames } from '../../services/database';
 import { useUsername } from '../Contexts/UsernameContext';
 import { Card, Button, Form, Row, Col } from 'react-bootstrap';
 import NavigationBar from '../NavigationBar/NavigationBar'
 import { useNavigate } from 'react-router-dom';
-import styles from './/Friends.css'
+import './/Friends.css'
 import Particles from "react-tsparticles";
 import { loadSlim } from "tsparticles-slim";
 
@@ -12,12 +12,11 @@ const FriendsDemo = (props) => {
 /**
  * Component for managing friend requests and current friends.
  */
-    const { username, setUsername } = useUsername();
+    const { username} = useUsername();
     const [targetUser, setTargetUser] = useState('');
     const [receivedRequests, setReceivedRequests] = useState([]);
     const [sentRequests, setSentRequests] = useState([]);
     const [currentFriends, setCurrentFriends] = useState([]);
-    const [isFriends, setIsFriends] = useState(null);
     const [usernames, setUsernames] = useState([]);
     const navigate = useNavigate();
 
@@ -126,7 +125,7 @@ const particlesLoaded = useCallback(async container => {
                                 <ul>
                                     {usernames.filter(user => user.username.toLowerCase().includes(targetUser.toLowerCase())).map(filteredUser => (
                                         <li key={filteredUser.username} onClick={() => navigate(`/profile/${filteredUser.username}`)} className="user-item">
-                                            <span>{filteredUser.username}</span>
+                                            <span style={{cursor: "pointer"}}>{filteredUser.username}</span>
                                             <Button variant="primary" size="sm" className="send-request-btn" onClick={() => handleSendRequest(filteredUser.username)}>Send Friend Request</Button>
                                         </li>
                                     ))}
@@ -145,10 +144,10 @@ const particlesLoaded = useCallback(async container => {
                                 <Card.Title style={{whiteSpace: "nowrap"}}>Received Friend Requests</Card.Title>
                                 <ul>
                                     {receivedRequests.map(request => (
-                                        <li style={{marginTop: "10px", marginBottom: "10px", cursor: "pointer"}} key={request.requester} onClick={() => navigate(`/profile/${request.requester}`)} >
+                                        <li style={{marginTop: "10px", marginBottom: "10px", cursor: "pointer", whiteSpace:"nowrap"}} key={request.requester} onClick={() => navigate(`/profile/${request.requester}`)} >
                                             {request.requester}
-                                            <Button variant="success" onClick={() => handleAcceptRequest(request.requester)}>Accept</Button>
-                                            <Button variant="danger" onClick={() => handleDeclineRequest(request.requester)}>Decline</Button>
+                                            <Button variant="success" style={{margin: "10px", fontSize: "12pt"}} onClick={() => handleAcceptRequest(request.requester)}>Accept</Button>
+                                            <Button variant="danger" style={{fontSize: "12pt"}} onClick={() => handleDeclineRequest(request.requester)}>Decline</Button>
                                         </li>
                                     ))}
                                 </ul>

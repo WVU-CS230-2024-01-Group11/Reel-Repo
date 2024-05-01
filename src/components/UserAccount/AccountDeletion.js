@@ -94,15 +94,15 @@ const AccountDeletion = (props) => {
     return (
         <>
         <NavigationBar/>
-        <div className='content'>
+        <div style={{display: "grid", justifyContent: "center", alignContent: "center", margin: "100px", marginTop: "150px"}}>
             <h1>Settings</h1>
-            <div className="form-check form-switch mx-4" onClick={changeThemeMode}>
+            <div className="form-check form-switch mx-4" onClick={changeThemeMode} style={{marginTop: "20px"}}>
                 <input type="checkbox" className="form-check-input p-2" id='flexSwitchCheckChecked' checked={'dark' === themeMode ? true : false} readOnly />
-                <label className="toggle-label">Dark Mode</label>
+                <span style={{margin: "10px", whiteSpace: "nowrap"}}>Dark Mode</span>
             </div>
-            <div className="form-check form-switch mx-4" onClick={changeParticleMode}>
+            <div className="form-check form-switch mx-4" onClick={changeParticleMode} style={{margin: "20px"}}>
                 <input type="checkbox" className="form-check-input p-2" id='flexSwitchCheckChecked' checked={particlesMode} readOnly />
-                <label className="toggle-label">Particle Effect</label>
+                <span style={{margin: "10px", whiteSpace: "nowrap"}}>Particle Effect</span>
             </div>
             <Button variant="danger" onClick={() => setShowModal(true)}>
                 Delete Account
