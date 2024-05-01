@@ -292,7 +292,7 @@ function Details(props) {
                     <div className='overviewDetails' style={{backgroundColor: themeMode === "dark" ? props.accent2 : props.secondary, color: "white"}}>{mediaDetails.overview}</div>
                     <div className='details-grid'>
                     <div className='releaseYear' style={{backgroundColor: themeMode === "dark" ? props.accent2 : props.secondary, color: "white"}}>Release year
-                        <p className='releaseYearP'>{mediaDetails.release_date.substring(0, 4)}</p>
+                        <p className='releaseYearP'>{mediaDetails.release_date.substring(0, 4) || "No Year" }</p>
                     </div>
                     <div className='rating' style={{backgroundColor: themeMode === "dark" ? props.accent2 : props.secondary, color: "white"}}>Average Rating
                         <p className='averageVote'>{mediaDetails.vote_average}</p>
@@ -335,7 +335,7 @@ function Details(props) {
                         </>
                     ) : (
                         <>
-                <div className="tv-details-container">
+                <div className="tv-details-container" style={{opacity: "0.97", backgroundColor: themeMode === "dark" ? props.accent1 : "whitesmoke", color: themeMode === "dark" ? "white" : "black" }}>
                 <h1>{mediaDetails.name}</h1>
                 <div className="tv-grid">
                 <img src={`https://image.tmdb.org/t/p/w300${mediaDetails.poster_path}`} alt="TV Show Poster" />
@@ -409,19 +409,19 @@ function Details(props) {
                     </ModalFooter>
                 </Modal>
                     <Button variant="secondary" onClick={handleWatchLater}>Watch Later</Button>
-                    <div className='tv-overviewDetails'>{mediaDetails.overview}</div>
+                    <div className='tv-overviewDetails' style={{backgroundColor: themeMode === "dark" ? props.accent2 : props.secondary, color: "white"}}>{mediaDetails.overview}</div>
                     <div className='tv-details-grid'>
-                    <div className='tv-seasonsBox'>Number of seasons
+                    <div className='tv-seasonsBox'style={{backgroundColor: themeMode === "dark" ? props.accent2 : props.secondary, color: "white"}} >Number of seasons
                         <p className='tv-seasons'>{mediaDetails.number_of_seasons}</p>
                     </div>
                     
-                    <div className='tv-ratingBox'>Average Rating
+                    <div className='tv-ratingBox' style={{backgroundColor: themeMode === "dark" ? props.accent2 : props.secondary, color: "white"}}>Average Rating
                         <p className='tv-tvRating'>{mediaDetails.vote_average}</p>
                     </div>
-                    <div className='tv-episodesBox'>Episodes
+                    <div className='tv-episodesBox' style={{backgroundColor: themeMode === "dark" ? props.accent2 : props.secondary, color: "white"}}>Episodes
                         <p className='tv-episodes'>{mediaDetails.number_of_episodes}</p>
                     </div>
-                    <div className='tv-genresBox'>Genres
+                    <div className='tv-genresBox' style={{backgroundColor: themeMode === "dark" ? props.accent2 : props.secondary, color: "white"}}>Genres
                         <p className='tv-tvGenres'>{mediaDetails.genres.slice(0, 3).map(genre => genre.name).join(', ')}</p>
                     </div>
                     

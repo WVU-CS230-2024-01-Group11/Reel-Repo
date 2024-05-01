@@ -125,8 +125,8 @@ function Search(props) {
     const [themeMode, setThemeMode] = useState();
     useEffect(() => {
         fetchUserSettings();
-      }, [username]);
-    const fetchUserSettings = async () => {
+      }, [username, searchResults]);
+      const fetchUserSettings = async () => {
         const fetchedParticlesMode = await fetchParticlesMode(username);
         const fetchedThemeMode = await fetchThemeMode(username);
         setParticlesMode(fetchedParticlesMode.particles_mode);
@@ -134,8 +134,8 @@ function Search(props) {
         setParticlesColor('light' === fetchedThemeMode.theme_mode ? props.primary : props.secondary);
         const element = document.body;
         element.dataset.bsTheme = fetchedThemeMode.theme_mode;
-        console.log(fetchThemeMode)
-    }
+        console.log("Theme: "+fetchedThemeMode)
+      }
     
    /**
      * errorCB Function
@@ -154,16 +154,16 @@ function Search(props) {
         <div style={{flexGrow: "3"}} onBlur={() => setIsFocused(false)} onFocus={() => setIsFocused(true)}>
             <div className="search-bar-container">
             <input className="search-bar" id="searchbar" onKeyUp={getSearch} type="text" name="search" placeholder={"Search "+searchType} />
-            <select value={searchType} onChange={handleSearchType}>
+            <select className={themeMode === "dark" ? "select-dark" : "select-light"} value={searchType} onChange={handleSearchType}>
                 <option value="movie">movie</option>
                 <option value="tv">tv</option>
                 <option value="person">person</option>
             </select>
             </div>
-            <ul className ="search-results-list" onMouseEnter={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)} style ={{display: searchResults.length === 0 || (!isFocused && !isHovered) ? 'none' : 'flex'}}>
+            <ul className={themeMode === "dark" ? "search-results-list-dark" : "search-results-list-light"} onMouseEnter={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)} style ={{display: searchResults.length === 0 || (!isFocused && !isHovered) ? 'none' : 'flex'}}>
                 {searchResults.map(result => (
                     searchType === 'person' ? ( 
-                    <div className = "search-result-item" style={{backgroundColor: themeMode === "dark" ? props.accent1 : "whitesmoke"}} key={result.id} onClick={()=>navigate(`/details/${result.media_type}/${result.id}`)}>
+                    <div className = "search-result-item" style={{backgroundColor: themeMode === "dark" ? "#2f2f2f": "#fff" }} key={result.id} onClick={()=>navigate(`/details/${result.media_type}/${result.id}`)}>
                         <div className='title-year-box'>
                             <span className="title">{result.media_type === 'tv' ? result.name : result.title }</span>
                             <span className="year">{getYear(result.media_type, result)}</span>
@@ -172,7 +172,7 @@ function Search(props) {
                         <img className="movie-poster"src={`https://image.tmdb.org/t/p/w200${result.poster_path}`} alt="Media Poster" />
                     </div>
                     ) : (
-                        <div className = "search-result-item" key={result.id} onClick={()=>navigate(`/details/${searchType}/${result.id}`)}>
+                        <div className = "search-result-item" style={{backgroundColor: themeMode === "dark" ? "#5b5b5b": "#fff" }}  key={result.id} onClick={()=>navigate(`/details/${searchType}/${result.id}`)}>
                             <div className='title-year-box'>
                                 <span className="title">{searchType === 'tv' ? result.name : result.title }</span>
                             
