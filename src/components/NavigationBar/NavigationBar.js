@@ -4,21 +4,34 @@ import "./NavigationBar.css";
 import Search from '../Search/Search';
 import { useUsername } from '../Contexts/UsernameContext';
 
+/**
+ * NavigationBar component represents the navigation bar of the application.
+ * It displays the logo, search bar, navigation links, and a dark mode toggle.
+ *
+ * @param {object} props - The component props.
+ * @returns {JSX.Element} - The rendered NavigationBar component.
+ */
 export default function NavigationBar(props) {
   const [darkMode, setDarkMode] = useState(false);
   const { username, setUsername } = useUsername();
 
+  /**
+   * Toggles the dark mode of the application.
+   * It updates the darkMode state and changes the Bootstrap theme accordingly.
+   */
   const toggleDarkMode = () => {
     setDarkMode(!darkMode);
-    // You can add logic here to toggle dark mode in your application
     const element = document.body;
-        element.dataset.bsTheme = 
-          element.dataset.bsTheme == "light" ? "dark" : "light";
+    element.dataset.bsTheme = element.dataset.bsTheme == "light" ? "dark" : "light";
   };
 
+  /**
+   * Logs out the user by resetting the username in the context.
+   */
   function logout() {
     setUsername('');
   }
+
   return (
     <nav className={`navigation-bar ${darkMode ? 'dark-mode' : ''}`}>
       <div className="navbar-logo">

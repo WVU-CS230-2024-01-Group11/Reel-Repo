@@ -1,3 +1,13 @@
+/**
+ * UserStatistics component displays various statistics related to a user's movie and TV show watching habits.
+ * It fetches data from the database and renders the statistics in different tabs.
+ *
+ * @component
+ * @example
+ * return (
+ *   <UserStatistics />
+ * )
+ */
 import React, { useState, useEffect } from 'react';
 import { totalMovieWatchTime,movieGenreCounts, TVGenreCounts, allWatchedEpisodes, TVWatchedMonth, TVWatchedYear, TVByRating, allWatchedMovies, moviesWatchedMonth, moviesByRating, moviesWatchedYear, getUserTopRatedMovie, getUserTopRatedTVShow, totalWatchTimeMonth, totalWatchTimeYear, totalTVWatchTime, totalWatchTime} from '../../services/database';
 import './UserStatistics.css'
@@ -9,6 +19,10 @@ import { Tab, Tabs } from 'react-bootstrap';
 import { useUsername } from '../Contexts/UsernameContext';
 
 
+/**
+ * UserStatistics component displays various statistics related to a user's movie and TV show watching habits.
+ * It fetches the necessary data from API endpoints and renders the statistics in a tabbed layout.
+ */
 function UserStatistics() {
   const { username, setUsername } = useUsername();
   const [key, setKey] = useState('time');
