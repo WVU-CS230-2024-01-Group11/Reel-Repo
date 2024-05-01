@@ -25,7 +25,7 @@ import defaultAvatar from '../Profile/Avatars/blank-profile-picture-973460_1280.
 import Particles from "react-tsparticles";
 import { loadSlim } from "tsparticles-slim";
 //Colors for piechart
-const colorList = ["Dimgrey", "FloralWhite", "Gainsboro", "LightSlateGrey", "MintCream", "OldLace", "SeaShell", "Silver", "HoneyDew", "WhiteSmoke"];
+const colorList = ["#000080", "#C83200", "#FF8000", "#03A89E", "#FFD700", "purple", "yellowgreen", "darkred", "pink", "green"];
 
 function Home(props) {
   //Username context
