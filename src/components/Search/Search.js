@@ -123,7 +123,7 @@ function Search(props) {
     const [themeMode, setThemeMode] = useState();
     useEffect(() => {
         fetchUserSettings();
-      }, [username]);
+      }, [username, searchResults]);
     const fetchUserSettings = async () => {
         const fetchedThemeMode = await fetchThemeMode(username);
         setThemeMode(fetchedThemeMode.theme_mode);
