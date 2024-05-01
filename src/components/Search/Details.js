@@ -1,16 +1,18 @@
 // Import necessary React libraries and hooks, navigation tools, themoviedb API, and components
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, useCallback } from 'react';
 import { useLocation } from 'react-router-dom';
 import theMovieDb from '../Utils/themoviedb';
 import './Details.css';
 import Button from 'react-bootstrap/Button';
-import { addEpisodeToWatched, addMovieToWatched, addMovieToWatchLater, addTVShowToWatchLater } from '../../services/database';
+import { fetchParticlesMode, fetchThemeMode, addEpisodeToWatched, addMovieToWatched, addMovieToWatchLater, addTVShowToWatchLater } from '../../services/database';
 import Form from 'react-bootstrap/Form';
 import  Modal from 'react-bootstrap/Modal';
 import { FormControl, ModalBody, ModalFooter } from 'react-bootstrap';
 import { getMovieWatchProviders, getTVWatchProviders } from '../Utils/watchProviders';
 import NavigationBar from '../NavigationBar/NavigationBar';
 import { useUsername } from '../Contexts/UsernameContext';
+import Particles from "react-tsparticles";
+import { loadSlim } from "tsparticles-slim";
 
 /**
  * Details Component
@@ -21,7 +23,7 @@ import { useUsername } from '../Contexts/UsernameContext';
  *
  * @returns {JSX.Element} - The JSX structure of the Details component.
  */
-function Details() {
+function Details(props) {
     // State hooks for managing media details, types, ID, rating, and modal visibility
     const [mediaDetails, setMediaDetails] = useState(null);
     const [mediaType, setMediaType] = useState("");
@@ -205,6 +207,30 @@ function Details() {
             }
         }
     
+        const [particlesMode, setParticlesMode] = useState();
+        const [particlesColor, setParticlesColor] = useState();
+          const [themeMode, setThemeMode] = useState();
+          useEffect(() => {
+              fetchUserSettings();
+            }, [username]);
+            const fetchUserSettings = async () => {
+              const fetchedParticlesMode = await fetchParticlesMode(username);
+              const fetchedThemeMode = await fetchThemeMode(username);
+              setParticlesMode(fetchedParticlesMode.particles_mode);
+              setThemeMode(fetchedThemeMode.theme_mode);
+              setParticlesColor('light' === fetchedThemeMode.theme_mode ? props.primary : props.secondary);
+              const element = document.body;
+              element.dataset.bsTheme = fetchedThemeMode.theme_mode;
+          }
+        
+        const particlesInit = useCallback(async engine => {
+          await loadSlim(engine);
+      }, []);
+      
+      const particlesLoaded = useCallback(async container => {
+          await console.log(container);
+      }, []);
+  
 
     // Render function displaying navigation bar, media details, buttons for actions, and modal dialogs
     return (
@@ -215,7 +241,7 @@ function Details() {
                     {mediaType === 'movie' ? (
                         <>
                           
-                           <div className="movie-details-container">
+                           <div className="movie-details-container" style={{opacity: "0.97", backgroundColor: themeMode === "dark" ? props.accent1 : "whitesmoke", color: themeMode === "dark" ? "white" : "black" }}>
                 <h1>{mediaDetails.original_title}</h1>
                 <div className='movie-grid'>
                 <img className='poster' src={`https://image.tmdb.org/t/p/w300${mediaDetails.poster_path}`} alt="Movie Poster" />
@@ -263,15 +289,15 @@ function Details() {
                     </ModalFooter>
                 </Modal>
                     <Button variant="secondary" onClick={handleWatchLater}>Watch Later</Button>
-                    <div className='overviewDetails'>{mediaDetails.overview}</div>
+                    <div className='overviewDetails' style={{backgroundColor: themeMode === "dark" ? props.accent2 : props.secondary, color: "white"}}>{mediaDetails.overview}</div>
                     <div className='details-grid'>
-                    <div className='releaseYear'>Release year
+                    <div className='releaseYear' style={{backgroundColor: themeMode === "dark" ? props.accent2 : props.secondary, color: "white"}}>Release year
                         <p className='releaseYearP'>{mediaDetails.release_date.substring(0, 4)}</p>
                     </div>
-                    <div className='rating'>Average Rating
+                    <div className='rating' style={{backgroundColor: themeMode === "dark" ? props.accent2 : props.secondary, color: "white"}}>Average Rating
                         <p className='averageVote'>{mediaDetails.vote_average}</p>
                     </div>
-                    <div className='genres'>Genres
+                    <div className='genres' style={{backgroundColor: themeMode === "dark" ? props.accent2 : props.secondary, color: "white"}}>Genres
                         <p className='genresP'>{mediaDetails.genres.slice(0, 3).map(genre => genre.name).join(', ')}</p>
                     </div>
                     </div>
@@ -433,6 +459,72 @@ function Details() {
                     )}
                 </>
             )}
+            <Particles style={{display: particlesMode === 1 ? "" : "none"}}
+            id="tsparticles"
+            init={particlesInit}
+            loaded={particlesLoaded}
+            options={{
+                fullScreen: {
+                    enable: true,
+                    zIndex: -1
+                },
+                fpsLimit: 120,
+                interactivity: {
+                    events: {
+                        onClick: {
+                            enable: false,
+                            mode: "push",
+                        },
+                        onHover: {
+                            enable: false,
+                            mode: "repulse",
+                        },
+                        resize: true,
+                    },
+                    modes: {
+                        push: {
+                            quantity: 4,
+                        },
+                        repulse: {
+                            distance: 200,
+                            duration: 0.4,
+                        },
+                    },
+                },
+                particles: {
+                    color: {
+                        value: particlesColor,
+                    },
+                    move: {
+                        direction: "none",
+                        enable: true,
+                        outModes: {
+                            default: "bounce",
+                        },
+                        random: false,
+                        speed: 8,
+                        straight: false,
+                    },
+                    number: {
+                        density: {
+                            enable: true,
+                            area: 4000,
+                        },
+                        value: 80,
+                    },
+                    opacity: {
+                        value: 1,
+                    },
+                    shape: {
+                        type: "square",
+                    },
+                    size: {
+                        value: { min: 10, max: 20 },
+                    },
+                },
+                detectRetina: true,
+            }}
+          />
         </div>
     );
 }

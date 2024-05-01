@@ -28,7 +28,7 @@ export default function NavigationBar(props) {
           Reel Repo
         </a>
       </div>
-      <Search />
+      <Search primary={props.primary} secondary={props.secondary} accent1={props.accent1} accent2={props.accent2}/>
       <ul className="navbar-anchors">
         <li className="navbar-anchor nonhidden-anchors">
           <div className="anchor-link">

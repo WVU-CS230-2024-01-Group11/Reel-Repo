@@ -1,7 +1,9 @@
 // Import necessary React libraries and hooks, navigation and themoviedb API
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import { useNavigate } from 'react-router-dom';
 import theMovieDb from '../Utils/themoviedb';
+import { fetchThemeMode, fetchParticlesMode } from '../../services/database';
+import { useUsername } from '../Contexts/UsernameContext';
 import './Search.css';
 
 /**
@@ -12,9 +14,10 @@ import './Search.css';
  *
  * @returns {JSX.Element} - The JSX structure of the Search component.
  */
-function Search() {
+function Search(props) {
     const navigate = useNavigate();
     // State hooks for managing search results, type of search, and UI focus/hover states
+    const { username, setUsername } = useUsername();
     const [searchResults, setSearchResults] = useState([]);
     const [searchType, setSearchType ] = useState('movie');
     const [isFocused, setIsFocused] = useState(false);
@@ -116,6 +119,23 @@ function Search() {
             }
         }
     }
+
+    const [particlesMode, setParticlesMode] = useState();
+    const [particlesColor, setParticlesColor] = useState();
+    const [themeMode, setThemeMode] = useState();
+    useEffect(() => {
+        fetchUserSettings();
+      }, [username]);
+    const fetchUserSettings = async () => {
+        const fetchedParticlesMode = await fetchParticlesMode(username);
+        const fetchedThemeMode = await fetchThemeMode(username);
+        setParticlesMode(fetchedParticlesMode.particles_mode);
+        setThemeMode(fetchedThemeMode.theme_mode);
+        setParticlesColor('light' === fetchedThemeMode.theme_mode ? props.primary : props.secondary);
+        const element = document.body;
+        element.dataset.bsTheme = fetchedThemeMode.theme_mode;
+        console.log(fetchThemeMode)
+    }
     
    /**
      * errorCB Function
@@ -143,7 +163,7 @@ function Search() {
             <ul className ="search-results-list" onMouseEnter={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)} style ={{display: searchResults.length === 0 || (!isFocused && !isHovered) ? 'none' : 'flex'}}>
                 {searchResults.map(result => (
                     searchType === 'person' ? ( 
-                    <div className = "search-result-item" key={result.id} onClick={()=>navigate(`/details/${result.media_type}/${result.id}`)}>
+                    <div className = "search-result-item" style={{backgroundColor: themeMode === "dark" ? props.accent1 : "whitesmoke"}} key={result.id} onClick={()=>navigate(`/details/${result.media_type}/${result.id}`)}>
                         <div className='title-year-box'>
                             <span className="title">{result.media_type === 'tv' ? result.name : result.title }</span>
                             <span className="year">{getYear(result.media_type, result)}</span>

@@ -143,25 +143,25 @@ const particlesLoaded = useCallback(async container => {
   <h2 style={{marginBottom: "50px"}}>Time Spent Watching</h2>
     <div className="Stat">
     <div className="stat-row">
-      <div className="stat-item" style={{backgroundColor: cardColor, opacity: "0.97"}}>
-        <p className="stat-title">Total Watch Time:</p>
+      <div className="stat-item" style={{backgroundColor: cardColor, opacity: "0.97", color: "white"}}>
+        <p className="stat-title" style={{whiteSpace:"nowrap"}}>Total Watch Time:</p>
         <p className="stat-data">{stats.totalWatchTime[0] ? stats.totalWatchTime[0].total_runtime : 0} min</p>
       </div>
-      <div className="stat-item" style={{backgroundColor: cardColor, opacity: "0.97"}}>
-        <p className="stat-title">Total Watch Time This Year:</p>
+      <div className="stat-item" style={{backgroundColor: cardColor, opacity: "0.97", color: "white"}}>
+        <p className="stat-title" style={{whiteSpace:"nowrap"}}>Total Watch Time This Year:</p>
         <p className="stat-data">{stats.totalWatchTimeYear[0] ? stats.totalWatchTimeYear[0].total_runtime : 0} min</p>
       </div>
-      <div className="stat-item" style={{backgroundColor: cardColor, opacity: "0.97"}}>
-        <p className="stat-title">Total Watch Time This Month:</p>
+      <div className="stat-item" style={{backgroundColor: cardColor, opacity: "0.97", color: "white"}}>
+        <p className="stat-title" style={{whiteSpace:"nowrap"}}>Total Watch Time This Month:</p>
         <p className="stat-data">{stats.totalWatchTimeMonth[0] ? stats.totalWatchTimeMonth[0].total_runtime : 0} min</p>
       </div>
     </div>
     <div className="stat-row">
-      <div className="stat-item" style={{backgroundColor: cardColor, opacity: "0.97"}}>
+      <div className="stat-item" style={{backgroundColor: cardColor, opacity: "0.97", color: "white"}}>
         <p className="stat-title">Movie Watch Time:</p>
         <p className="stat-data">{stats.totalMovieWatchTime[0] ? stats.totalMovieWatchTime[0].total_watch_time : 0} min</p>
       </div>
-      <div className="stat-item" style={{backgroundColor: cardColor, opacity: "0.97"}}>
+      <div className="stat-item" style={{backgroundColor: cardColor, opacity: "0.97", color: "white"}}>
         <p className="stat-title">TV Watch Time:</p>
         <p className="stat-data">{stats.totalTVWatchTime[0] ? stats.totalTVWatchTime[0].total_watch_time : 0} min</p>
       </div>
