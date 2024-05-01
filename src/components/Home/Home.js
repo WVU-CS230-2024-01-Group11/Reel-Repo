@@ -3,7 +3,7 @@ import { useState, useEffect, useCallback } from "react";
 import theMovieDb from "../Utils/themoviedb";
 import { useNavigate } from 'react-router-dom';
 import  { useUsername } from '../Contexts/UsernameContext';
-import { getFriendsTopRatings, fetchFiveMoviesByRating, fetchFiveShowsByRating, totalMovieWatchTime, totalTVWatchTime, totalWatchTime, getCurrentFriends, movieGenreCounts, TVGenreCounts, getWatchLaterMoviesView, getWatchLaterTVView, fetchCharacterIcon} from '../../services/database';
+import { fetchParticlesMode, fetchThemeMode, getFriendsTopRatings, fetchFiveMoviesByRating, fetchFiveShowsByRating, totalMovieWatchTime, totalTVWatchTime, totalWatchTime, getCurrentFriends, movieGenreCounts, TVGenreCounts, getWatchLaterMoviesView, getWatchLaterTVView, fetchCharacterIcon} from '../../services/database';
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 import { Dropdown } from "react-bootstrap";
@@ -327,6 +327,24 @@ function Home(props) {
     });
   };
 
+  const [particlesMode, setParticlesMode] = useState();
+  const [particlesColor, setParticlesColor] = useState();
+const [cardColor, setCardColor] = useState();
+  const [themeMode, setThemeMode] = useState();
+  useEffect(() => {
+     fetchUserSettings();
+  }, [username]);
+  const fetchUserSettings = async () => {
+    const fetchedParticlesMode = await fetchParticlesMode(username);
+    const fetchedThemeMode = await fetchThemeMode(username);
+    setParticlesMode(fetchedParticlesMode.particles_mode);
+    setThemeMode(fetchedThemeMode.theme_mode);
+    setParticlesColor('light' === fetchedThemeMode.theme_mode ? props.primary : props.secondary);
+    setCardColor('light' === fetchedThemeMode.theme_mode ? props.secondary : props.accent2);
+    const element = document.body;
+    element.dataset.bsTheme = fetchedThemeMode.theme_mode;
+  }
+
   const particlesInit = useCallback(async engine => {
     console.log(engine);
     await loadSlim(engine);
@@ -342,14 +360,14 @@ function Home(props) {
       <div>
         </div>
           <div className="content">
-            <div className="card-normal card1" onClick={()=>navigate('/profile')}>
+            <div className="card-normal card1" onClick={()=>navigate('/profile')} style={{backgroundColor: cardColor}}>
               <div className="card-label">Profile</div>
               <div className='card-content'>
                 <div id='profile'> <img src={avatar || defaultAvatar} alt='Profile' style={{borderRadius: "50%"}}/> @{username}</div>
                 <div id='friend-count'>{currentFriends.length} Friends</div>
               </div>
             </div>
-            <div className="card-normal card2" onClick={()=>navigate('/stats')}>
+            <div className="card-normal card2" onClick={()=>navigate('/stats')} style={{backgroundColor: cardColor}}>
               <div className="card-label">Watch Time</div>
               <div className='card-content' id='watch-time' >
                 <div>{watchTimeString[0]}</div>
@@ -357,7 +375,7 @@ function Home(props) {
                 <div>{watchTimeString[2]}</div>
               </div>
             </div>
-            <div className="card-big card3" >
+            <div className="card-big card3" style={{backgroundColor: cardColor}}>
             <div className="card-label">Friend Rankings</div>
             <table >
                 <thead>
@@ -404,7 +422,7 @@ function Home(props) {
                 </tbody>
               </table>
           </div>
-            <div className="card-wide card4">
+            <div className="card-wide card4" style={{backgroundColor: cardColor}}>
             <div className="card-label">
               <Dropdown onSelect={handleGenreSelect} >
                   <Dropdown.Toggle id="dropdown-basic">
@@ -460,7 +478,7 @@ function Home(props) {
               
               </div>
             </div>
-            <div className="card-long card5">
+            <div className="card-long card5" style={{backgroundColor: cardColor}}>
               <div className="card-label">Recommended &amp; Suggested
               <Dropdown onSelect={handleRecommendedSelect} >
                   <Dropdown.Toggle id="dropdown-basic">
@@ -507,7 +525,7 @@ function Home(props) {
                 )}
             </Carousel>
             </div>
-            <div className="card-long card6" >
+            <div className="card-long card6" style={{backgroundColor: cardColor}}>
               <div className="card-label">Watch Later 
                   <Dropdown onSelect={handleWatchLaterSelect} >
                   <Dropdown.Toggle id="dropdown-basic">
@@ -555,7 +573,7 @@ function Home(props) {
             </Carousel>
           </div>
           </div>
-          <Particles
+          <Particles style={{display: particlesMode === 1 ? "" : "none"}}
             id="tsparticles"
             init={particlesInit}
             loaded={particlesLoaded}
@@ -589,7 +607,7 @@ function Home(props) {
                 },
                 particles: {
                     color: {
-                        value: props.primary,
+                        value: particlesColor,
                     },
                     move: {
                         direction: "none",

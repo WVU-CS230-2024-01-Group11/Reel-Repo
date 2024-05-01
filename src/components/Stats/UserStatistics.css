@@ -42,13 +42,13 @@
     gap: 20px; /* space between movie boxes */
 }
 
-.movie-box {
+.stat-movie-box {
     display: flex;
     flex-direction: column;
     align-items: center; /* Center the movie details under the image */
 }
 
-.movie-box img {
+.stat-movie-box img {
     width: 100px;
     height: auto;
     border-radius: 5px;
@@ -75,7 +75,6 @@
 }
 
 .genre-box {
-    background-color: var(--accent2);
     padding: 10px;
     border-radius: 5px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);

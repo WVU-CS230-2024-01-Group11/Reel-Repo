@@ -1,6 +1,6 @@
 import React from 'react'
 import NavigationBar from '../NavigationBar/NavigationBar'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import  { useUsername } from '../Contexts/UsernameContext'
 import Popup from 'reactjs-popup'
 import 'reactjs-popup/dist/index.css';
@@ -17,10 +17,12 @@ import avatar10 from './Avatars/row-3-column-2.jpg';
 import avatar11 from './Avatars/row-3-column-3.jpg';
 import avatar12 from './Avatars/row-3-column-4.jpg';
 import defaultAvatar from './Avatars/blank-profile-picture-973460_1280.jpg'
-import { updateCharacterIcon, fetchCharacterIcon, fetchUserDetails, getUserMovieWatchHistory, getUserEpisodeWatchHistory,fetchFiveMoviesByRating, fetchFiveShowsByRating } from '../../services/database'
+import { fetchThemeMode, fetchParticlesMode, updateCharacterIcon, fetchCharacterIcon, fetchUserDetails, getUserMovieWatchHistory, getUserEpisodeWatchHistory,fetchFiveMoviesByRating, fetchFiveShowsByRating } from '../../services/database'
 import styles from './/Profile.css'
+import Particles from "react-tsparticles";
+import { loadSlim } from "tsparticles-slim";
 
-export default function Profile() {
+export default function Profile(props) {
   const { username, setUsername } = useUsername();
   const [selectedAvatar, setSelectedAvatar] = useState(defaultAvatar);
   const [currentAvatar, setCurrentAvatar] = useState();
@@ -104,11 +106,40 @@ const handleConfirmAvatar = async () => {
       console.error('Error updating avatar:', error);
   }
 };
+
+const [particlesMode, setParticlesMode] = useState();
+    const [themeMode, setThemeMode] = useState();
+    const [particlesColor, setParticlesColor] = useState();
+    useEffect(() => {
+        fetchUserSettings();
+        console.log("Particles: "+particlesMode)
+      }, [username]);
+    const fetchUserSettings = async () => {
+      const fetchUserSettings = async () => {
+        const fetchedParticlesMode = await fetchParticlesMode(username);
+        const fetchedThemeMode = await fetchThemeMode(username);
+        setParticlesMode(fetchedParticlesMode.particles_mode);
+        setThemeMode(fetchedThemeMode.theme_mode);
+        setParticlesColor('light' === fetchedThemeMode.theme_mode ? props.primary : props.secondary);
+        const element = document.body;
+        element.dataset.bsTheme = fetchedThemeMode.theme_mode;
+        
+    }
+    }
+
+const particlesInit = useCallback(async engine => {
+  await loadSlim(engine);
+}, []);
+
+const particlesLoaded = useCallback(async container => {
+  await console.log(container);
+}, []);
+
 return (
   <>
     <NavigationBar />
-    <div className='contentProfile'>
-      <div className='profileHeader'>
+    <div className='content'>
+      <div className='profileHeader' style={{opacity: "0.97"}}>
         <img src={currentAvatar} alt="Current Avatar" className='profilePic' />
         <div>
           <h2 className='usernameHandle'>@{username}</h2>
@@ -129,7 +160,7 @@ return (
         <div className='recentlyWatchedMovies'>
           <h3>Recently Watched Movies</h3>
           {movieHistory.map(movie => (
-            <div className='movieCard'>{movie.movie_name}</div>
+            <div className='movieCard' style={{opacity: "0.97"}}>{movie.movie_name}</div>
           ))}
         </div>
         <div className='recentlyWatchedEpisodes'>
@@ -152,6 +183,72 @@ return (
         </div>
       </div>
     </div>
+    <Particles style={{display: particlesMode === 1 ? "" : "none"}}
+            id="tsparticles"
+            init={particlesInit}
+            loaded={particlesLoaded}
+            options={{
+                fullScreen: {
+                    enable: true,
+                    zIndex: -1
+                },
+                fpsLimit: 120,
+                interactivity: {
+                    events: {
+                        onClick: {
+                            enable: false,
+                            mode: "push",
+                        },
+                        onHover: {
+                            enable: false,
+                            mode: "repulse",
+                        },
+                        resize: true,
+                    },
+                    modes: {
+                        push: {
+                            quantity: 4,
+                        },
+                        repulse: {
+                            distance: 200,
+                            duration: 0.4,
+                        },
+                    },
+                },
+                particles: {
+                    color: {
+                        value: particlesColor,
+                    },
+                    move: {
+                        direction: "none",
+                        enable: true,
+                        outModes: {
+                            default: "bounce",
+                        },
+                        random: false,
+                        speed: 8,
+                        straight: false,
+                    },
+                    number: {
+                        density: {
+                            enable: true,
+                            area: 4000,
+                        },
+                        value: 80,
+                    },
+                    opacity: {
+                        value: 1,
+                    },
+                    shape: {
+                        type: "square",
+                    },
+                    size: {
+                        value: { min: 10, max: 20 },
+                    },
+                },
+                detectRetina: true,
+            }}
+          />
   </>
 );
 }

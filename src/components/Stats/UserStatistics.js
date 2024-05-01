@@ -1,15 +1,14 @@
-import React, { useState, useEffect } from 'react';
-import { totalMovieWatchTime,movieGenreCounts, TVGenreCounts, allWatchedEpisodes, TVWatchedMonth, TVWatchedYear, TVByRating, allWatchedMovies, moviesWatchedMonth, moviesByRating, moviesWatchedYear, getUserTopRatedMovie, getUserTopRatedTVShow, totalWatchTimeMonth, totalWatchTimeYear, totalTVWatchTime, totalWatchTime} from '../../services/database';
+import React, { useState, useEffect, useCallback } from 'react';
+import { fetchParticlesMode, fetchThemeMode, totalMovieWatchTime,movieGenreCounts, TVGenreCounts, allWatchedEpisodes, TVWatchedMonth, TVWatchedYear, TVByRating, allWatchedMovies, moviesWatchedMonth, moviesByRating, moviesWatchedYear, getUserTopRatedMovie, getUserTopRatedTVShow, totalWatchTimeMonth, totalWatchTimeYear, totalTVWatchTime, totalWatchTime} from '../../services/database';
 import './UserStatistics.css'
 import NavigationBar from '../NavigationBar/NavigationBar';
-import TVStats from '../UserAccount/TVStats';
-import TimeStats from '../UserAccount/TimeStats';
 import { Nav } from 'react-bootstrap';
 import { Tab, Tabs } from 'react-bootstrap';
 import { useUsername } from '../Contexts/UsernameContext';
+import Particles from "react-tsparticles";
+import { loadSlim } from "tsparticles-slim";
 
-
-function UserStatistics() {
+function UserStatistics(props) {
   const { username, setUsername } = useUsername();
   const [key, setKey] = useState('time');
   const [stats, setStats] = useState({
@@ -87,11 +86,39 @@ function UserStatistics() {
     acc[show_name].seasons[season_number].push(episode);
     return acc;
   }, {});
+
+  const [particlesMode, setParticlesMode] = useState();
+  const [particlesColor, setParticlesColor] = useState();
+  const [cardColor, setCardColor] = useState();
+    const [themeMode, setThemeMode] = useState();
+    useEffect(() => {
+        fetchUserSettings();
+      }, [username]);
+      const fetchUserSettings = async () => {
+        const fetchedParticlesMode = await fetchParticlesMode(username);
+        const fetchedThemeMode = await fetchThemeMode(username);
+        setParticlesMode(fetchedParticlesMode.particles_mode);
+        setThemeMode(fetchedThemeMode.theme_mode);
+        setParticlesColor('light' === fetchedThemeMode.theme_mode ? props.primary : props.secondary);
+        setCardColor('light' === fetchedThemeMode.theme_mode ? props.secondary : props.accent2);
+        const element = document.body;
+        element.dataset.bsTheme = fetchedThemeMode.theme_mode;
+    }
+  
+  const particlesInit = useCallback(async engine => {
+    await loadSlim(engine);
+}, []);
+
+const particlesLoaded = useCallback(async container => {
+    await console.log(container);
+}, []);
+
   return (
   
   <div className="UserStatistics">
     <NavigationBar />
     <div className="content">
+      <h1>Statistics</h1>
   <Tabs
       id="controlled-tab-example"
       activeKey={key}
@@ -102,25 +129,25 @@ function UserStatistics() {
   <h2 style={{marginBottom: "50px"}}>Time Spent Watching</h2>
     <div className="Stat">
     <div className="stat-row">
-      <div className="stat-item">
+      <div className="stat-item" style={{backgroundColor: cardColor, opacity: "0.97"}}>
         <p className="stat-title">Total Watch Time:</p>
         <p className="stat-data">{stats.totalWatchTime[0] ? stats.totalWatchTime[0].total_runtime : 0} min</p>
       </div>
-      <div className="stat-item">
+      <div className="stat-item" style={{backgroundColor: cardColor, opacity: "0.97"}}>
         <p className="stat-title">Total Watch Time This Year:</p>
         <p className="stat-data">{stats.totalWatchTimeYear[0] ? stats.totalWatchTimeYear[0].total_runtime : 0} min</p>
       </div>
-      <div className="stat-item">
+      <div className="stat-item" style={{backgroundColor: cardColor, opacity: "0.97"}}>
         <p className="stat-title">Total Watch Time This Month:</p>
         <p className="stat-data">{stats.totalWatchTimeMonth[0] ? stats.totalWatchTimeMonth[0].total_runtime : 0} min</p>
       </div>
     </div>
     <div className="stat-row">
-      <div className="stat-item">
+      <div className="stat-item" style={{backgroundColor: cardColor, opacity: "0.97"}}>
         <p className="stat-title">Movie Watch Time:</p>
         <p className="stat-data">{stats.totalMovieWatchTime[0] ? stats.totalMovieWatchTime[0].total_watch_time : 0} min</p>
       </div>
-      <div className="stat-item">
+      <div className="stat-item" style={{backgroundColor: cardColor, opacity: "0.97"}}>
         <p className="stat-title">TV Watch Time:</p>
         <p className="stat-data">{stats.totalTVWatchTime[0] ? stats.totalTVWatchTime[0].total_watch_time : 0} min</p>
       </div>
@@ -128,7 +155,7 @@ function UserStatistics() {
   </div>
   </Tab>
   <Tab eventKey="movies" title="Movies">
-  <h3 className='topMovieHeader'>Top Movie</h3>
+  <h2>Top Movie</h2>
   <div className='movie-container'>
     <img src={stats.getUserTopRatedMovie[0] && stats.getUserTopRatedMovie[0].poster_path ? `https://image.tmdb.org/t/p/w200${stats.getUserTopRatedMovie[0].poster_path}` : 'default_poster.jpg'} alt="Top Movie Poster"/>
     <div>
@@ -139,7 +166,7 @@ function UserStatistics() {
   <p>Movie Genre Count:</p>
   <div className='genre-container'>
     {stats.movieGenreCount && stats.movieGenreCount.length > 0 ? stats.movieGenreCount.map((genre, index) => (
-      <div className='genre-box' key={index}>
+      <div className='genre-box' key={index} style={{backgroundColor: cardColor}}>
         {genre.movieGenre_name}: {genre.titles_watched}
       </div>
     )) : <p>No Genre Data Available</p>}
@@ -147,7 +174,7 @@ function UserStatistics() {
   <p>Movies watched this month:</p>
   <div className='monthly-movies'>
     {stats.moviesWatchedMonth && stats.moviesWatchedMonth.length > 0 ? stats.moviesWatchedMonth.map((movie, index) => (
-      <div className='movie-box' key={index}>
+      <div className='stat-movie-box' key={index}>
         <img src={movie.poster_path ? `https://image.tmdb.org/t/p/w200${movie.poster_path}` : 'default_poster.jpg'} alt={movie.movie_name}/>
         <div>{movie.movie_name || 'Unknown Movie'}</div>
       </div>
@@ -156,7 +183,7 @@ function UserStatistics() {
 </Tab>
 
 <Tab eventKey="tv" title="TV">
-  <h3 className='topTVHeader'>Top Show</h3>
+  <h2>Top Show</h2>
   <div className='show-container'>
     <img src={stats.getUserTopRatedTVShow[0] && stats.getUserTopRatedTVShow[0].poster_path ? `https://image.tmdb.org/t/p/w200${stats.getUserTopRatedTVShow[0].poster_path}` : 'default_poster.jpg'} alt="Top Show Poster"/>
     <div>
@@ -167,7 +194,7 @@ function UserStatistics() {
   <p>TV Genre Count:</p>
   <div className='genre-container'>
     {stats.TVGenreCount && stats.TVGenreCount.length > 0 ? stats.TVGenreCount.map((genre, index) => (
-      <div className='genre-box' key={index}>
+      <div className='genre-box' key={index} style={{backgroundColor: cardColor}}>
         {genre.tvGenre_name}: {genre.media_count}
       </div>
     )) : <p>No TV Genre Data Available</p>}
@@ -202,6 +229,72 @@ function UserStatistics() {
 </Tab>
 </Tabs>
 </div>
+<Particles style={{display: particlesMode === 1 ? "" : "none"}}
+            id="tsparticles"
+            init={particlesInit}
+            loaded={particlesLoaded}
+            options={{
+                fullScreen: {
+                    enable: true,
+                    zIndex: -1
+                },
+                fpsLimit: 120,
+                interactivity: {
+                    events: {
+                        onClick: {
+                            enable: false,
+                            mode: "push",
+                        },
+                        onHover: {
+                            enable: false,
+                            mode: "repulse",
+                        },
+                        resize: true,
+                    },
+                    modes: {
+                        push: {
+                            quantity: 4,
+                        },
+                        repulse: {
+                            distance: 200,
+                            duration: 0.4,
+                        },
+                    },
+                },
+                particles: {
+                    color: {
+                        value: particlesColor,
+                    },
+                    move: {
+                        direction: "none",
+                        enable: true,
+                        outModes: {
+                            default: "bounce",
+                        },
+                        random: false,
+                        speed: 8,
+                        straight: false,
+                    },
+                    number: {
+                        density: {
+                            enable: true,
+                            area: 4000,
+                        },
+                        value: 80,
+                    },
+                    opacity: {
+                        value: 1,
+                    },
+                    shape: {
+                        type: "square",
+                    },
+                    size: {
+                        value: { min: 10, max: 20 },
+                    },
+                },
+                detectRetina: true,
+            }}
+          />
 </div>
   );
 }

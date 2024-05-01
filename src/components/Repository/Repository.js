@@ -1,14 +1,15 @@
 // Import necessary React libraries and hooks, database methods, styles, bootstrap components
-import React, { useState, useEffect } from 'react';
-import {getUserMovieWatchHistory, getUserEpisodeWatchHistory} from '../../services/database';
+import React, { useState, useEffect, useCallback } from 'react';
+import {fetchParticlesMode, fetchThemeMode, getUserMovieWatchHistory, getUserEpisodeWatchHistory} from '../../services/database';
 import NavigationBar from '../NavigationBar/NavigationBar'
-
 import { Tab } from 'react-bootstrap';
 import { Tabs, Accordion, Table } from 'react-bootstrap';
 import { useUsername } from '../Contexts/UsernameContext';
 import styles from './/Repository.css';
+import Particles from "react-tsparticles";
+import { loadSlim } from "tsparticles-slim";
 
-function Repository() {
+function Repository(props) {
   const { username, setUsername } = useUsername();
   // State for storing movie and episode watch histories
   const [movieHistory, setMovieHistory] = useState(new Map());
@@ -106,11 +107,37 @@ const organizeEpisodesByDate = (episodes) => {
   return episodeMap;
 };
 
+const [particlesMode, setParticlesMode] = useState();
+const [particlesColor, setParticlesColor] = useState();
+const [cardColor, setCardColor] = useState();
+    const [themeMode, setThemeMode] = useState();
+    useEffect(() => {
+        fetchUserSettings();
+      }, [username]);
+    const fetchUserSettings = async () => {
+      const fetchedParticlesMode = await fetchParticlesMode(username);
+      const fetchedThemeMode = await fetchThemeMode(username);
+      setParticlesMode(fetchedParticlesMode.particles_mode);
+      setThemeMode(fetchedThemeMode.theme_mode);
+      setParticlesColor('light' === fetchedThemeMode.theme_mode ? props.primary : props.secondary);
+      setCardColor('light' === fetchedThemeMode.theme_mode ? props.secondary : props.accent2);
+      const element = document.body;
+      element.dataset.bsTheme = fetchedThemeMode.theme_mode;
+    }
+  
+  const particlesInit = useCallback(async engine => {
+    await loadSlim(engine);
+}, []);
+
+const particlesLoaded = useCallback(async container => {
+    await console.log(container);
+}, []);
 
   return (
     <>
     <NavigationBar />
     <div className='content'>
+      <h1>Repository</h1>
     <Tabs
       id="controlled-tab-example"
       activeKey={key}
@@ -118,7 +145,7 @@ const organizeEpisodesByDate = (episodes) => {
       className="mb-3"
     >
       <Tab eventKey="movie" title="Movies">
-      <div className="card-big repositoryCard">
+      <div className="card-big repositoryCard" style={{backgroundColor: cardColor}}>
         <div className="card-label">Movie Repository</div>
         <Accordion defaultActiveKey="0">
               {Array.from(movieHistory.keys()).sort().reverse().map(year => (
@@ -166,8 +193,8 @@ const organizeEpisodesByDate = (episodes) => {
         </div>
       </Tab>
       <Tab eventKey="TV" title="TV Shows">
-  <div className="card-big repositoryCard">
-    <div className="card-label">TV Repository</div>
+  <div className="card-big repositoryCard" style={{backgroundColor: cardColor}}>
+    <div className='card-label'>TV Repository</div>
     <Accordion defaultActiveKey="0">
       {Array.from(episodeHistory.keys()).sort().reverse().map(year => (
         <Accordion.Item eventKey={year.toString()} key={year}>
@@ -229,6 +256,72 @@ const organizeEpisodesByDate = (episodes) => {
 </Tab>
     </Tabs>
     </div>
+    <Particles style={{display: particlesMode === 1 ? "" : "none"}}
+            id="tsparticles"
+            init={particlesInit}
+            loaded={particlesLoaded}
+            options={{
+                fullScreen: {
+                    enable: true,
+                    zIndex: -1
+                },
+                fpsLimit: 120,
+                interactivity: {
+                    events: {
+                        onClick: {
+                            enable: false,
+                            mode: "push",
+                        },
+                        onHover: {
+                            enable: false,
+                            mode: "repulse",
+                        },
+                        resize: true,
+                    },
+                    modes: {
+                        push: {
+                            quantity: 4,
+                        },
+                        repulse: {
+                            distance: 200,
+                            duration: 0.4,
+                        },
+                    },
+                },
+                particles: {
+                    color: {
+                        value: particlesColor,
+                    },
+                    move: {
+                        direction: "none",
+                        enable: true,
+                        outModes: {
+                            default: "bounce",
+                        },
+                        random: false,
+                        speed: 8,
+                        straight: false,
+                    },
+                    number: {
+                        density: {
+                            enable: true,
+                            area: 4000,
+                        },
+                        value: 80,
+                    },
+                    opacity: {
+                        value: 1,
+                    },
+                    shape: {
+                        type: "square",
+                    },
+                    size: {
+                        value: { min: 10, max: 20 },
+                    },
+                },
+                detectRetina: true,
+            }}
+          />
   </>
   );
 }

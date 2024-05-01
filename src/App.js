@@ -32,7 +32,7 @@ function App() {
   // Element is the component you want that page to be. I think it can only be used with Components
   // Component must be exported in its own file and then imported here for it to work
 
-  const colors = ["#002855", "EAAA00", "#1C2B39", " #7F6310"]; //["#FF204E", "#A0153E", "#5D0E41", "#00224D"]
+  const colors = ["#002855", "#EAAA00", "#1C2B39", " #7F6310"]; //["#FF204E", "#A0153E", "#5D0E41", "#00224D"]
   return (
     //Username global context wrapper
     <UsernameProvider>
@@ -41,37 +41,37 @@ function App() {
           <Route
             exact 
             path="/"
-            element={<AccountLogin primary={colors[0]} secondary={colors[1]} accent1={colors[2]}/>}
+            element={<AccountLogin primary={colors[0]} secondary={colors[1]} accent1={colors[2]} accent2={colors[3]}/>}
           />
           <Route
             exact 
             path="/repository"
-            element={<Repository />}
+            element={<Repository primary={colors[0]} secondary={colors[1]} accent1={colors[2]} accent2={colors[3]}/>}
           />
           <Route
             exact 
             path="/stats"
-            element={<UserStatistics />}
+            element={<UserStatistics primary={colors[0]} secondary={colors[1]} accent1={colors[2]} accent2={colors[3]}/>}
           />
           <Route
             exact
             path="/details/:media-type/:id"
-            element={<Details />}
+            element={<Details primary={colors[0]} secondary={colors[1]} accent1={colors[2]} accent2={colors[3]}/>}
           />
           <Route
             exact 
             path="/profile"
-            element={<Profile />}
+            element={<Profile primary={colors[0]} secondary={colors[1]} accent1={colors[2]} accent2={colors[3]}/>}
           />
           <Route
             exact
             path="/settings"
-            element={<AccountDeletion />}
+            element={<AccountDeletion primary={colors[0]} secondary={colors[1]} accent1={colors[2]} accent2={colors[3]}/>}
             />
              <Route 
             exact 
             path="/account-creation" 
-            element={<AccountCreation primary={colors[0]} secondary={colors[1]} accent1={colors[2]}/>} 
+            element={<AccountCreation primary={colors[0]} secondary={colors[1]} accent1={colors[2]} accent2={colors[3]}/>} 
             />
             <Route 
             exact 
@@ -91,7 +91,7 @@ function App() {
             <Route
             exact
             path="/friends"
-            element={<FriendsDemo />}
+            element={<FriendsDemo primary={colors[0]} secondary={colors[1]} accent1={colors[2]} accent2={colors[3]}/>}
             />
         </Routes>
         

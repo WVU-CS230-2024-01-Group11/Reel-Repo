@@ -1,9 +1,12 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Modal, Button } from 'react-bootstrap';
-import { deleteAccount } from '../../services/database';
+import { deleteAccount, fetchThemeMode, fetchParticlesMode, updateThemeMode, updateParticlesMode, totalMovieWatchTime } from '../../services/database';
 import NavigationBar from '../NavigationBar/NavigationBar';
 import { useUsername } from '../Contexts/UsernameContext';
-const AccountDeletion = () => {
+import Particles from "react-tsparticles";
+import { loadSlim } from "tsparticles-slim";
+
+const AccountDeletion = (props) => {
     const [showModal, setShowModal] = useState(false);
     const { username, setUsername } = useUsername();
     const handleDelete = async () => {
@@ -17,12 +20,67 @@ const AccountDeletion = () => {
         }
     };
 
+    const [particlesMode, setParticlesMode] = useState();
+    const [particlesColor, setParticlesColor] = useState();
+    const [themeMode, setThemeMode] = useState();
+    useEffect(() => {
+        fetchUserSettings();
+      }, [username]);
+    const fetchUserSettings = async () => {
+        const fetchedParticlesMode = await fetchParticlesMode(username);
+        const fetchedThemeMode = await fetchThemeMode(username);
+        setParticlesMode(fetchedParticlesMode.particles_mode);
+        setThemeMode(fetchedThemeMode.theme_mode);
+        setParticlesColor('light' === fetchedThemeMode.theme_mode ? props.primary : props.secondary);
+        const element = document.body;
+        element.dataset.bsTheme = fetchedThemeMode.theme_mode;
+    }
+
+    const changeThemeMode = () => {
+        try {
+            const mode = 'light' === themeMode ? 'dark' : 'light';
+            setThemeMode(mode);
+            updateThemeMode(username, mode);
+            const element = document.body;
+            element.dataset.bsTheme = mode;
+            setParticlesColor('light' === mode ? props.primary : props.secondary);
+        } catch (error) {
+            alert('Failed to update setting. Please try again later.');
+        }
+    }
+
+    const changeParticleMode = async () => {
+        try {
+            const mode = particlesMode ? 0 : 1;
+            setParticlesMode(mode);
+            updateParticlesMode(username, mode === 1 ? true : false);
+            setParticlesColor('light' === themeMode ? props.primary : props.secondary);
+        } catch (error) {
+            alert('Failed to update setting. Please try again later.');
+        }
+    }
+
+    const particlesInit = useCallback(async engine => {
+        await loadSlim(engine);
+    }, []);
+    
+    const particlesLoaded = useCallback(async container => {
+        await console.log(container);
+    }, []);
+
     return (
         <>
         <NavigationBar/>
         <div className='content'>
-            <h1>User Settings</h1>
-            <h2>Hello {username}!</h2>
+            <h1>Settings</h1>
+            <div className="form-check form-switch mx-4" onClick={changeThemeMode}>
+                <input type="checkbox" className="form-check-input p-2" id='flexSwitchCheckChecked' checked={'dark' === themeMode ? true : false} readOnly />
+                <label className="toggle-label">Dark Mode</label>
+            </div>
+            <div className="form-check form-switch mx-4" onClick={changeParticleMode}>
+                <input type="checkbox" className="form-check-input p-2" id='flexSwitchCheckChecked' checked={particlesMode} readOnly />
+                <label className="toggle-label">Particle Effect</label>
+            </div>
             <Button variant="danger" onClick={() => setShowModal(true)}>
                 Delete Account
             </Button>
@@ -42,6 +100,72 @@ const AccountDeletion = () => {
                 </Modal.Footer>
             </Modal>
             </div>
+            <Particles style={{display: particlesMode === 1 ? "" : "none"}}
+            id="tsparticles"
+            init={particlesInit}
+            loaded={particlesLoaded}
+            options={{
+                fullScreen: {
+                    enable: true,
+                    zIndex: -1
+                },
+                fpsLimit: 120,
+                interactivity: {
+                    events: {
+                        onClick: {
+                            enable: false,
+                            mode: "push",
+                        },
+                        onHover: {
+                            enable: false,
+                            mode: "repulse",
+                        },
+                        resize: true,
+                    },
+                    modes: {
+                        push: {
+                            quantity: 4,
+                        },
+                        repulse: {
+                            distance: 200,
+                            duration: 0.4,
+                        },
+                    },
+                },
+                particles: {
+                    color: {
+                        value: particlesColor,
+                    },
+                    move: {
+                        direction: "none",
+                        enable: true,
+                        outModes: {
+                            default: "bounce",
+                        },
+                        random: false,
+                        speed: 8,
+                        straight: false,
+                    },
+                    number: {
+                        density: {
+                            enable: true,
+                            area: 4000,
+                        },
+                        value: 80,
+                    },
+                    opacity: {
+                        value: 1,
+                    },
+                    shape: {
+                        type: "square",
+                    },
+                    size: {
+                        value: { min: 10, max: 20 },
+                    },
+                },
+                detectRetina: true,
+            }}
+          />
         </>
     );
 };
