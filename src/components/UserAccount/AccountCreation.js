@@ -39,6 +39,8 @@ function AccountCreation(props) {
   const [passwordMatchError, setPasswordMatchError] = useState('');
   const [capVal, setCapVal]=useState(null);
 
+ 
+
   //Clears error messages
   const clearErrors = () => {
     setUserError('');
@@ -162,10 +164,13 @@ function AccountCreation(props) {
     }
     if (password === "") {
       setPasswordError("Password can't be blank");
-      passedAll=false;
-    } else if (!isStrongPassword) {
-      setPasswordError(isStrongPassword);
-      passedAll=false;
+      passedAll = false;
+    } else {
+      const passwordCheck = isStrongPassword(); 
+      if (passwordCheck !== true) {
+        setPasswordError(passwordCheck);
+        passedAll = false;
+      }
     }
 
     if (passwordMatch === "") {
