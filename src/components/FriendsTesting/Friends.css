@@ -64,3 +64,8 @@
 .send-request-btn {
     white-space: nowrap; /* Prevents the text inside the button from wrapping */
 }
+
+.mb-3 .card-body {
+    width: 30vw;
+    min-height: 18vh;
+}
