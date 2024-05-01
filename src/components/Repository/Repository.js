@@ -160,7 +160,7 @@ const particlesLoaded = useCallback(async container => {
                       <Accordion defaultActiveKey="0" key={monthYearKey}>
                         <Accordion.Item className='outerItem' eventKey={monthYearKey}>
                           <Accordion.Header className='accordianHeader'>{monthYearKey.split('-')[1]}</Accordion.Header>
-                          <Accordion.Body className="inner-accordian">
+                          <Accordion.Body className="inner-accordian" style={{color: "black"}}>
                             <div className='headerContainer'>
                                 <div className="posterLabel">Poster</div>
                                 <div className="movieLabel">Title</div>
@@ -199,7 +199,7 @@ const particlesLoaded = useCallback(async container => {
       {Array.from(episodeHistory.keys()).sort().reverse().map(year => (
         <Accordion.Item eventKey={year.toString()} key={year}>
           <Accordion.Header className='outer-header'>{year}</Accordion.Header>
-          <Accordion.Body className='outer-accordian'>  
+          <Accordion.Body className='outer-accordian' >  
             <Accordion defaultActiveKey="0">
               {Array.from(episodeHistory.get(year).keys()).sort((a, b) => {
                 const monthA = a.split('-')[1];
@@ -207,8 +207,8 @@ const particlesLoaded = useCallback(async container => {
                 return monthToNumber[monthA] - monthToNumber[monthB];
               }).map(monthYearKey => (
                 <Accordion.Item eventKey={monthYearKey} key={monthYearKey}>
-                  <Accordion.Header>{monthYearKey.split('-')[1]}</Accordion.Header>
-                  <Accordion.Body>
+                  <Accordion.Header style={{backgroundColor: "green"}}>{monthYearKey.split('-')[1]}</Accordion.Header>
+                  <Accordion.Body style={{backgroundColor: "white", color: "black"}}>
                   <div className='headerContainer1'>
                     <div className="episodeLabel">Episode</div>
                     <div className="ratingLabel1">Your Rating</div>
