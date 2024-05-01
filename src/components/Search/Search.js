@@ -120,22 +120,14 @@ function Search(props) {
         }
     }
 
-    const [particlesMode, setParticlesMode] = useState();
-    const [particlesColor, setParticlesColor] = useState();
     const [themeMode, setThemeMode] = useState();
     useEffect(() => {
         fetchUserSettings();
-      }, [username, searchResults]);
-      const fetchUserSettings = async () => {
-        const fetchedParticlesMode = await fetchParticlesMode(username);
+      }, [username]);
+    const fetchUserSettings = async () => {
         const fetchedThemeMode = await fetchThemeMode(username);
-        setParticlesMode(fetchedParticlesMode.particles_mode);
         setThemeMode(fetchedThemeMode.theme_mode);
-        setParticlesColor('light' === fetchedThemeMode.theme_mode ? props.primary : props.secondary);
-        const element = document.body;
-        element.dataset.bsTheme = fetchedThemeMode.theme_mode;
-        console.log("Theme: "+fetchedThemeMode)
-      }
+    }
     
    /**
      * errorCB Function
