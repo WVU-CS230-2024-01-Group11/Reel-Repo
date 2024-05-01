@@ -8,8 +8,10 @@ import styles from './/Friends.css'
 import Particles from "react-tsparticles";
 import { loadSlim } from "tsparticles-slim";
 
-
-const FriendsDemo = () => {
+const FriendsDemo = (props) => {
+/**
+ * Component for managing friend requests and current friends.
+ */
     const { username, setUsername } = useUsername();
     const [targetUser, setTargetUser] = useState('');
     const [receivedRequests, setReceivedRequests] = useState([]);
@@ -84,7 +86,6 @@ const FriendsDemo = () => {
         await removeFriend(username, friend);
         alert('Friend removed!');
     };
-
     const [particlesMode, setParticlesMode] = useState();
     const [themeMode, setThemeMode] = useState();
     const [particlesColor, setParticlesColor] = useState();
@@ -113,14 +114,13 @@ const particlesLoaded = useCallback(async container => {
 }, []);
 
     return (
-        <div className="container">
+        <>
          <NavigationBar />
-
-            <h2>Friends Demo</h2>
-        <div style = {{paddingTop: '100px'}}>
+        <div className='content'>
+        <h1>Friends</h1>
             <Row className="mb-3">
                 <Col>
-                    <Form.Control type="text" placeholder="Search For User" value={targetUser} onChange={(e) => setTargetUser(e.target.value)} />
+                    <Form.Control style={{opacity: "0.95"}} type="text" placeholder="Search For User" value={targetUser} onChange={(e) => setTargetUser(e.target.value)} />
                     {targetUser && (
                             <div className="search-overlay" >
                                 <ul>
@@ -133,66 +133,126 @@ const particlesLoaded = useCallback(async container => {
                                 </ul>
                             </div>
                         )}
-                </Col>
-                <Col className="d-flex align-items-end">
-                
-                    <Button className="mr-2" onClick={handleCheckFriendship}>Check Friendship</Button>
-                    {isFriends !== null && (
-                        <div>
-                            {isFriends.isFriends ? 'You are friends' : 'You are not friends'}
-                        </div>
-                    )}
-                </Col>
-            </Row>
-            <Row className="mb-3">
-                <Col>
-                    <Card>
-                        <Card.Body>
-                            <Card.Title>Received Friend Requests</Card.Title>
-                            <ul>
-                                {receivedRequests.map(request => (
-                                    <li key={request.requester}>
-                                        {request.requester}
-                                        <Button variant="success" onClick={() => handleAcceptRequest(request.requester)}>Accept</Button>
-                                        <Button variant="danger" onClick={() => handleDeclineRequest(request.requester)}>Decline</Button>
-                                    </li>
-                                ))}
-                            </ul>
-                        </Card.Body>
-                    </Card>
-                </Col>
-                <Col>
-                    <Card>
-                        <Card.Body>
-                            <Card.Title>Sent Friend Requests</Card.Title>
-                            <ul>
-                                {sentRequests.map(request => (
-                                    <li key={request.receiver}>{request.receiver}</li>
-                                ))}
-                            </ul>
-                        </Card.Body>
-                    </Card>
-                </Col>
-            </Row>
-            <Row>
-                <Col>
-                    <Card>
-                        <Card.Body>
-                            <Card.Title>Current Friends</Card.Title>
-                            <ul>
-                                {currentFriends.map(friend => (
-                                    <li key={friend.friend} className="mb-2">
-                                        <span>{friend.friend}</span>
-                                        <Button variant="danger" size="sm" className="ml-2" onClick={() => handleRemoveFriend(friend.friend)}>Remove Friend</Button>
-                                    </li>
-                                ))}
-                            </ul>
-                        </Card.Body>
-                    </Card>
-                </Col>
-            </Row>
-        </div>
-        </div>
+                    </Col>
+                    <Col className="d-flex align-items-end">
+
+                    </Col>
+                </Row>
+                <Row className="mb-3">
+                    <Col>
+                        <Card>
+                            <Card.Body>
+                                <Card.Title>Received Friend Requests</Card.Title>
+                                <ul>
+                                    {receivedRequests.map(request => (
+                                        <li key={request.requester} onClick={() => navigate(`/profile/${request.requester}`)} >
+                                            {request.requester}
+                                            <Button variant="success" onClick={() => handleAcceptRequest(request.requester)}>Accept</Button>
+                                            <Button variant="danger" onClick={() => handleDeclineRequest(request.requester)}>Decline</Button>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </Card.Body>
+                        </Card>
+                    </Col>
+                    <Col>
+                        <Card>
+                            <Card.Body>
+                                <Card.Title>Sent Friend Requests</Card.Title>
+                                <ul>
+                                    {sentRequests.map(request => (
+                                        <li key={request.receiver} onClick={() => navigate(`/profile/${request.receiver}`)}>{request.receiver}</li>
+                                    ))}
+                                </ul>
+                            </Card.Body>
+                        </Card>
+                    </Col>
+                </Row>
+                <Row>
+                    <Col>
+                        <Card>
+                            <Card.Body>
+                                <Card.Title>Current Friends</Card.Title>
+                                <ul>
+                                    {currentFriends.map(friend => (
+                                        <li key={friend.friend} className="mb-2">
+                                            <span onClick={() => navigate(`/profile/${friend.friend}`)}>{friend.friend}</span>
+                                            <Button variant="danger" size="sm" className="ml-2" onClick={() => handleRemoveFriend(friend.friend)}>Remove Friend</Button>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </Card.Body>
+                        </Card>
+                    </Col>
+                </Row>
+            </div>
+        <Particles style={{display: particlesMode === 1 ? "" : "none"}}
+        id="tsparticles"
+        init={particlesInit}
+        loaded={particlesLoaded}
+        options={{
+            fullScreen: {
+                enable: true,
+                zIndex: -1
+            },
+            fpsLimit: 120,
+            interactivity: {
+                events: {
+                    onClick: {
+                        enable: false,
+                        mode: "push",
+                    },
+                    onHover: {
+                        enable: false,
+                        mode: "repulse",
+                    },
+                    resize: true,
+                },
+                modes: {
+                    push: {
+                        quantity: 4,
+                    },
+                    repulse: {
+                        distance: 200,
+                        duration: 0.4,
+                    },
+                },
+            },
+            particles: {
+                color: {
+                    value: particlesColor,
+                },
+                move: {
+                    direction: "none",
+                    enable: true,
+                    outModes: {
+                        default: "bounce",
+                    },
+                    random: false,
+                    speed: 8,
+                    straight: false,
+                },
+                number: {
+                    density: {
+                        enable: true,
+                        area: 4000,
+                    },
+                    value: 80,
+                },
+                opacity: {
+                    value: 1,
+                },
+                shape: {
+                    type: "square",
+                },
+                size: {
+                    value: { min: 10, max: 20 },
+                },
+            },
+            detectRetina: true,
+        }}
+      />
+    </>
     );
 };
 
