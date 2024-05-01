@@ -299,6 +299,7 @@ export default function Profile(props) {
         }
     }
   }
+
   /**
      * handleConfrimAvatar Function
      *
@@ -329,24 +330,23 @@ export default function Profile(props) {
   };
 
   const [particlesMode, setParticlesMode] = useState();
-    const [themeMode, setThemeMode] = useState();
-    const [particlesColor, setParticlesColor] = useState();
-    useEffect(() => {
-        fetchUserSettings();
-        console.log("Particles: "+particlesMode)
-      }, [username]);
-    const fetchUserSettings = async () => {
-      const fetchUserSettings = async () => {
-        const fetchedParticlesMode = await fetchParticlesMode(username);
-        const fetchedThemeMode = await fetchThemeMode(username);
-        setParticlesMode(fetchedParticlesMode.particles_mode);
-        setThemeMode(fetchedThemeMode.theme_mode);
-        setParticlesColor('light' === fetchedThemeMode.theme_mode ? props.primary : props.secondary);
-        const element = document.body;
-        element.dataset.bsTheme = fetchedThemeMode.theme_mode;
-        
-    }
-    }
+  const [themeMode, setThemeMode] = useState();
+  const [particlesColor, setParticlesColor] = useState();
+  const [cardColor, setCardColor] = useState();
+  useEffect(() => {
+    fetchUserSettings();
+  }, [username]);
+  const fetchUserSettings = async () => {
+    const fetchedParticlesMode = await fetchParticlesMode(username);
+    const fetchedThemeMode = await fetchThemeMode(username);
+    setParticlesMode(fetchedParticlesMode.particles_mode);
+    setThemeMode(fetchedThemeMode.theme_mode);
+    setParticlesColor('light' === fetchedThemeMode.theme_mode ? props.primary : props.secondary);
+    setCardColor('light' === fetchedThemeMode.theme_mode ? props.secondary : props.accent2);
+    const element = document.body;
+    element.dataset.bsTheme = fetchedThemeMode.theme_mode;
+    console.log("Theme: "+fetchedThemeMode)
+  }
 
 const particlesInit = useCallback(async engine => {
   await loadSlim(engine);
@@ -361,34 +361,34 @@ return (
   <>
     <NavigationBar />
     <div className='content'>
-      <div className='profileHeader' style={{opacity: "0.97"}}>
+      <div className='profileHeader' style={{opacity: "0.97", borderRadius:"20px", backgroundColor: themeMode === "dark" ? props.accent1 : "D3D3D3"}}>
         <img src={currentAvatar} alt="Current Avatar" className='profilePic' />
         <div>
           <h2 className='usernameHandle'>@{activeProfile}</h2>
           <h1 className='userFullName'>{userDetails.firstname} {userDetails.lastname}</h1>
         </div>
         {activeProfile === username ? (
-        <Popup trigger={<button className='avatarBtn'>Choose Avatar</button>} modal nested>
+        <Popup style={{borderRadius: "15px", backgroundColor: "black"}} trigger={<button className='avatarBtn' style={{borderRadius:"15px", border:"none", backgroundColor: "#004EFF", color: "white"}}>Choose Avatar</button>} modal nested>
           <div className='avatarSelection'>
             {Object.entries(avatarMap).map(([key, image]) => (
               <button key={key} onClick={() => handleAvatarSelect(key)}>
                 <img src={image} alt={`Avatar ${key}`} className='avatarImage' />
               </button>
             ))}
-            <button onClick={handleSelection}>Confirm Selection</button>
+            <button onClick={handleSelection} style={{borderRadius: "15px", margin: "20px"}}>Confirm Selection</button>
           </div>
         </Popup>
         ) : (
           friendStatus.isFriends ? (
-            <button className='friendButton' disabled >Already Friends</button>
+            <button className='friendButton' disabled style={{borderRadius:"15px", border:"none", backgroundColor: "grey", color: "white"}}>Already Friends</button>
           ):(
-            <button className='friendButton'  onClick={() => handleSendRequest(activeProfile)}>Add Friend</button>
+            <button className='friendButton'  onClick={() => handleSendRequest(activeProfile)} style={{borderRadius:"15px", border:"none", backgroundColor: "#004EFF", color: "white"}}>Add Friend</button>
           )
           
         )}
       </div>
       <div className='topRow'>
-        <div className='card-normal averagesCard'>
+        <div className='card-normal averagesCard' style={{backgroundColor: cardColor, color: "white"}}>
         <div className="card-label1"> Average Ratings</div>
         <Carousel className="averageRatingsCarousel" activeIndex={index} onSelect={handleSelect} interval={null}>
         <Carousel.Item>
@@ -396,7 +396,7 @@ return (
                 {averageMovieRating?.avg_movie_rating ?? "n/a"} 
             </div>
             <Carousel.Caption>
-                <div className='ratingLabel'>Movies</div>
+                <div className='ratingLabel' style={{color: "white"}}>Movies</div>
             </Carousel.Caption>
         </Carousel.Item>
 
@@ -405,12 +405,12 @@ return (
                 {averageEpisodeRating?.avg_episode_rating ?? "n/a"} 
             </div>
             <Carousel.Caption>
-                <div className='ratingLabel'>Episodes</div>
+                <div className='ratingLabel' style={{color: "white"}}>Episodes</div>
             </Carousel.Caption>
         </Carousel.Item>
     </Carousel>
         </div>
-        <div className='card-normal topShowMovie'>
+        <div className='card-normal topShowMovie' style={{backgroundColor: cardColor, color: "white"}}>
           <div className="card-label1">Top Rated</div>
           <Carousel className="topRatedCarousel" activeIndex={index2} onSelect={handleSelect2} interval={null}>
           <Carousel.Item className="topRatedItem">
@@ -444,7 +444,7 @@ return (
           </Carousel.Item>
     </Carousel>
         </div>
-        <div className='card-normal watchTimes'>
+        <div className='card-normal watchTimes' style={{backgroundColor: cardColor, color: "white"}}>
           <div className="card-label1">Watch Time</div>
           <Carousel activeIndex={index1} onSelect={handleSelect1} interval={null}>
             <Carousel.Item>
@@ -452,7 +452,7 @@ return (
                     {watchTime?.totalWatchTime[0]?.total_runtime ?? "N/A"} min
                 </div>
                 <Carousel.Caption>
-                    <div className='ratingLabel'>Total</div>
+                    <div className='ratingLabel' style={{color: "white"}}>Total</div>
                 </Carousel.Caption>
             </Carousel.Item>
 
@@ -461,7 +461,7 @@ return (
                     {watchTime?.totalMovieWatchTime[0]?.total_watch_time ?? "N/A"} min
                 </div>
                 <Carousel.Caption>
-                    <div className='ratingLabel'>Movies</div>
+                    <div className='ratingLabel' style={{color: "white"}}>Movies</div>
                 </Carousel.Caption>
             </Carousel.Item>
 
@@ -470,7 +470,7 @@ return (
                     {watchTime?.totalTVWatchTime[0]?.total_watch_time ?? "N/A"} min
                 </div>
                 <Carousel.Caption>
-                    <div className='ratingLabel'>TV</div>
+                    <div className='ratingLabel' style={{color: "white"}}>TV</div>
                 </Carousel.Caption>
             </Carousel.Item>
         </Carousel>
@@ -478,7 +478,7 @@ return (
         
       </div>
       <div className='secondRow'>
-        <div className='card-big recentlyWatched'>
+        <div className='card-big recentlyWatched' style={{backgroundColor: cardColor, color: "white"}}>
           <div className='card-label1'>Recently Watched
           <Dropdown className='dropdown1' onSelect={handleRecentSelect} >
                   <Dropdown.Toggle id="dropdown-basic">
@@ -521,7 +521,7 @@ return (
             </Carousel>
        </div>
         </div>
-        <div className='card-big topFive'>
+        <div className='card-big topFive' style={{backgroundColor: cardColor, color: "white"}}>
           <div className='card-label1'>Top Five 
           <Dropdown className='dropdown1' onSelect={handleTopSelect} >
                   <Dropdown.Toggle id="dropdown-basic">

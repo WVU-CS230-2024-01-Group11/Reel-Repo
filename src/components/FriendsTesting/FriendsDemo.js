@@ -120,13 +120,13 @@ const particlesLoaded = useCallback(async container => {
         <h1>Friends</h1>
             <Row className="mb-3">
                 <Col>
-                    <Form.Control style={{opacity: "0.95"}} type="text" placeholder="Search For User" value={targetUser} onChange={(e) => setTargetUser(e.target.value)} />
+                    <Form.Control style={{opacity: "0.97" }} type="text" placeholder="Search For User" value={targetUser} onChange={(e) => setTargetUser(e.target.value)} />
                     {targetUser && (
-                            <div className="search-overlay" >
+                            <div className="search-overlay" style={{backgroundColor: themeMode === 'dark' ? props.accent1 : "whitesmoke", borderRadius: "15px"}}>
                                 <ul>
                                     {usernames.filter(user => user.username.toLowerCase().includes(targetUser.toLowerCase())).map(filteredUser => (
                                         <li key={filteredUser.username} onClick={() => navigate(`/profile/${filteredUser.username}`)} className="user-item">
-                                            <span >{filteredUser.username}</span>
+                                            <span>{filteredUser.username}</span>
                                             <Button variant="primary" size="sm" className="send-request-btn" onClick={() => handleSendRequest(filteredUser.username)}>Send Friend Request</Button>
                                         </li>
                                     ))}
@@ -140,12 +140,12 @@ const particlesLoaded = useCallback(async container => {
                 </Row>
                 <Row className="mb-3">
                     <Col>
-                        <Card>
+                        <Card style={{backgroundColor: cardColor, color: "white"}}>
                             <Card.Body>
-                                <Card.Title>Received Friend Requests</Card.Title>
+                                <Card.Title style={{whiteSpace: "nowrap"}}>Received Friend Requests</Card.Title>
                                 <ul>
                                     {receivedRequests.map(request => (
-                                        <li key={request.requester} onClick={() => navigate(`/profile/${request.requester}`)} >
+                                        <li style={{marginTop: "10px", marginBottom: "10px", cursor: "pointer"}} key={request.requester} onClick={() => navigate(`/profile/${request.requester}`)} >
                                             {request.requester}
                                             <Button variant="success" onClick={() => handleAcceptRequest(request.requester)}>Accept</Button>
                                             <Button variant="danger" onClick={() => handleDeclineRequest(request.requester)}>Decline</Button>
@@ -156,12 +156,12 @@ const particlesLoaded = useCallback(async container => {
                         </Card>
                     </Col>
                     <Col>
-                        <Card>
+                        <Card style={{backgroundColor: cardColor, color: "white"}}>
                             <Card.Body>
                                 <Card.Title>Sent Friend Requests</Card.Title>
                                 <ul>
                                     {sentRequests.map(request => (
-                                        <li key={request.receiver} onClick={() => navigate(`/profile/${request.receiver}`)}>{request.receiver}</li>
+                                        <li style={{marginTop: "10px", marginBottom: "10px", cursor: "pointer"}} key={request.receiver} onClick={() => navigate(`/profile/${request.receiver}`)}>{request.receiver}</li>
                                     ))}
                                 </ul>
                             </Card.Body>
@@ -170,13 +170,13 @@ const particlesLoaded = useCallback(async container => {
                 </Row>
                 <Row>
                     <Col>
-                        <Card>
+                        <Card style={{backgroundColor: cardColor, color: "white"}}>
                             <Card.Body>
                                 <Card.Title>Current Friends</Card.Title>
                                 <ul>
                                     {currentFriends.map(friend => (
-                                        <li key={friend.friend} className="mb-2">
-                                            <span onClick={() => navigate(`/profile/${friend.friend}`)}>{friend.friend}</span>
+                                        <li style={{cursor: "pointer"}} key={friend.friend} className="mb-2">
+                                            <span onClick={() => navigate(`/profile/${friend.friend}`)} style={{margin: "10px"}}>{friend.friend}</span>
                                             <Button variant="danger" size="sm" className="ml-2" onClick={() => handleRemoveFriend(friend.friend)}>Remove Friend</Button>
                                         </li>
                                     ))}

@@ -360,13 +360,13 @@ const [cardColor, setCardColor] = useState();
             <div className="card-normal card1" onClick={()=>navigate(`/profile/${username}`)} style={{backgroundColor: cardColor}}>
               <div className="card-label">Profile</div>
               <div className='card-content'>
-                <div id='profile'> <img src={avatar || defaultAvatar} alt='Profile' style={{borderRadius: "50%"}}/> @{username}</div>
-                <div id='friend-count'>{currentFriends.length} Friends</div>
+                <div id='profile' style={{color: "white"}}> <img src={avatar || defaultAvatar} alt='Profile' style={{borderRadius: "50%"}}/> @{username}</div>
+                <div id='friend-count' style={{color: "white"}}>{currentFriends.length} Friends</div>
               </div>
             </div>
             <div className="card-normal card2" onClick={()=>navigate('/stats')} style={{backgroundColor: cardColor}}>
               <div className="card-label">Watch Time</div>
-              <div className='card-content' id='watch-time' >
+              <div className='card-content' id='watch-time' style={{color: "white"}}>
                 <div>{watchTimeString[0]}</div>
                 <div>{watchTimeString[1]}</div>
                 <div>{watchTimeString[2]}</div>
