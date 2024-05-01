@@ -373,8 +373,8 @@ app.get('/api/recently-watched/episodes', async (req, res) => {
 app.get('/api/average-rating/episodes', async (req, res) => {
     const { username } = req.query;
     try {
-        const [rating] = await queryAsync('SELECT avg_episode_rating FROM UserAverageEpisodeRating WHERE username = ?', [username]);
-        res.json(rating[0]);
+        const rating = await queryAsync('SELECT avg_episode_rating FROM UserAverageEpisodeRating WHERE username = ?', [username]);
+        res.json(rating);
     } catch (error) {
         console.error('Error fetching average episode rating:', error);
         res.status(500).send('Error fetching average episode rating');
@@ -383,8 +383,8 @@ app.get('/api/average-rating/episodes', async (req, res) => {
 app.get('/api/average-rating/movies', async (req, res) => {
     const { username } = req.query;
     try {
-        const [rating] = await queryAsync('SELECT avg_movie_rating FROM UserAverageMovieRating WHERE username = ?', [username]);
-        res.json(rating[0]);
+        const rating = await queryAsync('SELECT avg_movie_rating FROM UserAverageMovieRating WHERE username = ?', [username]);
+        res.json(rating);
     } catch (error) {
         console.error('Error fetching average movie rating:', error);
         res.status(500).send('Error fetching average movie rating');
@@ -721,21 +721,29 @@ app.post('/api/preferences/particles-mode', async (req, res) => {
     }
 });
 
-// NEED TO ALTER
-app.delete('/api/accounts/:username', (req, res) => {
+app.delete('/api/accounts/:username', async (req, res) => {
     const username = req.params.username;
-    queryAsync('DELETE FROM accounts WHERE username = ?', username, (error, results) => {
-        if (error) {
-            console.error('Error deleting account:', error);
-            res.status(500).send('Error deleting account');
-        } else {                                     
-            if (results.affectedRows > 0) {
-                res.send('Account deleted successfully');
-            } else {
-                res.status(404).send('Account not found');
-            }
-        }
-    });
+    try {
+        await queryAsync('START TRANSACTION');
+
+        await queryAsync('DELETE FROM UserMovies WHERE username = ?', [username]);
+        await queryAsync('DELETE FROM UserTV WHERE username = ?', [username]);
+        await queryAsync('DELETE FROM UserThemeMode WHERE username = ?', [username]);
+        await queryAsync('DELETE FROM UserParticlesMode WHERE username = ?', [username]);
+        await queryAsync('DELETE FROM friendRequests WHERE receiver = ? OR requester = ?', [username, username]);
+        await queryAsync('DELETE FROM friends WHERE user1 = ? OR user2 = ?', [username, username]);
+        await queryAsync('DELETE FROM watchLaterMovies WHERE user_id = ?', [username]);
+        await queryAsync('DELETE FROM watchLaterTV WHERE user_id = ?', [username]);
+        
+        await queryAsync('DELETE FROM accounts WHERE username = ?', [username]);
+
+        await queryAsync('COMMIT');
+        res.send('Account and all related records deleted successfully');
+    } catch (error) {
+        await queryAsync('ROLLBACK');
+        console.error('Error deleting account:', error);
+        res.status(500).send('Error deleting account');
+    }
 });
 app.delete('/api/friend-request', async (req, res) => {
     const { requester, receiver } = req.body;

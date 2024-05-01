@@ -60,7 +60,7 @@ function App() {
           />
           <Route
             exact 
-            path="/profile"
+            path="/profile/:username"
             element={<Profile primary={colors[0]} secondary={colors[1]} accent1={colors[2]} accent2={colors[3]}/>}
           />
           <Route

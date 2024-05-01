@@ -4,7 +4,14 @@ import { useNavigate } from 'react-router-dom';
 import theMovieDb from '../Utils/themoviedb';
 import './Search.css';
 
-
+/**
+ * Search Component
+ *
+ * Provides a UI for searching movies, TV shows, and people using The Movie Database (TMDb) API.
+ * Displays search results with relevant information and navigates to detailed pages.
+ *
+ * @returns {JSX.Element} - The JSX structure of the Search component.
+ */
 function Search() {
     const navigate = useNavigate();
     // State hooks for managing search results, type of search, and UI focus/hover states
@@ -13,7 +20,14 @@ function Search() {
     const [isFocused, setIsFocused] = useState(false);
     const [isHovered, setIsHovered] = useState(false);
 
-     // Function to handle search input changes, triggers API call for non-empty queries
+     /**
+     * getSearch Function
+     *
+     * Handles changes to the search input, triggering an API call to TMDb based on the current search type.
+     *
+     * @param {Object} event - The input event object from onKeyUp.
+     * @returns {void}
+     */
     function getSearch(event) {
         const query = event.target.value;
         if (query.trim() !== '') {
@@ -29,16 +43,40 @@ function Search() {
         }
     }
     
-    // Function to handle changes in search type (movie, tv, person)
+    /**
+     * handleSearchType Function
+     *
+     * Updates the type of search based on a select dropdown.
+     *
+     * @param {Object} event - The select event object from onChange.
+     * @returns {void}
+     */
     function handleSearchType(event) {
         setSearchType(event.target.value);
     }
-    // Utility function to truncate text to a specified max length
+
+   /**
+     * truncateText Function
+     *
+     * Utility function to truncate text to a specified maximum length.
+     *
+     * @param {string} text - The text to be truncated.
+     * @param {int} maxLength - The maximum allowed length for the text.
+     * @returns {string} - The truncated text, with "..." appended if necessary.
+     */
     function truncateText(text, maxLength) {
         return text.length > maxLength ? text.substring(0, maxLength) + "..." : text;
       }
     
-    // Utility function to extract the year from movie or TV show data
+    /**
+     * getYear Function
+     *
+     * Extracts the year from movie or TV show data.
+     *
+     * @param {string} searchType - The type of search ("movie" or "tv").
+     * @param {Object} result - The result object containing the relevant data.
+     * @returns {string} - The year extracted from the data, or "N/A" if not available.
+     */
     function getYear(searchType, result) {
         if (result !== '') {
             if (searchType === 'movie') {
@@ -58,7 +96,14 @@ function Search() {
         return "N/A"; 
     }
 
-    // Callback for successful API call, updates search results
+     /**
+     * successCB Function
+     *
+     * Callback function for a successful API call to TMDb, updating search results.
+     *
+     * @param {string} data - The raw data returned from the API call.
+     * @returns {void}
+     */
     function successCB(data) {
         const parsedData = JSON.parse(data);
         // Shows max of 5 results
@@ -72,14 +117,19 @@ function Search() {
         }
     }
     
-    // Callback for failed API call, logs error
+   /**
+     * errorCB Function
+     *
+     * Callback function for a failed API call, logging an error message.
+     *
+     * @param {string} error - The error message returned from the API call.
+     * @returns {void}
+     */
     function errorCB(error) {
         console.error('Error fetching data:', error);
     }
     
-    // onKeyUp calls the function getSearch
-    // Unordered list of search results
-        // Takes each movie and on click, navigates to the details page for it
+     // UI rendering with search bar, select dropdown, and search results list
     return (
         <div style={{flexGrow: "3"}} onBlur={() => setIsFocused(false)} onFocus={() => setIsFocused(true)}>
             <div className="search-bar-container">

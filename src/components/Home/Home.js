@@ -151,7 +151,6 @@ function Home(props) {
   useEffect(() => {
     const fetchTopMovies = async () => {
       const movies = await fetchFiveMoviesByRating(username);
-      console.log(movies);
       setTopMovies(movies);
     };
     const fetchTopShows = async () => {
@@ -283,7 +282,6 @@ function Home(props) {
   const getMovieRecommendations = () => {
     let recommended = [];
     const movieIds = topMovies.map(movie => movie.movie_id);
-    console.log(movieIds);
     let completedCalls = 0;
 
     movieIds.forEach(id => {
@@ -295,7 +293,6 @@ function Home(props) {
 
           if (completedCalls === movieIds.length) {
             setMovieRecommendations(recommended);
-            console.log(recommended);
           }
       }
 
@@ -360,7 +357,7 @@ const [cardColor, setCardColor] = useState();
       <div>
         </div>
           <div className="content">
-            <div className="card-normal card1" onClick={()=>navigate('/profile')} style={{backgroundColor: cardColor}}>
+            <div className="card-normal card1" onClick={()=>navigate(`/profile/${username}`)} style={{backgroundColor: cardColor}}>
               <div className="card-label">Profile</div>
               <div className='card-content'>
                 <div id='profile'> <img src={avatar || defaultAvatar} alt='Profile' style={{borderRadius: "50%"}}/> @{username}</div>
@@ -390,7 +387,7 @@ const [cardColor, setCardColor] = useState();
                 <tbody>
                   {friendsRatings.map(friend => (
                     <tr key={friend.friend_username}>
-                      <td className="friend-username">{friend.friend_username}</td>
+                      <td className="friend-username" onClick={() => navigate(`/profile/${friend.friend_username}`)} >{friend.friend_username}</td>
                       <td>
                         {friend.top_movie_poster ? (
                           <img src={`https://image.tmdb.org/t/p/original${friend.top_movie_poster}`} alt={friend.top_movie || 'No Movie'} onClick={() => navigate(`/details/movie/${friend.top_movie_id}`)} />

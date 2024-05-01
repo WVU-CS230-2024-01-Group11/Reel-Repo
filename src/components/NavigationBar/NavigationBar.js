@@ -4,12 +4,23 @@ import "./NavigationBar.css";
 import Search from '../Search/Search';
 import { useUsername } from '../Contexts/UsernameContext';
 
+/**
+ * NavigationBar component represents the navigation bar of the application.
+ * It displays the logo, search bar, navigation links, and a dark mode toggle.
+ *
+ * @param {object} props - The component props.
+ * @returns {JSX.Element} - The rendered NavigationBar component.
+ */
 export default function NavigationBar(props) {
   const { username, setUsername } = useUsername();
 
+  /**
+   * Logs out the user by resetting the username in the context.
+   */
   function logout() {
     setUsername('');
   }
+
   return (
     <nav className="navigation-bar">
       <div className="navbar-logo">
@@ -39,7 +50,7 @@ export default function NavigationBar(props) {
             <div className="dropdown-content">
               <a className="hidden-anchors" href="/repository">Repo</a>
               <a className="hidden-anchors" href="/Stats">Stats</a>
-              <a className="shown-anchors" href="/profile">Profile</a>
+              <a className="shown-anchors" href={`/profile/${username}`}>Profile</a>
               <a className="shown-anchors" href="/friends">Friends</a>
               <a className="shown-anchors" href="/settings">Settings</a>
               <a onClick={logout} className="shown-anchors" href="/">Logout</a>

@@ -70,17 +70,12 @@ function AccountCreation(props) {
       return true;
     }
     try {
-      //const response = await axios.get(`https://emailvalidation.abstractapi.com/v1?api_key=8ae6693aed28402592266ed6eed9a016&email=${email}`);
-      //console.log (response.data.is_disposable_email.value);
-      //return response.data.is_disposable_email.value;
-      return false;
+      const response = await axios.get(`https://emailvalidation.abstractapi.com/v1?api_key=8ae6693aed28402592266ed6eed9a016&email=${email}`);
+      console.log (response.data.is_disposable_email.value);
+      return response.data.is_disposable_email.value;
   } catch (error) {
       if (error.response && error.response.status === 429) {
-          //standard plan is 1 request a second
-          await new Promise(resolve => setTimeout(resolve, 2000)); 
-          return sendEmailValidationRequest(); 
-      } else {
-          throw error; 
+          return false; 
       }
   }
   }
@@ -137,7 +132,6 @@ function AccountCreation(props) {
     clearErrors();
     let passedAll=true
     const isTaken=await usernameTaken();
-    console.log(isTaken);
     if (tempUsername === "") {
       setUserError("Username can't be blank");
       passedAll=false;
@@ -145,13 +139,11 @@ function AccountCreation(props) {
       setUserError("Username is already taken");
       passedAll=false;
     }
-    console.log("checking emails");
     if (email === "") {
       setEmailError("Email can't be blank");
       passedAll=false;
     } 
     const emailValidationResult = await isValidEmail();
-    console.log(emailValidationResult);
     if (emailValidationResult===1) {
       setEmailError("Provide a valid email format");
       passedAll=false;
@@ -160,17 +152,14 @@ function AccountCreation(props) {
       setEmailError("Provide a valid email");
       passedAll=false; 
     }
-    console.log(`email validation: ${passedAll}`);
     if (firstName === "") {
       setFirstError("First name can't be blank");
       passedAll=false;
     }
-    console.log(`firstname: ${passedAll}`);
     if (lastName === "") {
       setLastError("Last name can't be blank");
       passedAll=false;
     }
-    console.log(`lastname: ${passedAll}`);
     if (password === "") {
       setPasswordError("Password can't be blank");
       passedAll=false;
@@ -178,15 +167,13 @@ function AccountCreation(props) {
       setPasswordError(isStrongPassword);
       passedAll=false;
     }
-    console.log(`password strong/blank: ${passedAll}`);
+
     if (passwordMatch === "") {
       setPasswordMatchError("Please confirm your password");
       passedAll=false;
-      console.log(`password match blank: ${passedAll}`);
     } else if (passwordMatch !== password) {
       setPasswordMatchError("Passwords do not match");
       passedAll=false;
-      console.log(`[password not matched: ${passedAll}`);
     }
     return passedAll;
   };

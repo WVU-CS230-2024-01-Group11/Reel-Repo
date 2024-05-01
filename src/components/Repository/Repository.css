@@ -87,7 +87,11 @@
     align-items: center;
     text-wrap: wrap;
   }
+  .grid-movieImage {
+    grid-column: 1;
+  }
 
+  
   .accordianHeader {
     background-color:transparent; /* Example background color */
     color: white; /* Text color */

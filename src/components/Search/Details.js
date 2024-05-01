@@ -12,7 +12,15 @@ import { getMovieWatchProviders, getTVWatchProviders } from '../Utils/watchProvi
 import NavigationBar from '../NavigationBar/NavigationBar';
 import { useUsername } from '../Contexts/UsernameContext';
 
-
+/**
+ * Details Component
+ *
+ * Provides a detailed view of a movie or TV show using data from The Movie Database (TMDb) API.
+ * Displays media information, allows users to add to watched or watch later lists, and provides
+ * options to interact with the media.
+ *
+ * @returns {JSX.Element} - The JSX structure of the Details component.
+ */
 function Details() {
     // State hooks for managing media details, types, ID, rating, and modal visibility
     const [mediaDetails, setMediaDetails] = useState(null);
@@ -27,12 +35,31 @@ function Details() {
     const location = useLocation();
     const { username, setUsername } = useUsername();
 
-    // Function to close the modal dialog
+    /**
+     * handleClose Function
+     *
+     * Closes the modal dialog.
+     *
+     * @returns {void}
+     */
     const handleClose = () => setShow(false);
-    // Function to open the modal dialog
+
+    /**
+     * handleShow Function
+     *
+     * Opens the modal dialog.
+     *
+     * @returns {void}
+     */
     const handleShow = () => setShow(true);
 
-    // Effect hook to fetch media details based on the current URL path
+    /**
+     * useEffect Hook
+     *
+     * Fetches media details and watch providers based on the current URL path.
+     *
+     * @returns {void}
+     */
     useEffect(() => {
         const pathParts = location.pathname.split('/');
         const type = pathParts[pathParts.length - 2]; 
@@ -53,25 +80,59 @@ function Details() {
         }
     }, [location.pathname]);
 
-    // Callback function on successful retrieval of media details
+    /**
+     * detailsSuccess Function
+     *
+     * Callback function for a successful retrieval of media details, parsing and setting the details.
+     *
+     * @param {string} details - The raw details string returned from TMDb.
+     * @returns {void}
+     */
     function detailsSuccess(details) {
         const parsedDetails = JSON.parse(details);
         setMediaDetails(parsedDetails);
     }
 
-    // Error callback function
+    /**
+     * errorCB Function
+     *
+     * Callback function for a failed API call, logging an error message.
+     *
+     * @param {string} error - The error message returned from TMDb.
+     * @returns {void}
+     */
     function errorCB(error) {
         console.error('Error fetching data:', error);
     }
 
-    // Event handler for watched button to open modal
+    /**
+     * handleWatchedButton Function
+     *
+     * Opens the modal dialog for adding media to watched lists.
+     *
+     * @param {Object} event - The click event object from onClick.
+     * @returns {void}
+     */
     function handleWatchedButton(event) {
         handleShow();
     }
 
-    // Submit movie data to the database
+    /**
+     * submitMovieData Function
+     *
+     * Submits movie data to the database, including rating and watch date.
+     *
+     * @param {Object} event - The form submission event object from onSubmit.
+     * @returns {void}
+     */
     function submitMovieData(event) {
         event.preventDefault();
+       
+        const ratingNumber = parseFloat(rating);
+        if (!date_watched || isNaN(ratingNumber) || ratingNumber < 0 || ratingNumber > 10) {
+            alert("Must input valid data");
+            return;
+        }
         handleClose();
         const movieData = {
             username,
@@ -82,9 +143,22 @@ function Details() {
         addMovieToWatched(movieData);
     }
 
-    // Submit TV show data to the database
+    /**
+     * submitTVData Function
+     *
+     * Submits TV show data to the database, including rating, watch date, season, and episode.
+     *
+     * @param {Object} event - The form submission event object from onSubmit.
+     * @returns {void}
+     */
     function submitTVData(event) {
         event.preventDefault();
+       
+        const ratingNumber = parseFloat(rating);
+    if (!selectedSeason || !selectedEpisode || !date_watched || isNaN(ratingNumber) || ratingNumber < 0 || ratingNumber > 10) {
+        alert("Must input valid data");
+        return;
+    }
         handleClose();
         theMovieDb.tvEpisodes.getById({"id": mediaId, "season_number": selectedSeason, "episode_number": selectedEpisode}, successTV, errorCB);
 
@@ -104,7 +178,14 @@ function Details() {
             addEpisodeToWatched(episodeData);
         }
     }
-    // Event handler for adding to watch later list
+    /**
+     * handleWatchLater Function
+     *
+     * Adds the media to a watch later list.
+     *
+     * @param {Object} event - The click event object from onClick.
+     * @returns {void}
+     */
     function handleWatchLater(event) {
         if (mediaType === 'movie') {
             const movieData = {
