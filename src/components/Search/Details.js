@@ -391,7 +391,7 @@ function Details(props) {
                                 disabled={!selectedSeason} 
                             >
                                 <option value="">Select an Episode</option>
-                                {selectedSeason && Array.from({ length: mediaDetails.seasons[selectedSeason - 1].episode_count }, (_, i) => (
+                                {selectedSeason && Array.from({ length: mediaDetails.seasons[selectedSeason].episode_count }, (_, i) => (
                                     <option key={i + 1} value={i + 1}>Episode {i + 1}</option>
                                 ))}
                             </Form.Select>
